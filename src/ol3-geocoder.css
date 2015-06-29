@@ -2,6 +2,7 @@
     position: absolute;
     top: calc(.5em + 65px);
     left: .5em;
+    box-sizing: content-box;
 }
 .ol-geocoder-search {
     width: 28px;
@@ -17,7 +18,7 @@
     width: 220px;
     height: 35px;
 }
-.ol-geocoder-bt-search{
+.ol-geocoder-search button{
     position: absolute;
     width: 25px; height: 25px;
     top: 2px; left: 2px;
@@ -47,8 +48,9 @@
 }
 ul.ol-geocoder-result {
     position: absolute;
-    top: 20px; left: 32px;
+    top: 35px; left: 32px;
     width: 260px;
+    max-height: 300px;
     text-overflow: ellipsis;
     white-space: nowrap;
     list-style: none;
@@ -72,6 +74,9 @@ ul.ol-geocoder-result li {
     text-overflow: ellipsis;
     border-bottom: 1px solid #eee;
     padding: 0;
+}
+ul.ol-geocoder-result li:nth-child(odd) {
+    background-color: rgb(224, 255, 224);
 }
 ul.ol-geocoder-result li a {
     display: block;

@@ -1,10 +1,12 @@
 window.geocoder = {};
 var geocoder = window.geocoder;
-
 geocoder.Nominatim = function(opt_options) {
 
     var this_ = this;
     this.options = opt_options || {};
+    
+    this.options.provider = opt_options.provider || 'osm';
+    this.options.keepOpen = opt_options.keepOpen || false;
     this.options.expanded_class = 'ol-geocoder-search-expanded';
     this.options.address_css = {
         road: 'ol-geocoder-address-road',
@@ -13,13 +15,13 @@ geocoder.Nominatim = function(opt_options) {
     };
     
     this.feature_increment = 0;
-    this.layer_name = 'geocoder-nominatim';
-    this.layerSource = new ol.source.Vector();
+    this.layer_name = 'geocoder-nominatim-' + 
+        (new Date().getTime()).toString(36);
+        
     this.vectorLayer = new ol.layer.Vector({
         name: this.layer_name,
-        source: this.layerSource
+        source: new ol.source.Vector()
     });
-    
     
     this.button = document.createElement('button');
     this.button.type = 'button';
@@ -64,12 +66,6 @@ geocoder.Nominatim = function(opt_options) {
 };
 ol.inherits(geocoder.Nominatim, ol.control.Control);
 
-/*
- * Returns layer source
- */
-geocoder.Nominatim.prototype.getSource = function() {
-    return this.layerSource;
-};
 geocoder.Nominatim.prototype.json = function(url, data, callback) {
     
     // Must encode data
@@ -105,7 +101,7 @@ geocoder.Nominatim.prototype.query = function(query){
     var
         this_ = this,
         input = this.input_search,
-        provider = this.Utils.getNominatimProvider('mapquest');
+        provider = this.Utils.getNominatimProvider(this.options.provider);
         
     this.clearResults();
     this.Utils.addClass(input, 'ol-geocoder-input-search-loading');
@@ -118,6 +114,16 @@ geocoder.Nominatim.prototype.query = function(query){
         this_.Utils.removeClass(input, 'ol-geocoder-input-search-loading');
         if(response.length > 0){
             this_.createList(response);
+            
+            var canvas = this_.getMap().getTargetElement();
+            
+            //one-time fire click
+            canvas.addEventListener('click', {
+                handleEvent: function (evt) {
+                    this_.clearResults(true);
+                    canvas.removeEventListener(evt.type, this, false);
+                }
+            }, false);
         }
     });
 };
@@ -142,7 +148,11 @@ geocoder.Nominatim.prototype.createList = function(response){
     });
 };
 geocoder.Nominatim.prototype.chosen = function(place, address){
-    this.clearResults(true);
+    
+    if(this.options.keepOpen === false){
+        this.clearResults(true);
+    }
+    
     var
         map = this.getMap(),
         coord = this.Utils.to3857([place.lon, place.lat]),
@@ -188,22 +198,28 @@ geocoder.Nominatim.prototype.createFeature = function(obj){
             })
         ];
     
-    //TODO accept style from options constructor
     this.addLayer();
     var feature = new ol.Feature({
         address: obj.address,
         geometry: new ol.geom.Point(obj.coord)
     });
     var feature_id = this.featureId();
-    feature.setStyle(style_marker);
+    var feature_style = this.options.featureStyle || style_marker;
+    feature.setStyle(feature_style);
     feature.setId(feature_id);
-    this.layerSource.addFeature(feature);
+    this.getSource().addFeature(feature);
     //dispatchEvent
     this.set('geocoder', feature_id);
 };
 geocoder.Nominatim.prototype.featureId = function(){
     ++this.feature_increment;
     return 'geocoder-'+this.feature_increment;
+};
+/*
+ * Returns layer source
+ */
+geocoder.Nominatim.prototype.getSource = function() {
+    return this.vectorLayer.getSource();
 };
 geocoder.Nominatim.prototype.addLayer = function(){
     var
@@ -221,11 +237,11 @@ geocoder.Nominatim.prototype.addLayer = function(){
     }
 };
 geocoder.Nominatim.prototype.clearResults = function(collapse){
+    if(collapse){ //clear and collapse
+        return this.collapse(); 
+    }
     while (this.result_container.firstChild) {
         this.result_container.removeChild(this.result_container.firstChild);
-    }
-    if(collapse){
-        this.collapse(); 
     }
 };
 geocoder.Nominatim.prototype.addressTemplate = function(row){
@@ -268,12 +284,14 @@ geocoder.Nominatim.prototype.collapse = function(){
     this.input_search.value = "";
     this.input_search.blur();
     this.Utils.removeClass(this.control, this.options.expanded_class);
+    this.clearResults();
 };
 
 geocoder.Nominatim.prototype.Utils = {
     getNominatimProvider: function(key){
         var providers = {
-            mapquest: 'http://open.mapquestapi.com/nominatim/v1/search.php'
+            mapquest: 'http://open.mapquestapi.com/nominatim/v1/search.php',
+            osm: 'http://nominatim.openstreetmap.org/search/'
         };
         return providers[key];
     },
