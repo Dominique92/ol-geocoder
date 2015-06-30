@@ -3,11 +3,15 @@ var geocoder = window.geocoder;
 geocoder.Nominatim = function(opt_options) {
 
     var this_ = this;
-    this.options = opt_options || {};
     
-    this.options.provider = opt_options.provider || 'osm';
-    this.options.keepOpen = opt_options.keepOpen || false;
-    this.options.expanded_class = 'ol-geocoder-search-expanded';
+    var defaults = {
+        provider: 'osm',
+        keepOpen: false,
+        expanded_class: 'ol-geocoder-search-expanded'
+    };
+    
+    this.options = this.Utils.mergeOptions(defaults, opt_options);
+
     this.options.address_css = {
         road: 'ol-geocoder-address-road',
         city: 'ol-geocoder-address-city',
@@ -356,5 +360,17 @@ geocoder.Nominatim.prototype.Utils = {
             className = className.replace(" " + classNames[c] + " ", " ");
         }
         element.className = className.replace(/^\s+|\s+$/g,'');
+    },
+    /**
+     * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
+     * @param obj1
+     * @param obj2
+     * @returns obj3 a new object based on obj1 and obj2
+     */
+    mergeOptions: function(obj1, obj2){
+        var obj3 = {};
+        for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+        for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+        return obj3;
     }
 };
