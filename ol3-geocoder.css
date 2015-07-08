@@ -1,0 +1,109 @@
+.ol-geocoder ul{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    vertical-align: baseline;
+}
+.ol-geocoder {
+    position: absolute;
+    top: calc(.5em + 65px);
+    left: .5em;
+    box-sizing: content-box;
+}
+.ol-geocoder-search {
+    width: 28px;
+    height: 28px;
+    overflow: hidden;
+    
+    -webkit-transition: width .2s, height .2s;
+    -moz-transition: width .2s, height .2s;
+    -ms-transition: width .2s, height .2s;
+    transition: width .2s, height .2s;
+}
+.ol-geocoder-search-expanded {
+    width: 220px;
+    height: 35px;
+}
+.ol-geocoder-search button{
+    position: absolute;
+    width: 25px; height: 25px;
+    top: 2px; left: 2px;
+    background-image: url('//raw.githubusercontent.com/jonataswalker/map-utils/master/images/magnifier_geocoder.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.ol-geocoder-input-search{
+    position: absolute;
+    top: 4px; left: 32px;
+    width: 180px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    font-family:inherit;
+    font-size: 14px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.ol-geocoder-input-search-loading {
+    background-image: url('//raw.githubusercontent.com/jonataswalker/map-utils/master/images/input-loader-20px.gif');
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+.ol-geocoder-input-search:focus {
+    border-color: #35b5f4;
+}
+ul.ol-geocoder-result {
+    position: absolute;
+    top: 35px; left: 32px;
+    width: 260px;
+    max-height: 300px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    list-style: none;
+    padding: 0;
+    border-top: none;
+    
+    background-color: white;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    line-height: 1.2;
+    overflow: hidden;
+    overflow-y: auto;
+    
+    transition: height 0.125s ease-in;
+}
+ul.ol-geocoder-result li {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #eee;
+    padding: 0;
+}
+ul.ol-geocoder-result li:nth-child(odd) {
+    background-color: rgb(224, 255, 224);
+}
+ul.ol-geocoder-result li a {
+    display: block;
+    text-decoration: none;
+    padding: 3px 5px;
+}
+ul.ol-geocoder-result li a:hover {
+    background-color: rgb(212, 212, 212);
+}
+.ol-geocoder-address-road{
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+}
+.ol-geocoder-address-city{
+    font-size: 12px;
+    font-weight: normal;
+    color: #000;
+}
+.ol-geocoder-address-country{
+    font-size: 12px;
+    font-weight: lighter;
+    color: #444;
+}
