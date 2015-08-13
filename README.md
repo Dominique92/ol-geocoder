@@ -16,8 +16,8 @@ Load the CSS and Javascript:
 Add the control:
 
 ```javascript
-var geocoder = new geocoder.Nominatim();
-map.addControl(geocoder);
+var geocoderControl = new geocoder.Nominatim();
+map.addControl(geocoderControl);
 ```
 
 If you want to listen to changes and show a popup:
