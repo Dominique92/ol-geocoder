@@ -23,9 +23,9 @@ map.addControl(geocoderControl);
 If you want to listen to changes and show a popup:
 
 ```javascript
-geocoder.on('change:geocoder', function(evt){
+geocoderControl.on('change:geocoder', function(evt){
     var feature_id = evt.target.get('geocoder');
-    var feature = geocoder.getSource().getFeatureById(feature_id);
+    var feature = geocoderControl.getSource().getFeatureById(feature_id);
     var address = feature.get('address');
     var coord = feature.getGeometry().getCoordinates();
     content.innerHTML = '<p>'+address+'</p>';
