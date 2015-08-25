@@ -3,6 +3,12 @@ html, body, #map{
     height:100%;
     overflow:hidden;
 }
+body {
+    font: 1em/1.5 "Open Sans",Helvetica,Arial,sans-serif;
+    color: #222;
+    font-weight: 400;
+}
+
 #map{
     position:absolute;
     z-index:1;

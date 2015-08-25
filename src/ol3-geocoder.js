@@ -305,9 +305,8 @@ geocoder.Nominatim.prototype.Utils = {
                 y += '&' + e(x) + '=' + e(data[x]);
             }
             data = y.slice(1);
+            url += (/\?/.test(url) ? '&' : '?') + data;
         }
-        
-        url += (/\?/.test(url) ? '&' : '?') + data;
         
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET", url, true);
