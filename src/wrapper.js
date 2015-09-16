@@ -3,7 +3,7 @@
     
     this.Geocoder = (function(){
         
-        CODE_HERE
+        {CODE_HERE}
         
         return Geocoder;
     })();

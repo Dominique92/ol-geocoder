@@ -23,6 +23,8 @@
     //Instantiate with some options and add the Control
     var geocoder = new Geocoder('nominatim', {
         provider: 'mapquest',
+        key: '5wLaMQ9Z56pVgIKqxhD2UaM2BetlR6Vz', //please, get yours at
+                                                 // https://developer.mapquest.com/
         lang: 'pt-BR',
         limit: 5,
         keepOpen: true

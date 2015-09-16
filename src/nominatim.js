@@ -10,7 +10,7 @@
             source: new ol.source.Vector()
         });
         var defaults = {
-            provider: 'mapquest',
+            provider: 'osm',
             keepOpen: false
         };
         
@@ -25,7 +25,6 @@
 
         var container = this.createControl();
         this.els = Geocoder.Nominatim.elements;
-        
         
         this.setListeners();
         return this;
@@ -69,7 +68,9 @@
             utils.removeClass(this.els.input_search, 'ol-geocoder-loading');
             utils.addClass(this.els.control, this.constants.expanded_class);
             var input = this.els.input_search;
-            window.setTimeout(function(){input.focus()}, 100);
+            window.setTimeout(function(){
+                input.focus();
+            }, 100);
         },
         collapse: function(){
             this.els.input_search.value = "";
@@ -86,12 +87,15 @@
             var
                 this_ = this,
                 input = this.els.input_search,
-                provider = this.getProvider(
-                    this.options.provider,
-                    query,
-                    this.options.lang,
-                    this.options.limit
-                );
+                providers_names = Geocoder.Nominatim.providers.names,
+                provider = this.getProvider({
+                    provider: this.options.provider,
+                    key: this.options.key,
+                    query: query,
+                    lang: this.options.lang,
+                    limit: this.options.limit
+                })
+            ;
                 
             this.clearResults();
             utils.addClass(input, 'ol-geocoder-loading');
@@ -102,14 +106,16 @@
                     var response;
                     
                     switch (this_.options.provider) {
-                        case 'osm':
-                        case 'mapquest':
-                            response = this.response.length > 0 ? this.response : undefined;
+                        case providers_names.OSM:
+                        case providers_names.MAPQUEST:
+                            response = this.response.length > 0 
+                                ? this.response 
+                                : undefined;
                             break;
-                        case 'photon':
+                        case providers_names.PHOTON:
                             response = this.response.features.length > 0 
-                            ? this_.photonResponse(this.response.features)
-                            : undefined;
+                                ? this_.photonResponse(this.response.features)
+                                : undefined;
                             break;
                     }
                     if(response){
@@ -265,20 +271,30 @@
                 map.addLayer(this.layer);
             }
         },
-        getProvider: function(key, query, lang, limit){
-            var provider = Geocoder.Nominatim.providers[key];
-            provider.params.q = query;
-            provider.params.limit = limit || provider.params.limit;
+        getProvider: function(options){
+            var
+                provider = Geocoder.Nominatim.providers[options.provider],
+                providers_names = Geocoder.Nominatim.providers.names,
+                langs_photon = ['de', 'it', 'fr', 'en']
+            ;
+            provider.params.q = options.query;
+            provider.params.limit = options.limit || provider.params.limit;
             
-            if(key == 'photon'){
-                lang = lang.toLowerCase();
-                var accepted = ['de', 'it', 'fr', 'en'];
-                (accepted.indexOf(lang) > -1) 
-                    ? provider.params.lang = lang
+            //defining key
+            if(options.provider == providers_names.MAPQUEST){
+                provider.params.key = options.key;
+            }
+            
+            //defining language
+            if(options.provider == providers_names.PHOTON){
+                options.lang = options.lang.toLowerCase();
+                
+                provider.params.lang = (langs_photon.indexOf(options.lang) > -1) 
+                    ? options.lang
                     : provider.params.lang;
             } else {
                 provider.params['accept-language'] =
-                    lang || provider.params['accept-language'];
+                    options.lang || provider.params['accept-language'];
             }
             
             return provider;
@@ -287,6 +303,11 @@
     
     Geocoder.Nominatim.elements = {};
     Geocoder.Nominatim.providers = {
+        names: {
+            OSM: 'osm',
+            MAPQUEST: 'mapquest',
+            PHOTON: 'photon'
+        },
         osm: {
             url: 'http://nominatim.openstreetmap.org/search/',
             params: {
@@ -300,6 +321,7 @@
         mapquest: {
             url: 'http://open.mapquestapi.com/nominatim/v1/search.php',
             params: {
+                key: '',
                 format: 'json',
                 q: '',
                 addressdetails: 1,
@@ -323,14 +345,16 @@
                 anchor: [0.5, 1],
                 src: '//cdn.rawgit.com/jonataswalker/'
                     + 'map-utils/master/images/marker.png'
-            }), zIndex: 5
+            }),
+            zIndex: 5
         }),
         new ol.style.Style({
             image: new ol.style.Circle({
                 fill: new ol.style.Fill({ color: [235, 235, 235, 1]}),
                 stroke: new ol.style.Stroke({ color: [0, 0, 0, 1]}),
                 radius: 5
-            }), zIndex: 4
+            }),
+            zIndex: 4
         })
     ];
     Geocoder.Nominatim.html = [
