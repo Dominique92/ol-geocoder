@@ -4,12 +4,14 @@
     left: .5em;
     box-sizing: border-box;
 }
-.ol-geocoder *, .ol-geocoder *::before, .ol-geocoder *::after {
+.ol-geocoder *,
+.ol-geocoder *::before,
+.ol-geocoder *::after {
     box-sizing: inherit;
 }
 .ol-geocoder-search {
-    width: 28px;
-    height: 28px;
+    width: 31px;
+    height: 31px;
     overflow: hidden;
     
     -webkit-transition: width .2s, height .2s;
