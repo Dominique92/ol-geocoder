@@ -9,6 +9,7 @@ The plugin supports (for now) the following providers:
 
 * [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim)
 * [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/)
+* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro)
 * [Photon](http://photon.komoot.de/)
 
 ## How to use it?
@@ -29,7 +30,7 @@ var geocoder = new Geocoder('nominatim', {
 map.addControl(geocoder);
 ```
 
-Listen when an address is chosen
+Listen and do something when an address is chosen
 ```javascript
 geocoder.on('change:geocoder', function(evt){
     var

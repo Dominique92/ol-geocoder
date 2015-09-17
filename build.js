@@ -3,19 +3,25 @@ var
     fs = require('fs'),
     path = require('path'),
     UglifyJS = require('uglify-js'),
+    CleanCSS = require('clean-css'),
     read = function(f) {
         return fs.readFileSync(f).toString();
     },
     log = function(t){console.log(t)},
-    js_str = '',
+    css_min = '',
+    js_str = '', css_str = '', css_file,
     src_dir = __dirname + '/src/',
     js_files = [
         'base.js',
         'nominatim.js',
         'utils.js'
     ],
+    css_files = [
+        'ol3-geocoder.css'
+    ],
     
     out_dir = __dirname + '/',
+    out_css_file = out_dir + 'ol3-geocoder.min.css',
     out_js_file_combined = out_dir + 'ol3-geocoder-debug.js',
     out_js_file_min = out_dir + 'ol3-geocoder.js',
     i = -1
@@ -44,3 +50,20 @@ fs.writeFile(out_js_file_combined, js_str_combined, function(error) {
         });
     }
 });
+
+//CSS
+i = -1;
+while(++i < css_files.length){
+    css_file = fs.realpathSync(out_dir + css_files[i]);
+    css_str += read(css_file);
+}
+css_min = new CleanCSS({
+    restructuring: false
+}).minify(css_str).styles;
+
+try {
+    fs.writeFileSync(out_css_file, css_min);
+    log(out_css_file + ' written');
+} catch(e){
+    log(e);
+}

@@ -26,7 +26,8 @@ Geocoder.prototype.getSource = function(){
     Geocoder.Nominatim = function(geocoder, opt_options){
         this.geocoder = geocoder;
         this.feature_increment = 0;
-        this.layer_name = 'geocoder-nominatim-' + (new Date().getTime()).toString(36);
+        this.layer_name = 'geocoder-nominatim-'
+            + (new Date().getTime()).toString(36);
         this.layer = new ol.layer.Vector({
             name: this.layer_name,
             source: new ol.source.Vector()
@@ -37,6 +38,7 @@ Geocoder.prototype.getSource = function(){
         };
         
         this.options = utils.mergeOptions(defaults, opt_options);
+        this.options.provider = this.options.provider.toLowerCase();
         this.constants = {
             class_container: 'ol-geocoder',
             expanded_class: 'ol-geocoder-search-expanded',
@@ -124,6 +126,7 @@ Geocoder.prototype.getSource = function(){
 
             utils.json(provider.url, provider.params).when({
                 ready: function(){
+                    //log(this.response);
                     utils.removeClass(input, 'ol-geocoder-loading');
                     var response;
                     
@@ -137,6 +140,11 @@ Geocoder.prototype.getSource = function(){
                         case providers_names.PHOTON:
                             response = this.response.features.length > 0 
                                 ? this_.photonResponse(this.response.features)
+                                : undefined;
+                            break;
+                        case providers_names.GOOGLE:
+                            response = this.response.results.length > 0 
+                                ? this_.googleResponse(this.response.results)
                                 : undefined;
                             break;
                     }
@@ -276,6 +284,34 @@ Geocoder.prototype.getSource = function(){
             });
             return array;
         },
+        googleResponse: function(results){
+            var array = results.map(function(result){
+                var
+                    parts = result.formatted_address.split(','),
+                    name = (parts.length > 1)
+                        ? parts.slice(0, parts.length - 1)
+                        : parts,
+                    country = (parts.length > 1)
+                        ? parts[parts.length - 1]
+                        : ''
+                ;
+                //log(result);
+                //log(parts);
+                
+                var obj = {
+                    lon: result.geometry.location.lng,
+                    lat: result.geometry.location.lat,
+                    address: {
+                        name: name.join(','),
+                        city: '',
+                        state: '',
+                        country: country
+                    }
+                };
+                return obj;
+            });
+            return array;
+        },
         getSource: function() {
             return this.layer.getSource();
         },
@@ -297,26 +333,44 @@ Geocoder.prototype.getSource = function(){
             var
                 provider = Geocoder.Nominatim.providers[options.provider],
                 providers_names = Geocoder.Nominatim.providers.names,
+                requires_key = [
+                    providers_names.MAPQUEST,
+                    providers_names.GOOGLE
+                ],
                 langs_photon = ['de', 'it', 'fr', 'en']
             ;
-            provider.params.q = options.query;
-            provider.params.limit = options.limit || provider.params.limit;
             
-            //defining key
-            if(options.provider == providers_names.MAPQUEST){
-                provider.params.key = options.key;
-            }
-            
-            //defining language
-            if(options.provider == providers_names.PHOTON){
-                options.lang = options.lang.toLowerCase();
+            if(options.provider == providers_names.MAPQUEST
+                || options.provider == providers_names.OSM){
                 
+                provider.params.q = options.query;
+                provider.params.limit = 
+                    options.limit || provider.params.limit;
+                provider.params['accept-language'] =
+                    options.lang || provider.params['accept-language'];
+            
+                if(options.provider == providers_names.MAPQUEST){
+                    provider.params.key = options.key;
+                }
+
+            } else if(options.provider == providers_names.PHOTON){
+                
+                provider.params.q = options.query;
+                provider.params.limit = 
+                    options.limit || provider.params.limit;
+                
+                options.lang = options.lang.toLowerCase();
                 provider.params.lang = (langs_photon.indexOf(options.lang) > -1) 
                     ? options.lang
                     : provider.params.lang;
-            } else {
-                provider.params['accept-language'] =
-                    options.lang || provider.params['accept-language'];
+                    
+            } else if(options.provider == providers_names.GOOGLE){
+                
+                provider.params.key = options.key;
+                provider.params.address = options.query;
+                provider.params.language =
+                    options.lang || provider.params.language;
+                
             }
             
             return provider;
@@ -328,6 +382,7 @@ Geocoder.prototype.getSource = function(){
         names: {
             OSM: 'osm',
             MAPQUEST: 'mapquest',
+            GOOGLE: 'google',
             PHOTON: 'photon'
         },
         osm: {
@@ -349,6 +404,14 @@ Geocoder.prototype.getSource = function(){
                 addressdetails: 1,
                 limit: 10,
                 'accept-language': 'en-US'
+            }
+        },
+        google: {
+            url: 'https://maps.googleapis.com/maps/api/geocode/json',
+            params: {
+                key: '',
+                address: '',
+                language: 'en-US'
             }
         },
         photon: {
