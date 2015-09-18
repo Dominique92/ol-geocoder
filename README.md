@@ -1,6 +1,8 @@
 # OpenLayers 3 Control Geocoder
 A geocoder extension for OpenLayers 3.
 
+![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol3-geocoder/screenshots/images/anim.gif)
+
 ## Demo
 You can see [here a demo](http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html).
 
@@ -13,11 +15,12 @@ The plugin supports (for now) the following providers:
 * [Photon](http://photon.komoot.de/)
 
 ## How to use it?
-Load the CSS and Javascript:
+Load (from [jsDelivr CDN](http://www.jsdelivr.com/projects/openlayers.geocoder)) the CSS and Javascript:
 ```HTML
-<link rel="stylesheet" href="ol3-geocoder.css" />
-<script src="ol3-geocoder.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css">
+<script src="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js"></script>
 ```
+[Or download latest release.](https://github.com/jonataswalker/ol3-geocoder/releases/latest)
 
 Instantiate with some options and add the Control
 ```javascript
