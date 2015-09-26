@@ -1,4 +1,4 @@
-(function(){
+(function(win, doc){
     'use strict';
     
     var 
@@ -64,4 +64,4 @@
         return false;
     };
     map.addOverlay(overlay);
-})();
+})(window, document);
