@@ -20,6 +20,11 @@
 
           <h1 id="project_title">ol3-geocoder</h1>
           <h2 id="project_tagline">A geocoder extension for OpenLayers 3.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jonataswalker/ol3-geocoder/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jonataswalker/ol3-geocoder/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
     </div>
 
@@ -29,7 +34,7 @@
         <h2>
 <a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h2>
 
-<p>You can see <a href="http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html">here a demo</a>.</p>
+<p>You can see <a href="http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html">here a demo</a> or on <a href="http://jsfiddle.net/jonataswalker/c4qv9afb/">jsFiddle</a> if you prefer.</p>
 
 <h2>
 <a id="providers" class="anchor" href="#providers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Providers</h2>
@@ -40,32 +45,45 @@
 <li>
 <a href="http://www.openstreetmap.org/">OSM</a>/<a href="http://wiki.openstreetmap.org/wiki/Nominatim">Nominatim</a>
 </li>
-<li><a href="http://open.mapquestapi.com/nominatim/">MapQuest Geocoding API</a></li>
-<li><a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding API</a></li>
+<li>
+<a href="http://open.mapquestapi.com/nominatim/">MapQuest Geocoding API</a> - requires KEY.</li>
+<li>
+<a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding API</a> - requires KEY.</li>
 <li><a href="http://photon.komoot.de/">Photon</a></li>
 </ul>
 
 <h2>
 <a id="how-to-use-it" class="anchor" href="#how-to-use-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use it?</h2>
 
-<p>Load (from <a href="http://www.jsdelivr.com/projects/openlayers.geocoder">jsDelivr CDN</a>) the CSS and Javascript:</p>
+<h5>
+<a id="cdn-hosted---jsdelivr" class="anchor" href="#cdn-hosted---jsdelivr" aria-hidden="true"><span class="octicon octicon-link"></span></a>CDN Hosted - <a href="http://www.jsdelivr.com/projects/openlayers.geocoder">jsDelivr</a>
+</h5>
 
-<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">link</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css<span class="pl-pds">"</span></span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span>&gt;
+<p>Load CSS and Javascript:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">link</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css<span class="pl-pds">"</span></span>  <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span>&gt;
 &lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
-<p><a href="https://github.com/jonataswalker/ol3-geocoder/releases/latest">Or download latest release.</a></p>
+<h5>
+<a id="self-hosted" class="anchor" href="#self-hosted" aria-hidden="true"><span class="octicon octicon-link"></span></a>Self hosted</h5>
 
-<p>Instantiate with some options and add the Control</p>
+<p>Download <a href="https://github.com/jonataswalker/ol3-geocoder/releases/latest">latest release</a> and (obviously) load CSS and Javascript.</p>
+
+<h5>
+<a id="instantiate-with-some-options-and-add-the-control" class="anchor" href="#instantiate-with-some-options-and-add-the-control" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instantiate with some options and add the Control</h5>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> geocoder <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Geocoder</span>(<span class="pl-s"><span class="pl-pds">'</span>nominatim<span class="pl-pds">'</span></span>, {
     provider<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>mapquest<span class="pl-pds">'</span></span>,
+    key<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>__some_key__<span class="pl-pds">'</span></span>,
     lang<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pt-BR<span class="pl-pds">'</span></span>, <span class="pl-c">//en-US, fr-FR</span>
+    placeholder<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Search for ...<span class="pl-pds">'</span></span>,
     limit<span class="pl-k">:</span> <span class="pl-c1">5</span>,
     keepOpen<span class="pl-k">:</span> <span class="pl-c1">true</span>
 });
 map.addControl(geocoder);</pre></div>
 
-<p>Listen and do something when an address is chosen</p>
+<h5>
+<a id="listen-and-do-something-when-an-address-is-chosen" class="anchor" href="#listen-and-do-something-when-an-address-is-chosen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listen and do something when an address is chosen</h5>
 
 <div class="highlight highlight-source-js"><pre>geocoder.on(<span class="pl-s"><span class="pl-pds">'</span>change:geocoder<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">evt</span>){
     <span class="pl-k">var</span>
@@ -81,7 +99,7 @@ map.addControl(geocoder);</pre></div>
 <h2>
 <a id="where-are-the-docs" class="anchor" href="#where-are-the-docs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Where are the docs?</h2>
 
-<p>Help wanted.</p>
+<p>Work in progress.</p>
       </section>
     </div>
 
