@@ -1,18 +1,21 @@
 (function(Geocoder){
-    'use strict';
     
     Geocoder.Nominatim = function(geocoder, opt_options){
         this.geocoder = geocoder;
-        this.feature_increment = 0;
-        this.layer_name = 'geocoder-nominatim-'
-            + (new Date().getTime()).toString(36);
+        this.layer_name = utils.randomId('geocoder-layer-');
         this.layer = new ol.layer.Vector({
             name: this.layer_name,
             source: new ol.source.Vector()
         });
         var defaults = {
             provider: 'osm',
-            keepOpen: false
+            key: '',
+            placeholder: 'Search for an address',
+            featureStyle: Geocoder.Nominatim.featureStyle,
+            lang: 'en-US',
+            limit: 5,
+            keepOpen: false,
+            debug: false
         };
         
         this.options = utils.mergeOptions(defaults, opt_options);
@@ -45,15 +48,22 @@
                 input_search: container.querySelector('.ol-geocoder-input-search'),
                 result_container: container.querySelector('.ol-geocoder-result')
             };
+            //set placeholder from options
+            Geocoder.Nominatim.elements.input_search.placeholder =
+                this.options.placeholder;
+
             return container;
         },
         setListeners: function(){
             var
                 this_ = this,
                 openSearch = function() {
-                    utils.hasClass(this_.els.control, this_.constants.expanded_class)
-                        ? this_.collapse()
-                        : this_.expand();
+                    if(utils.hasClass(this_.els.control,
+                        this_.constants.expanded_class)) {
+                            this_.collapse();
+                        } else {
+                            this_.expand();
+                        }
                 },
                 query = function(evt){
                     if (evt.keyCode == 13){ //enter key
@@ -81,21 +91,24 @@
             this.clearResults();
         },
         clearResults: function(collapse){
-            collapse 
-                ? this.collapse() //clear and collapse
-                : utils.removeAllChildren(this.els.result_container);
+            if(collapse) {
+                this.collapse();
+            } else {
+                utils.removeAllChildren(this.els.result_container);
+            }
         },
         query: function(query){
             var
                 this_ = this,
+                options = this.options,
                 input = this.els.input_search,
                 providers_names = Geocoder.Nominatim.providers.names,
                 provider = this.getProvider({
-                    provider: this.options.provider,
-                    key: this.options.key,
+                    provider: options.provider,
+                    key: options.key,
                     query: query,
-                    lang: this.options.lang,
-                    limit: this.options.limit
+                    lang: options.lang,
+                    limit: options.limit
                 })
             ;
                 
@@ -104,25 +117,29 @@
 
             utils.json(provider.url, provider.params).when({
                 ready: function(){
-                    //log(this.response);
+                    if(options.debug){
+                        log(this.response);
+                    }
+                    
                     utils.removeClass(input, 'ol-geocoder-loading');
+                    
+                    //will be fullfiled according to provider
                     var response;
                     
                     switch (this_.options.provider) {
                         case providers_names.OSM:
                         case providers_names.MAPQUEST:
-                            response = this.response.length > 0 
-                                ? this.response 
-                                : undefined;
+                            response = (this.response.length > 0) ?
+                                this_.mapquestResponse(this.response) : undefined;
                             break;
                         case providers_names.PHOTON:
-                            response = this.response.features.length > 0 
-                                ? this_.photonResponse(this.response.features)
+                            response = (this.response.features.length > 0) ?
+                                this_.photonResponse(this.response.features)
                                 : undefined;
                             break;
                         case providers_names.GOOGLE:
-                            response = this.response.results.length > 0 
-                                ? this_.googleResponse(this.response.results)
+                            response = (this.response.results.length > 0) ?
+                                this_.googleResponse(this.response.results)
                                 : undefined;
                             break;
                     }
@@ -156,13 +173,13 @@
             
             response.forEach(function(row) {
                 var
-                    address = this_.addressTemplate(row),
-                    html = '<a href="#">' + address + '</a>',
+                    address_html = this_.addressTemplate(row),
+                    html = '<a href="#">' + address_html + '</a>',
                     li = utils.createElement('li', html)
                 ;
                 li.addEventListener('click', function(evt){
                     evt.preventDefault();
-                    this_.chosen(row, address);
+                    this_.chosen(row, address_html, row.address, row.original);
                 }, false);
                 
                 ul.appendChild(li);
@@ -197,7 +214,7 @@
             }
             return utils.template(html.join('<br/>'), r);
         },
-        chosen: function(place, address){
+        chosen: function(place, address_html, address_obj, address_original){
             
             if(this.options.keepOpen === false){
                 this.clearResults(true);
@@ -209,7 +226,9 @@
                 resolution = 2.388657133911758, duration = 500,
                 obj = {
                     coord: coord,
-                    address: address
+                    address_html: address_html,
+                    address_obj: address_obj,
+                    address_original: address_original
                 },
                 pan = ol.animation.pan({
                     duration: duration,
@@ -229,11 +248,14 @@
         createFeature: function(obj){
             var
                 feature = new ol.Feature({
-                    address: obj.address,
+                    address_html: obj.address_html,
+                    address_obj: obj.address_obj,
+                    address_original: obj.address_original,
                     geometry: new ol.geom.Point(obj.coord)
                 }),
-                feature_id = this.featureId(),
-                feature_style = this.options.featureStyle || Geocoder.Nominatim.featureStyle
+                feature_id = utils.randomId('geocoder-ft-'),
+                feature_style = this.options.featureStyle || 
+                    Geocoder.Nominatim.featureStyle
             ;
             
             this.addLayer();
@@ -243,12 +265,29 @@
             //dispatchEvent
             this.geocoder.set('geocoder', feature_id);
         },
-        featureId: function(){
-            return 'geocoder-' + (++this.feature_increment);
+        mapquestResponse: function(results){
+            var array = results.map(function(result){
+                return {
+                    lon: result.lon,
+                    lat: result.lat,
+                    address: {
+                        name: result.address.neighbourhood || '',
+                        road: result.address.road || '',
+                        city: result.address.city || result.address.town,
+                        state: result.address.state,
+                        country: result.address.country
+                    },
+                    original: {
+                        formatted: result.display_name,
+                        details: result.address
+                    }
+                };
+            });
+            return array;
         },
         photonResponse: function(features){
             var array = features.map(function(feature){
-                var obj = {
+                return {
                     lon: feature.geometry.coordinates[0],
                     lat: feature.geometry.coordinates[1],
                     address: {
@@ -256,37 +295,87 @@
                         city: feature.properties.city,
                         state: feature.properties.state,
                         country: feature.properties.country
+                    },
+                    original: {
+                        formatted: feature.properties.name,
+                        details: feature.properties
                     }
                 };
-                return obj;
             });
             return array;
         },
         googleResponse: function(results){
-            var array = results.map(function(result){
-                var
-                    parts = result.formatted_address.split(','),
-                    name = (parts.length > 1)
-                        ? parts.slice(0, parts.length - 1)
-                        : parts,
-                    country = (parts.length > 1)
-                        ? parts[parts.length - 1]
-                        : ''
-                ;
-                //log(result);
-                //log(parts);
-                
-                var obj = {
-                    lon: result.geometry.location.lng,
-                    lat: result.geometry.location.lat,
-                    address: {
-                        name: name.join(','),
-                        city: '',
-                        state: '',
-                        country: country
-                    }
+            var
+                name = [
+                    'point_of_interest',
+                    'establishment',
+                    'natural_feature',
+                    'airport'
+                ],
+                road = [
+                    'street_address',
+                    'route',
+                    'sublocality_level_5',
+                    'intersection'
+                ],
+                city = [
+                    'locality'
+                ],
+                state = [
+                    'administrative_area_level_1'
+                ],
+                country = [
+                    'country'
+                ]
+            ;
+            
+            /*
+             * @param {Array} details - address_components
+             */
+            var getDetails = function(details){
+                var parts = {
+                    name: '',
+                    road: '',
+                    city: '',
+                    state: '',
+                    country: ''
                 };
-                return obj;
+                details.forEach(function(detail){
+                    if(utils.anyMatchInArray(detail.types, name)){
+                        parts.name = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, road)){
+                        parts.road = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, city)){
+                        parts.city = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, state)){
+                        parts.state = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, country)){
+                        parts.country = detail.long_name;
+                    }
+                });
+                return parts;
+            };
+            
+            var array = [];
+            results.forEach(function(result){
+                var details = getDetails(result.address_components);
+                if(utils.anyItemHasValue(details)){
+                    array.push({
+                        lon: result.geometry.location.lng,
+                        lat: result.geometry.location.lat,
+                        address: {
+                            name: details.name,
+                            road: details.road,
+                            city: details.city,
+                            state: details.state,
+                            country: details.country
+                        },
+                        original: {
+                            formatted: result.formatted_address,
+                            details: result.address_components
+                        }
+                    });
+                }
             });
             return array;
         },
@@ -404,7 +493,7 @@
     Geocoder.Nominatim.featureStyle = [
         new ol.style.Style({
             image: new ol.style.Icon({
-                scale: .7,
+                scale: 0.7,
                 anchor: [0.5, 1],
                 src: '//cdn.rawgit.com/jonataswalker/'
                     + 'map-utils/master/images/marker.png'
@@ -423,8 +512,12 @@
     Geocoder.Nominatim.html = [
         '<div class="ol-geocoder-search ol-control">',
             '<button class="ol-geocoder-btn-search"></button>',
-            '<input type="text" class="ol-geocoder-input-search">',
+            '<input type="text"',
+                ' class="ol-geocoder-input-search"',
+                ' placeholder="Search"',
+            '>',
         '</div>',
         '<ul class="ol-geocoder-result"></ul>'
     ].join('');
 })(Geocoder);
+

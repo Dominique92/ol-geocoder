@@ -1,4 +1,4 @@
-(function(win, doc){
+(function(){
     'use strict';
     
     var 
@@ -9,23 +9,22 @@
             maxZoom: 20
         }),
         baseLayer = new ol.layer.Tile({
-            preload: Infinity,
-            opacity: 1,
             source: new ol.source.MapQuest({layer: 'osm'})
         }),
         map = new ol.Map({
             target: doc.getElementById('map'),
             view: olview,
+            loadTilesWhileAnimating: true,
+            loadTilesWhileInteracting: true,
             layers: [baseLayer]
         })
     ;
 
     //Instantiate with some options and add the Control
     var geocoder = new Geocoder('nominatim', {
-        provider: 'mapquest',
-        key: '5wLaMQ9Z56pVgIKqxhD2UaM2BetlR6Vz', //please, get yours at
-                                                 // https://developer.mapquest.com/
-        lang: 'pt-BR',
+        provider: 'photon',
+        lang: 'en',
+        placeholder: 'Search for ...',
         limit: 5,
         keepOpen: true
     });
@@ -36,11 +35,15 @@
         var
             feature_id = evt.target.get('geocoder'),
             feature = geocoder.getSource().getFeatureById(feature_id),
-            address = feature.get('address'),
+            address_html = feature.get('address_html'),
+            address_obj = feature.get('address_obj'),
+            address_original = feature.get('address_original'),
             coord = feature.getGeometry().getCoordinates()
         ;
-        content.innerHTML = '<p>'+address+'</p>';
+        content.innerHTML = '<p>'+address_html+'</p>';
         overlay.setPosition(coord);
+        
+        console.info(address_obj);
     });
 
     /**
@@ -61,4 +64,4 @@
         return false;
     };
     map.addOverlay(overlay);
-})(window, document);
+})();

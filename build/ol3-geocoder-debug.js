@@ -3,8 +3,25 @@
     
     this.Geocoder = (function(){
         
-        var Geocoder = function(control_type, opt_options){
-    'use strict';
+        /**
+ * @constructor
+ * @extends {ol.control.Control}
+ * @fires change:geocoder
+ * @param {string|undefined} control_type Nominatim|Reverse.
+ * @param {object|undefined} opt_options Options.
+ */
+var Geocoder = function(control_type, opt_options){
+    //some checks before continue
+    utils.assert(
+        typeof control_type === "string" || typeof control_type === "undefined",
+        '@param `control_type` should be string|undefined type!'
+    );
+    utils.assert(
+        typeof opt_options === "object" || typeof opt_options === "undefined",
+        '@param `opt_options` should be object|undefined type!'
+    );
+    
+    control_type = control_type || 'nominatim';
     
     var nominatim = new Geocoder.Nominatim(this, opt_options);
     this.layer = nominatim.layer;
@@ -18,23 +35,39 @@
 };
 ol.inherits(Geocoder, ol.control.Control);
 
+/**
+ * @return {ol.source.Vector} Returns the source created by this control
+ */
 Geocoder.prototype.getSource = function(){
     return this.layer.getSource();
-};(function(Geocoder){
-    'use strict';
+};
+
+
+/**
+ * @return {ol.layer.Vector} Returns the layer created by this control
+ */
+Geocoder.prototype.getLayer = function(){
+    return this.layer;
+};
+
+(function(Geocoder){
     
     Geocoder.Nominatim = function(geocoder, opt_options){
         this.geocoder = geocoder;
-        this.feature_increment = 0;
-        this.layer_name = 'geocoder-nominatim-'
-            + (new Date().getTime()).toString(36);
+        this.layer_name = utils.randomId('geocoder-layer-');
         this.layer = new ol.layer.Vector({
             name: this.layer_name,
             source: new ol.source.Vector()
         });
         var defaults = {
             provider: 'osm',
-            keepOpen: false
+            key: '',
+            placeholder: 'Search for an address',
+            featureStyle: Geocoder.Nominatim.featureStyle,
+            lang: 'en-US',
+            limit: 5,
+            keepOpen: false,
+            debug: false
         };
         
         this.options = utils.mergeOptions(defaults, opt_options);
@@ -67,15 +100,22 @@ Geocoder.prototype.getSource = function(){
                 input_search: container.querySelector('.ol-geocoder-input-search'),
                 result_container: container.querySelector('.ol-geocoder-result')
             };
+            //set placeholder from options
+            Geocoder.Nominatim.elements.input_search.placeholder =
+                this.options.placeholder;
+
             return container;
         },
         setListeners: function(){
             var
                 this_ = this,
                 openSearch = function() {
-                    utils.hasClass(this_.els.control, this_.constants.expanded_class)
-                        ? this_.collapse()
-                        : this_.expand();
+                    if(utils.hasClass(this_.els.control,
+                        this_.constants.expanded_class)) {
+                            this_.collapse();
+                        } else {
+                            this_.expand();
+                        }
                 },
                 query = function(evt){
                     if (evt.keyCode == 13){ //enter key
@@ -103,21 +143,24 @@ Geocoder.prototype.getSource = function(){
             this.clearResults();
         },
         clearResults: function(collapse){
-            collapse 
-                ? this.collapse() //clear and collapse
-                : utils.removeAllChildren(this.els.result_container);
+            if(collapse) {
+                this.collapse();
+            } else {
+                utils.removeAllChildren(this.els.result_container);
+            }
         },
         query: function(query){
             var
                 this_ = this,
+                options = this.options,
                 input = this.els.input_search,
                 providers_names = Geocoder.Nominatim.providers.names,
                 provider = this.getProvider({
-                    provider: this.options.provider,
-                    key: this.options.key,
+                    provider: options.provider,
+                    key: options.key,
                     query: query,
-                    lang: this.options.lang,
-                    limit: this.options.limit
+                    lang: options.lang,
+                    limit: options.limit
                 })
             ;
                 
@@ -126,25 +169,29 @@ Geocoder.prototype.getSource = function(){
 
             utils.json(provider.url, provider.params).when({
                 ready: function(){
-                    //log(this.response);
+                    if(options.debug){
+                        log(this.response);
+                    }
+                    
                     utils.removeClass(input, 'ol-geocoder-loading');
+                    
+                    //will be fullfiled according to provider
                     var response;
                     
                     switch (this_.options.provider) {
                         case providers_names.OSM:
                         case providers_names.MAPQUEST:
-                            response = this.response.length > 0 
-                                ? this.response 
-                                : undefined;
+                            response = (this.response.length > 0) ?
+                                this_.mapquestResponse(this.response) : undefined;
                             break;
                         case providers_names.PHOTON:
-                            response = this.response.features.length > 0 
-                                ? this_.photonResponse(this.response.features)
+                            response = (this.response.features.length > 0) ?
+                                this_.photonResponse(this.response.features)
                                 : undefined;
                             break;
                         case providers_names.GOOGLE:
-                            response = this.response.results.length > 0 
-                                ? this_.googleResponse(this.response.results)
+                            response = (this.response.results.length > 0) ?
+                                this_.googleResponse(this.response.results)
                                 : undefined;
                             break;
                     }
@@ -178,13 +225,13 @@ Geocoder.prototype.getSource = function(){
             
             response.forEach(function(row) {
                 var
-                    address = this_.addressTemplate(row),
-                    html = '<a href="#">' + address + '</a>',
+                    address_html = this_.addressTemplate(row),
+                    html = '<a href="#">' + address_html + '</a>',
                     li = utils.createElement('li', html)
                 ;
                 li.addEventListener('click', function(evt){
                     evt.preventDefault();
-                    this_.chosen(row, address);
+                    this_.chosen(row, address_html, row.address, row.original);
                 }, false);
                 
                 ul.appendChild(li);
@@ -219,7 +266,7 @@ Geocoder.prototype.getSource = function(){
             }
             return utils.template(html.join('<br/>'), r);
         },
-        chosen: function(place, address){
+        chosen: function(place, address_html, address_obj, address_original){
             
             if(this.options.keepOpen === false){
                 this.clearResults(true);
@@ -231,7 +278,9 @@ Geocoder.prototype.getSource = function(){
                 resolution = 2.388657133911758, duration = 500,
                 obj = {
                     coord: coord,
-                    address: address
+                    address_html: address_html,
+                    address_obj: address_obj,
+                    address_original: address_original
                 },
                 pan = ol.animation.pan({
                     duration: duration,
@@ -251,11 +300,14 @@ Geocoder.prototype.getSource = function(){
         createFeature: function(obj){
             var
                 feature = new ol.Feature({
-                    address: obj.address,
+                    address_html: obj.address_html,
+                    address_obj: obj.address_obj,
+                    address_original: obj.address_original,
                     geometry: new ol.geom.Point(obj.coord)
                 }),
-                feature_id = this.featureId(),
-                feature_style = this.options.featureStyle || Geocoder.Nominatim.featureStyle
+                feature_id = utils.randomId('geocoder-ft-'),
+                feature_style = this.options.featureStyle || 
+                    Geocoder.Nominatim.featureStyle
             ;
             
             this.addLayer();
@@ -265,12 +317,29 @@ Geocoder.prototype.getSource = function(){
             //dispatchEvent
             this.geocoder.set('geocoder', feature_id);
         },
-        featureId: function(){
-            return 'geocoder-' + (++this.feature_increment);
+        mapquestResponse: function(results){
+            var array = results.map(function(result){
+                return {
+                    lon: result.lon,
+                    lat: result.lat,
+                    address: {
+                        name: result.address.neighbourhood || '',
+                        road: result.address.road || '',
+                        city: result.address.city || result.address.town,
+                        state: result.address.state,
+                        country: result.address.country
+                    },
+                    original: {
+                        formatted: result.display_name,
+                        details: result.address
+                    }
+                };
+            });
+            return array;
         },
         photonResponse: function(features){
             var array = features.map(function(feature){
-                var obj = {
+                return {
                     lon: feature.geometry.coordinates[0],
                     lat: feature.geometry.coordinates[1],
                     address: {
@@ -278,37 +347,87 @@ Geocoder.prototype.getSource = function(){
                         city: feature.properties.city,
                         state: feature.properties.state,
                         country: feature.properties.country
+                    },
+                    original: {
+                        formatted: feature.properties.name,
+                        details: feature.properties
                     }
                 };
-                return obj;
             });
             return array;
         },
         googleResponse: function(results){
-            var array = results.map(function(result){
-                var
-                    parts = result.formatted_address.split(','),
-                    name = (parts.length > 1)
-                        ? parts.slice(0, parts.length - 1)
-                        : parts,
-                    country = (parts.length > 1)
-                        ? parts[parts.length - 1]
-                        : ''
-                ;
-                //log(result);
-                //log(parts);
-                
-                var obj = {
-                    lon: result.geometry.location.lng,
-                    lat: result.geometry.location.lat,
-                    address: {
-                        name: name.join(','),
-                        city: '',
-                        state: '',
-                        country: country
-                    }
+            var
+                name = [
+                    'point_of_interest',
+                    'establishment',
+                    'natural_feature',
+                    'airport'
+                ],
+                road = [
+                    'street_address',
+                    'route',
+                    'sublocality_level_5',
+                    'intersection'
+                ],
+                city = [
+                    'locality'
+                ],
+                state = [
+                    'administrative_area_level_1'
+                ],
+                country = [
+                    'country'
+                ]
+            ;
+            
+            /*
+             * @param {Array} details - address_components
+             */
+            var getDetails = function(details){
+                var parts = {
+                    name: '',
+                    road: '',
+                    city: '',
+                    state: '',
+                    country: ''
                 };
-                return obj;
+                details.forEach(function(detail){
+                    if(utils.anyMatchInArray(detail.types, name)){
+                        parts.name = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, road)){
+                        parts.road = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, city)){
+                        parts.city = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, state)){
+                        parts.state = detail.long_name;
+                    } else if(utils.anyMatchInArray(detail.types, country)){
+                        parts.country = detail.long_name;
+                    }
+                });
+                return parts;
+            };
+            
+            var array = [];
+            results.forEach(function(result){
+                var details = getDetails(result.address_components);
+                if(utils.anyItemHasValue(details)){
+                    array.push({
+                        lon: result.geometry.location.lng,
+                        lat: result.geometry.location.lat,
+                        address: {
+                            name: details.name,
+                            road: details.road,
+                            city: details.city,
+                            state: details.state,
+                            country: details.country
+                        },
+                        original: {
+                            formatted: result.formatted_address,
+                            details: result.address_components
+                        }
+                    });
+                }
             });
             return array;
         },
@@ -426,7 +545,7 @@ Geocoder.prototype.getSource = function(){
     Geocoder.Nominatim.featureStyle = [
         new ol.style.Style({
             image: new ol.style.Icon({
-                scale: .7,
+                scale: 0.7,
                 anchor: [0.5, 1],
                 src: '//cdn.rawgit.com/jonataswalker/'
                     + 'map-utils/master/images/marker.png'
@@ -445,12 +564,16 @@ Geocoder.prototype.getSource = function(){
     Geocoder.Nominatim.html = [
         '<div class="ol-geocoder-search ol-control">',
             '<button class="ol-geocoder-btn-search"></button>',
-            '<input type="text" class="ol-geocoder-input-search">',
+            '<input type="text"',
+                ' class="ol-geocoder-input-search"',
+                ' placeholder="Search"',
+            '>',
         '</div>',
         '<ul class="ol-geocoder-result"></ul>'
     ].join('');
-})(Geocoder);(function(win, doc){
-    'use strict';
+})(Geocoder);
+
+(function(win, doc){
     
     var getXhr = function() {
         var xhr = false;
@@ -512,14 +635,20 @@ Geocoder.prototype.getSource = function(){
                 }
             };
         },
+        randomId: function(prefix){
+            var id = (new Date().getTime()).toString(36);
+            return (prefix) ? prefix + id : id;
+        },
         to3857: function(coord){
             return ol.proj.transform(
-                [parseFloat(coord[0]), parseFloat(coord[1])], 'EPSG:4326', 'EPSG:3857'
+                [parseFloat(coord[0]), parseFloat(coord[1])],
+                'EPSG:4326', 'EPSG:3857'
             );
         },
         to4326: function(coord){
             return ol.proj.transform(
-                [parseFloat(coord[0]), parseFloat(coord[1])], 'EPSG:3857', 'EPSG:4326'
+                [parseFloat(coord[0]), parseFloat(coord[1])],
+                'EPSG:3857', 'EPSG:4326'
             );
         },
         classRegex: function(classname) {
@@ -546,14 +675,18 @@ Geocoder.prototype.getSource = function(){
                 i = array.length
             ;
             while(i--){
-                if(!utils.hasClass(el, array[i])) utils._addClass(el, array[i]);
+                if(!utils.hasClass(el, array[i])) {
+                    utils._addClass(el, array[i]);
+                }
             }
         },
         _removeClass: function(el, c){
-            if (el.classList)
+            if (el.classList){
                 el.classList.remove(c);
-            else 
-                el.className = (el.className.replace(utils.classReg(c), ' ')).trim();
+            } else {
+                el.className = 
+                    (el.className.replace(utils.classReg(c), ' ')).trim();
+            }
         },
         removeClass: function(el, classname){
             if(Array.isArray(el)){
@@ -570,7 +703,9 @@ Geocoder.prototype.getSource = function(){
                 i = array.length
             ;
             while(i--){
-                if(utils.hasClass(el, array[i])) utils._removeClass(el, array[i]);
+                if(utils.hasClass(el, array[i])) {
+                    utils._removeClass(el, array[i]);
+                }
             }
         },
         hasClass: function(el, c){
@@ -585,10 +720,15 @@ Geocoder.prototype.getSource = function(){
                 return;
             }
             
-            if(el.classList)
+            if(el.classList) {
                 el.classList.toggle(c);
-            else
-                utils.hasClass(el, c) ? utils._removeClass(el, c) : utils._addClass(el, c);
+            } else {
+                if(utils.hasClass(el, c)){
+                    utils._removeClass(el, c);
+                } else {
+                    utils._addClass(el, c);
+                }
+            }
         },
         $: function(id){
             id = (id[0] === '#') ? id.substr(1, id.length) : id;
@@ -601,13 +741,35 @@ Geocoder.prototype.getSource = function(){
             }
             // Older browsers
             return (!!obj && typeof obj === "object" && 
-            obj.nodeType === 1 && !!obj.nodeName);
+                obj.nodeType === 1 && !!obj.nodeName);
         },
         getAllChildren: function(node, tag){
             return [].slice.call(node.getElementsByTagName(tag));
         },
+        isEmpty: function(str){
+            return (!str || 0 === str.length);
+        },
         emptyArray: function(array){
             while(array.length) array.pop();
+        },
+        anyMatchInArray: function(source, target) {
+            return source.some(function(each){
+                return target.indexOf(each) >= 0;
+            });
+        },
+        everyMatchInArray: function(arr1, arr2) {
+            return arr2.every(function(each){
+                return arr1.indexOf(each) >= 0;
+            });
+        },
+        anyItemHasValue: function(obj){
+            var has = false;
+            for(var key in obj){
+                if(!utils.isEmpty(obj[key])){
+                    has = true;
+                }
+            }
+            return has;
         },
         removeAllChildren: function(node) {
             while (node.firstChild) {
@@ -616,8 +778,9 @@ Geocoder.prototype.getSource = function(){
         },
         removeAll: function(collection) {
             var node;
-            while (node = collection[0])
+            while ((node = collection[0])) {
                 node.parentNode.removeChild(node);
+            }
         },
         getChildren: function(node, tag){
             return [].filter.call(node.childNodes, function(el) {
@@ -644,13 +807,14 @@ Geocoder.prototype.getSource = function(){
                 .replace(/'/g, "&#039;");
         },
         /**
-        * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
+        * Overwrites obj1's values with obj2's and adds 
+        * obj2's if non existent in obj1
         * @returns obj3 a new object based on obj1 and obj2
         */
         mergeOptions: function(obj1, obj2){
             var obj3 = {};
-            for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-            for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+            for (var attr1 in obj1) { obj3[attr1] = obj1[attr1]; }
+            for (var attr2 in obj2) { obj3[attr2] = obj2[attr2]; }
             return obj3;
         },
         createElement: function(node, html){
@@ -658,8 +822,12 @@ Geocoder.prototype.getSource = function(){
             if(Array.isArray(node)){
                 elem = doc.createElement(node[0]);
                 
-                if(node[1].id) elem.id = node[1].id;
-                if(node[1].classname) elem.className = node[1].classname;
+                if(node[1].id) {
+                    elem.id = node[1].id;
+                }
+                if(node[1].classname) {
+                    elem.className = node[1].classname;
+                }
                 
                 if(node[1].attr){
                     var attr = node[1].attr;
@@ -683,14 +851,29 @@ Geocoder.prototype.getSource = function(){
             }
             elem.appendChild(frag);
             return elem;
+        },
+        assert: function(condition, message) {
+            if (!condition) {
+                message = message || "Assertion failed";
+                if (typeof Error !== "undefined") {
+                    throw new Error(message);
+                }
+                throw message; // Fallback
+            }
+        },
+        assertEqual: function(a, b, message) {
+            if (a != b) {
+                throw new Error(message + " mismatch: " + a + " != " + b);
+            }
         }
     };
 })(win, doc);
+
         
         return Geocoder;
     })();
     var
-        log = function(m){console.info(m)},
+        log = function(m){console.info(m);},
         utils = Geocoder.Utils
     ;
 }).call(this, window, document);

@@ -1,5 +1,4 @@
 (function(win, doc){
-    'use strict';
     
     var getXhr = function() {
         var xhr = false;
@@ -61,14 +60,20 @@
                 }
             };
         },
+        randomId: function(prefix){
+            var id = (new Date().getTime()).toString(36);
+            return (prefix) ? prefix + id : id;
+        },
         to3857: function(coord){
             return ol.proj.transform(
-                [parseFloat(coord[0]), parseFloat(coord[1])], 'EPSG:4326', 'EPSG:3857'
+                [parseFloat(coord[0]), parseFloat(coord[1])],
+                'EPSG:4326', 'EPSG:3857'
             );
         },
         to4326: function(coord){
             return ol.proj.transform(
-                [parseFloat(coord[0]), parseFloat(coord[1])], 'EPSG:3857', 'EPSG:4326'
+                [parseFloat(coord[0]), parseFloat(coord[1])],
+                'EPSG:3857', 'EPSG:4326'
             );
         },
         classRegex: function(classname) {
@@ -95,14 +100,18 @@
                 i = array.length
             ;
             while(i--){
-                if(!utils.hasClass(el, array[i])) utils._addClass(el, array[i]);
+                if(!utils.hasClass(el, array[i])) {
+                    utils._addClass(el, array[i]);
+                }
             }
         },
         _removeClass: function(el, c){
-            if (el.classList)
+            if (el.classList){
                 el.classList.remove(c);
-            else 
-                el.className = (el.className.replace(utils.classReg(c), ' ')).trim();
+            } else {
+                el.className = 
+                    (el.className.replace(utils.classReg(c), ' ')).trim();
+            }
         },
         removeClass: function(el, classname){
             if(Array.isArray(el)){
@@ -119,7 +128,9 @@
                 i = array.length
             ;
             while(i--){
-                if(utils.hasClass(el, array[i])) utils._removeClass(el, array[i]);
+                if(utils.hasClass(el, array[i])) {
+                    utils._removeClass(el, array[i]);
+                }
             }
         },
         hasClass: function(el, c){
@@ -134,10 +145,15 @@
                 return;
             }
             
-            if(el.classList)
+            if(el.classList) {
                 el.classList.toggle(c);
-            else
-                utils.hasClass(el, c) ? utils._removeClass(el, c) : utils._addClass(el, c);
+            } else {
+                if(utils.hasClass(el, c)){
+                    utils._removeClass(el, c);
+                } else {
+                    utils._addClass(el, c);
+                }
+            }
         },
         $: function(id){
             id = (id[0] === '#') ? id.substr(1, id.length) : id;
@@ -150,13 +166,35 @@
             }
             // Older browsers
             return (!!obj && typeof obj === "object" && 
-            obj.nodeType === 1 && !!obj.nodeName);
+                obj.nodeType === 1 && !!obj.nodeName);
         },
         getAllChildren: function(node, tag){
             return [].slice.call(node.getElementsByTagName(tag));
         },
+        isEmpty: function(str){
+            return (!str || 0 === str.length);
+        },
         emptyArray: function(array){
             while(array.length) array.pop();
+        },
+        anyMatchInArray: function(source, target) {
+            return source.some(function(each){
+                return target.indexOf(each) >= 0;
+            });
+        },
+        everyMatchInArray: function(arr1, arr2) {
+            return arr2.every(function(each){
+                return arr1.indexOf(each) >= 0;
+            });
+        },
+        anyItemHasValue: function(obj){
+            var has = false;
+            for(var key in obj){
+                if(!utils.isEmpty(obj[key])){
+                    has = true;
+                }
+            }
+            return has;
         },
         removeAllChildren: function(node) {
             while (node.firstChild) {
@@ -165,8 +203,9 @@
         },
         removeAll: function(collection) {
             var node;
-            while (node = collection[0])
+            while ((node = collection[0])) {
                 node.parentNode.removeChild(node);
+            }
         },
         getChildren: function(node, tag){
             return [].filter.call(node.childNodes, function(el) {
@@ -193,13 +232,14 @@
                 .replace(/'/g, "&#039;");
         },
         /**
-        * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
+        * Overwrites obj1's values with obj2's and adds 
+        * obj2's if non existent in obj1
         * @returns obj3 a new object based on obj1 and obj2
         */
         mergeOptions: function(obj1, obj2){
             var obj3 = {};
-            for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-            for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+            for (var attr1 in obj1) { obj3[attr1] = obj1[attr1]; }
+            for (var attr2 in obj2) { obj3[attr2] = obj2[attr2]; }
             return obj3;
         },
         createElement: function(node, html){
@@ -207,8 +247,12 @@
             if(Array.isArray(node)){
                 elem = doc.createElement(node[0]);
                 
-                if(node[1].id) elem.id = node[1].id;
-                if(node[1].classname) elem.className = node[1].classname;
+                if(node[1].id) {
+                    elem.id = node[1].id;
+                }
+                if(node[1].classname) {
+                    elem.className = node[1].classname;
+                }
                 
                 if(node[1].attr){
                     var attr = node[1].attr;
@@ -232,6 +276,20 @@
             }
             elem.appendChild(frag);
             return elem;
+        },
+        assert: function(condition, message) {
+            if (!condition) {
+                message = message || "Assertion failed";
+                if (typeof Error !== "undefined") {
+                    throw new Error(message);
+                }
+                throw message; // Fallback
+            }
+        },
+        assertEqual: function(a, b, message) {
+            if (a != b) {
+                throw new Error(message + " mismatch: " + a + " != " + b);
+            }
         }
     };
 })(win, doc);

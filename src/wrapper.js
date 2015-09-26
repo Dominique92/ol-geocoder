@@ -3,12 +3,12 @@
     
     this.Geocoder = (function(){
         
-        {CODE_HERE}
+        /*{CODE_HERE}*/
         
         return Geocoder;
     })();
     var
-        log = function(m){console.info(m)},
+        log = function(m){console.info(m);},
         utils = Geocoder.Utils
     ;
 }).call(this, window, document);
