@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Ol3-Geocoder : Geocoder Nominatim for OpenLayers 3">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Ol3-Geocoder</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jonataswalker/ol3-geocoder">View on GitHub</a>
+
+          <h1 id="project_title">Ol3-Geocoder</h1>
+          <h2 id="project_tagline">Geocoder Nominatim for OpenLayers 3</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jonataswalker/ol3-geocoder/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jonataswalker/ol3-geocoder/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="openlayers-3-control-geocoder" class="anchor" href="#openlayers-3-control-geocoder" aria-hidden="true"><span class="octicon octicon-link"></span></a>OpenLayers 3 Control Geocoder</h1>
+
+<p>A geocoder extension for OpenLayers 3.</p>
+
+<h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h2>
+
+<p>You can see <a href="http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html">here a demo</a>.</p>
+
+<h2>
+<a id="providers" class="anchor" href="#providers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Providers</h2>
+
+<p>The plugin supports (for now) the following providers:</p>
+
+<ul>
+<li>
+<a href="http://www.openstreetmap.org/">OSM</a>/<a href="http://wiki.openstreetmap.org/wiki/Nominatim">Nominatim</a>
+</li>
+<li><a href="http://open.mapquestapi.com/nominatim/">MapQuest Geocoding API</a></li>
+<li><a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding API</a></li>
+<li><a href="http://photon.komoot.de/">Photon</a></li>
+</ul>
+
+<h2>
+<a id="how-to-use-it" class="anchor" href="#how-to-use-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use it?</h2>
+
+<p>Load (from <a href="http://www.jsdelivr.com/projects/openlayers.geocoder">jsDelivr CDN</a>) the CSS and Javascript:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css<span class="pl-pds">"</span></span>&gt;
+&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<p><a href="https://github.com/jonataswalker/ol3-geocoder/releases/latest">Or download latest release.</a></p>
+
+<p>Instantiate with some options and add the Control</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> geocoder <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Geocoder</span>(<span class="pl-s"><span class="pl-pds">'</span>nominatim<span class="pl-pds">'</span></span>, {
+    provider<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>mapquest<span class="pl-pds">'</span></span>,
+    lang<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pt-BR<span class="pl-pds">'</span></span>, <span class="pl-c">//en-US, fr-FR</span>
+    limit<span class="pl-k">:</span> <span class="pl-c1">5</span>,
+    keepOpen<span class="pl-k">:</span> <span class="pl-c1">true</span>
+});
+map.addControl(geocoder);</pre></div>
+
+<p>Listen and do something when an address is chosen</p>
+
+<div class="highlight highlight-source-js"><pre>geocoder.on(<span class="pl-s"><span class="pl-pds">'</span>change:geocoder<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">evt</span>){
+    <span class="pl-k">var</span>
+        feature_id <span class="pl-k">=</span> evt.<span class="pl-c1">target</span>.get(<span class="pl-s"><span class="pl-pds">'</span>geocoder<span class="pl-pds">'</span></span>),
+        feature <span class="pl-k">=</span> geocoder.getSource().getFeatureById(feature_id),
+        address <span class="pl-k">=</span> feature.get(<span class="pl-s"><span class="pl-pds">'</span>address<span class="pl-pds">'</span></span>),
+        coord <span class="pl-k">=</span> feature.getGeometry().getCoordinates()
+    ;
+    content.innerHTML <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;p&gt;<span class="pl-pds">'</span></span><span class="pl-k">+</span>address<span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">'</span>&lt;/p&gt;<span class="pl-pds">'</span></span>;
+    overlay.setPosition(coord);
+});</pre></div>
+
+<h2>
+<a id="where-are-the-docs" class="anchor" href="#where-are-the-docs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Where are the docs?</h2>
+
+<p>Help wanted.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Ol3-Geocoder maintained by <a href="https://github.com/jonataswalker">jonataswalker</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
