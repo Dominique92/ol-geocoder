@@ -511,7 +511,7 @@
     ];
     Geocoder.Nominatim.html = [
         '<div class="ol-geocoder-search ol-control">',
-            '<button class="ol-geocoder-btn-search"></button>',
+            '<button type="button" class="ol-geocoder-btn-search"></button>',
             '<input type="text"',
                 ' class="ol-geocoder-input-search"',
                 ' placeholder="Search"',
