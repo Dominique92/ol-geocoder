@@ -27,29 +27,52 @@ Download [latest release](https://github.com/jonataswalker/ol3-geocoder/releases
 ##### Instantiate with some options and add the Control
 ```javascript
 var geocoder = new Geocoder('nominatim', {
-    provider: 'mapquest',
-    key: '__some_key__',
-    lang: 'pt-BR', //en-US, fr-FR
-    placeholder: 'Search for ...',
-    limit: 5,
-    keepOpen: true
+  provider: 'mapquest',
+  key: '__some_key__',
+  lang: 'pt-BR', //en-US, fr-FR
+  placeholder: 'Search for ...',
+  limit: 5,
+  keepOpen: true
 });
 map.addControl(geocoder);
 ```
 
 ##### Listen and do something when an address is chosen
 ```javascript
-geocoder.on('change:geocoder', function(evt){
-    var
-        feature_id = evt.target.get('geocoder'),
-        feature = geocoder.getSource().getFeatureById(feature_id),
-        address = feature.get('address'),
-        coord = feature.getGeometry().getCoordinates()
-    ;
-    content.innerHTML = '<p>'+address+'</p>';
-    overlay.setPosition(coord);
+geocoder.on('addresschosen', function(evt){
+  var
+    feature = evt.feature,
+    coord = evt.coordinate,
+    address_html = feature.get('address_html')
+  ;
+  content.innerHTML = '<p>'+address_html+'</p>';
+  overlay.setPosition(coord);
 });
 ```
 
-## Where are the docs?
-Work in progress.
+# API
+
+## Constructor
+
+#### `new Geocoder(control_type, options)`
+
+###### `control_type` `{String}`
+Maybe later we will have other types like `'reverse'`. So for now just pass `'nominatim'`.
+
+###### `options` is an object with the following possible properties:
+* `provider`    : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`; Your preferable provider;
+* `key`         : ''; API Key if required;
+* `placeholder` : 'Search for an address'; Placeholder for text input;
+* `featureStyle`: `ol.style.Style`; Feature style;
+* `lang`        : `'en-US'`; Preferable language;
+* `limit`       : `5`; Limit of results;
+* `keepOpen`    : `false`; Whether the results keep openned;
+* `debug`       : `false`; If true logs provider's response;
+
+## Methods
+
+#### `geocoder.getLayer()`
+Returns the layer `{ol.layer.Vector}` created by Geocoder control.
+
+#### `geocoder.getSource()`
+Returns the source `{ol.source.Vector}` created by Geocoder control.
