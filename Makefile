@@ -6,25 +6,25 @@ JS_FINAL 	:= $(BUILD_DIR)/ol3-geocoder.js
 CSS_COMBINED 	:= $(BUILD_DIR)/ol3-geocoder.css
 CSS_FINAL 	:= $(BUILD_DIR)/ol3-geocoder.min.css
 
-JS_FILES 	= $(SRC_DIR)/wrapper-head.js \
+JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 		  $(SRC_DIR)/base.js \
 		  $(SRC_DIR)/nominatim.js \
 		  $(SRC_DIR)/utils.js \
 		  $(SRC_DIR)/wrapper-tail.js
 
-CSS_FILES 	= $(SRC_DIR)/ol3-geocoder.css
+CSS_FILES 	:= $(SRC_DIR)/ol3-geocoder.css
 
-CLEANCSS 	= /usr/local/bin/cleancss
-CLEANCSSFLAGS 	= --skip-restructuring
-POSTCSS 	= /usr/bin/postcss
-POSTCSSFLAGS 	= --use autoprefixer -b "last 2 versions"
-JSHINT 		= /usr/bin/jshint
-UGLIFYJS 	= /usr/bin/uglifyjs
-UGLIFYJSFLAGS 	= --mangle --mangle-regex --screw-ie8 -c warnings=false
-JS_BEAUTIFY	= /usr/bin/js-beautify
-BEAUTIFYFLAGS 	= -f - --indent-size 2 --preserve-newlines
-NODEMON 	= /usr/bin/nodemon
-PARALLELSHELL 	= /usr/bin/parallelshell
+CLEANCSS 	:= /usr/local/bin/cleancss
+CLEANCSSFLAGS 	:= --skip-restructuring
+POSTCSS 	:= /usr/bin/postcss
+POSTCSSFLAGS 	:= --use autoprefixer -b "last 2 versions"
+JSHINT 		:= /usr/bin/jshint
+UGLIFYJS 	:= /usr/bin/uglifyjs
+UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 -c warnings:=false
+JS_BEAUTIFY	:= /usr/bin/js-beautify
+BEAUTIFYFLAGS 	:= -f - --indent-size 2 --preserve-newlines
+NODEMON 	:= /usr/bin/nodemon
+PARALLELSHELL 	:= /usr/bin/parallelshell
 
 # just to create variables like NODEMON_JS_FLAGS when called
 define NodemonFlags
