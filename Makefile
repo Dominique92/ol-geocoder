@@ -53,13 +53,13 @@ jshint:
 	@$(JSHINT) $(JS_DEBUG)
 
 cleancss:
-	@$(POSTCSS) $(POSTCSSFLAGS) $(CSS_COMBINED) | $(CLEANCSS) $(CLEANCSSFLAGS) >  $(CSS_FINAL)
+	@cat $(CSS_COMBINED) | $(CLEANCSS) $(CLEANCSSFLAGS) > $(CSS_FINAL)
 
 combine-js:
 	@cat $(JS_FILES) | $(JS_BEAUTIFY) $(BEAUTIFYFLAGS) > $(JS_DEBUG)
 
 combine-css:
-	@cat $(CSS_FILES) > $(CSS_COMBINED)
+	@cat $(CSS_FILES) | $(POSTCSS) $(POSTCSSFLAGS) > $(CSS_COMBINED)
 
 watch-js: $(JS_FILES)
 	$(eval $(call NodemonFlags,js))
