@@ -20,6 +20,11 @@
 
           <h1 id="project_title">ol3-geocoder</h1>
           <h2 id="project_tagline">A geocoder extension for OpenLayers 3.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jonataswalker/ol3-geocoder/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jonataswalker/ol3-geocoder/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
     </div>
 
@@ -68,33 +73,80 @@
 <a id="instantiate-with-some-options-and-add-the-control" class="anchor" href="#instantiate-with-some-options-and-add-the-control" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instantiate with some options and add the Control</h5>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> geocoder <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Geocoder</span>(<span class="pl-s"><span class="pl-pds">'</span>nominatim<span class="pl-pds">'</span></span>, {
-    provider<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>mapquest<span class="pl-pds">'</span></span>,
-    key<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>__some_key__<span class="pl-pds">'</span></span>,
-    lang<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pt-BR<span class="pl-pds">'</span></span>, <span class="pl-c">//en-US, fr-FR</span>
-    placeholder<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Search for ...<span class="pl-pds">'</span></span>,
-    limit<span class="pl-k">:</span> <span class="pl-c1">5</span>,
-    keepOpen<span class="pl-k">:</span> <span class="pl-c1">true</span>
+  provider<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>mapquest<span class="pl-pds">'</span></span>,
+  key<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>__some_key__<span class="pl-pds">'</span></span>,
+  lang<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pt-BR<span class="pl-pds">'</span></span>, <span class="pl-c">//en-US, fr-FR</span>
+  placeholder<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Search for ...<span class="pl-pds">'</span></span>,
+  limit<span class="pl-k">:</span> <span class="pl-c1">5</span>,
+  keepOpen<span class="pl-k">:</span> <span class="pl-c1">true</span>
 });
-map.addControl(geocoder);</pre></div>
+<span class="pl-smi">map</span>.<span class="pl-en">addControl</span>(geocoder);</pre></div>
 
 <h5>
 <a id="listen-and-do-something-when-an-address-is-chosen" class="anchor" href="#listen-and-do-something-when-an-address-is-chosen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listen and do something when an address is chosen</h5>
 
-<div class="highlight highlight-source-js"><pre>geocoder.on(<span class="pl-s"><span class="pl-pds">'</span>change:geocoder<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">evt</span>){
-    <span class="pl-k">var</span>
-        feature_id <span class="pl-k">=</span> evt.<span class="pl-c1">target</span>.get(<span class="pl-s"><span class="pl-pds">'</span>geocoder<span class="pl-pds">'</span></span>),
-        feature <span class="pl-k">=</span> geocoder.getSource().getFeatureById(feature_id),
-        address <span class="pl-k">=</span> feature.get(<span class="pl-s"><span class="pl-pds">'</span>address<span class="pl-pds">'</span></span>),
-        coord <span class="pl-k">=</span> feature.getGeometry().getCoordinates()
-    ;
-    content.innerHTML <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;p&gt;<span class="pl-pds">'</span></span><span class="pl-k">+</span>address<span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">'</span>&lt;/p&gt;<span class="pl-pds">'</span></span>;
-    overlay.setPosition(coord);
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">geocoder</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>addresschosen<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">evt</span>){
+  <span class="pl-k">var</span>
+    feature <span class="pl-k">=</span> <span class="pl-smi">evt</span>.<span class="pl-smi">feature</span>,
+    coord <span class="pl-k">=</span> <span class="pl-smi">evt</span>.<span class="pl-smi">coordinate</span>,
+    address_html <span class="pl-k">=</span> <span class="pl-smi">feature</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>address_html<span class="pl-pds">'</span></span>)
+  ;
+  <span class="pl-smi">content</span>.<span class="pl-smi">innerHTML</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;p&gt;<span class="pl-pds">'</span></span><span class="pl-k">+</span>address_html<span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">'</span>&lt;/p&gt;<span class="pl-pds">'</span></span>;
+  <span class="pl-smi">overlay</span>.<span class="pl-en">setPosition</span>(coord);
 });</pre></div>
 
-<h2>
-<a id="where-are-the-docs" class="anchor" href="#where-are-the-docs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Where are the docs?</h2>
+<h1>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h1>
 
-<p>Work in progress.</p>
+<h2>
+<a id="constructor" class="anchor" href="#constructor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Constructor</h2>
+
+<h4>
+<a id="new-geocodercontrol_type-options" class="anchor" href="#new-geocodercontrol_type-options" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>new Geocoder(control_type, options)</code>
+</h4>
+
+<h6>
+<a id="control_type-string" class="anchor" href="#control_type-string" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>control_type</code> <code>{String}</code>
+</h6>
+
+<p>Maybe later we will have other types like <code>'reverse'</code>. So for now just pass <code>'nominatim'</code>.</p>
+
+<h6>
+<a id="options-is-an-object-with-the-following-possible-properties" class="anchor" href="#options-is-an-object-with-the-following-possible-properties" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>options</code> is an object with the following possible properties:</h6>
+
+<ul>
+<li>
+<code>provider</code>    : <code>'osm'</code> (default), <code>'mapquest'</code>, <code>'google'</code>, <code>'photon'</code>; Your preferable provider;</li>
+<li>
+<code>key</code>         : ''; API Key if required;</li>
+<li>
+<code>placeholder</code> : 'Search for an address'; Placeholder for text input;</li>
+<li>
+<code>featureStyle</code>: <code>ol.style.Style</code>; Feature style;</li>
+<li>
+<code>lang</code>        : <code>'en-US'</code>; Preferable language;</li>
+<li>
+<code>limit</code>       : <code>5</code>; Limit of results;</li>
+<li>
+<code>keepOpen</code>    : <code>false</code>; Whether the results keep openned;</li>
+<li>
+<code>debug</code>       : <code>false</code>; If true logs provider's response;</li>
+</ul>
+
+<h2>
+<a id="methods" class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods</h2>
+
+<h4>
+<a id="geocodergetlayer" class="anchor" href="#geocodergetlayer" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>geocoder.getLayer()</code>
+</h4>
+
+<p>Returns the layer <code>{ol.layer.Vector}</code> created by Geocoder control.</p>
+
+<h4>
+<a id="geocodergetsource" class="anchor" href="#geocodergetsource" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>geocoder.getSource()</code>
+</h4>
+
+<p>Returns the source <code>{ol.source.Vector}</code> created by Geocoder control.</p>
       </section>
     </div>
 
