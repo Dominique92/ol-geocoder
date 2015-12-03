@@ -20,6 +20,11 @@
 
           <h1 id="project_title">ol3-geocoder</h1>
           <h2 id="project_tagline">A geocoder extension for OpenLayers 3.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jonataswalker/ol3-geocoder/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jonataswalker/ol3-geocoder/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
     </div>
 
@@ -38,13 +43,15 @@
 
 <ul>
 <li>
-<a href="http://www.openstreetmap.org/">OSM</a>/<a href="http://wiki.openstreetmap.org/wiki/Nominatim">Nominatim</a>
-</li>
+<a href="http://www.openstreetmap.org/">OSM</a>/<a href="http://wiki.openstreetmap.org/wiki/Nominatim">Nominatim</a> — <code>'osm'</code>.</li>
 <li>
-<a href="http://open.mapquestapi.com/nominatim/">MapQuest Geocoding API</a> - requires KEY.</li>
+<a href="http://open.mapquestapi.com/nominatim/">MapQuest Geocoding API</a> - requires KEY  — <code>'mapquest'</code>.</li>
 <li>
-<a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding API</a> - requires KEY.</li>
-<li><a href="http://photon.komoot.de/">Photon</a></li>
+<a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding API</a> - requires KEY  — <code>'google'</code>.</li>
+<li>
+<a href="http://photon.komoot.de/">Photon</a>  — <code>'photon'</code>.</li>
+<li>
+<a href="https://mapzen.com/projects/search">Mapzen Search/Pelias</a> - requires KEY  — <code>'pelias'</code>.</li>
 </ul>
 
 <h2>
@@ -111,7 +118,7 @@
 
 <ul>
 <li>
-<code>provider</code>    : <code>'osm'</code> (default), <code>'mapquest'</code>, <code>'google'</code>, <code>'photon'</code>; Your preferable provider;</li>
+<code>provider</code>    : <code>'osm'</code> (default), <code>'mapquest'</code>, <code>'google'</code>, <code>'photon'</code>, <code>'pelias'</code>; Your preferable provider;</li>
 <li>
 <code>key</code>         : ''; API Key if required;</li>
 <li>
