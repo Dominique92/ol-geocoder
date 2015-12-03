@@ -9,7 +9,6 @@
     });
     var defaults = {
       provider: 'osm',
-      key: '',
       placeholder: 'Search for an address',
       featureStyle: Geocoder.Nominatim.featureStyle,
       lang: 'en-US',
@@ -21,16 +20,15 @@
     this.options = utils.mergeOptions(defaults, opt_options);
     this.options.provider = this.options.provider.toLowerCase();
     this.constants = {
-      class_container: 'ol-geocoder',
-      expanded_class: 'ol-geocoder-search-expanded',
       road: 'ol-geocoder-road',
       city: 'ol-geocoder-city',
-      country: 'ol-geocoder-country'
+      country: 'ol-geocoder-country',
+      class_container: 'ol-geocoder',
+      expanded_class: 'ol-geocoder-search-expanded'
     };
 
-    var container = this.createControl();
+    this.createControl();
     this.els = Geocoder.Nominatim.elements;
-    
     this.setListeners();
     return this;
   };
@@ -58,12 +56,11 @@
       var
         this_ = this,
         openSearch = function() {
-          if(utils.hasClass(this_.els.control,
-            this_.constants.expanded_class)) {
-              this_.collapse();
-            } else {
-              this_.expand();
-            }
+          if(utils.hasClass(this_.els.control, this_.constants.expanded_class)){
+            this_.collapse();
+          } else {
+            this_.expand();
+          }
         },
         query = function(evt){
           if (evt.keyCode == 13){ //enter key
@@ -80,7 +77,7 @@
       utils.removeClass(this.els.input_search, 'ol-geocoder-loading');
       utils.addClass(this.els.control, this.constants.expanded_class);
       var input = this.els.input_search;
-      window.setTimeout(function(){
+      win.setTimeout(function(){
         input.focus();
       }, 100);
     },
@@ -111,7 +108,7 @@
           limit: options.limit
         })
       ;
-        
+
       this.clearResults();
       utils.addClass(input, 'ol-geocoder-loading');
 
@@ -129,25 +126,25 @@
           switch (this_.options.provider) {
             case providers_names.OSM:
             case providers_names.MAPQUEST:
-              response__ = (response.length > 0) ?
+              response__ = response.length > 0 ?
                 this_.mapquestResponse(response) : undefined;
               break;
+            case providers_names.PELIAS:
+              response__ = response.features.length > 0 ?
+                this_.peliasResponse(response.features) : undefined;
+              break;
             case providers_names.PHOTON:
-              response__ = (response.features.length > 0) ?
-                this_.photonResponse(response.features)
-                : undefined;
+              response__ = response.features.length > 0 ?
+                this_.photonResponse(response.features) : undefined;
               break;
             case providers_names.GOOGLE:
-              response__ = (response.results.length > 0) ?
-                this_.googleResponse(response.results)
-                : undefined;
+              response__ = response.results.length > 0 ?
+                this_.googleResponse(response.results) : undefined;
               break;
           }
           if(response__){
             this_.createList(response__);
-            
             var canvas = this_.geocoder.getMap().getTargetElement();
-            
             //one-time fire click
             canvas.addEventListener('click', {
               handleEvent: function (evt) {
@@ -166,11 +163,8 @@
       });
     },
     createList: function(response){
-      var 
-        this_ = this,
-        ul = this.els.result_container
-      ;
-      
+      var this_ = this;
+      var ul = this.els.result_container;
       response.forEach(function(row) {
         var
           address_html = this_.addressTemplate(row),
@@ -185,37 +179,34 @@
         ul.appendChild(li);
       });
     },
-    addressTemplate: function(row){
-      
-      var r = row.address, html = [];
-      
-      if (r.name) {
+    addressTemplate: function(r){
+      var row = r.address, html = [];
+      if (row.name) {
         html.push(
           '<span class="' + this.constants.road + '">{name}</span>'
         );
       }
-      if (r.road || r.building) {
+      if (row.road || row.building || row.house_number) {
         html.push(
           '<span class="' + this.constants.road +
           '">{building} {road} {house_number}</span>'
         );
       }
-      if (r.city || r.town || r.village) {
+      if (row.city || row.town || row.village) {
         html.push(
           '<span class="' + this.constants.city +
           '">{postcode} {city} {town} {village}</span>'
         );
       }
-      if (r.state || r.country) {
+      if (row.state || row.country) {
         html.push(
           '<span class="' + this.constants.country +
           '">{state} {country}</span>'
         );
       }
-      return utils.template(html.join('<br/>'), r);
+      return utils.template(html.join('<br>'), row);
     },
     chosen: function(place, address_html, address_obj, address_original){
-      
       if(this.options.keepOpen === false){
         this.clearResults(true);
       }
@@ -276,6 +267,7 @@
           address: {
             name: result.address.neighbourhood || '',
             road: result.address.road || '',
+            postcode: result.address.postcode,
             city: result.address.city || result.address.town,
             state: result.address.state,
             country: result.address.country
@@ -295,12 +287,35 @@
           lat: feature.geometry.coordinates[1],
           address: {
             name: feature.properties.name,
+            postcode: feature.properties.postcode,
             city: feature.properties.city,
             state: feature.properties.state,
             country: feature.properties.country
           },
           original: {
             formatted: feature.properties.name,
+            details: feature.properties
+          }
+        };
+      });
+      return array;
+    },
+    peliasResponse: function(features){
+      var array = features.map(function(feature){
+        return {
+          lon: feature.geometry.coordinates[0],
+          lat: feature.geometry.coordinates[1],
+          address: {
+            name: feature.properties.name,
+            house_number: feature.properties.housenumber,
+            postcode: feature.properties.postalcode,
+            road: feature.properties.street,
+            city: feature.properties.city,
+            state: feature.properties.region,
+            country: feature.properties.country
+          },
+          original: {
+            formatted: feature.properties.label,
             details: feature.properties
           }
         };
@@ -321,15 +336,10 @@
           'sublocality_level_5',
           'intersection'
         ],
-        city = [
-          'locality'
-        ],
-        state = [
-          'administrative_area_level_1'
-        ],
-        country = [
-          'country'
-        ]
+        postcode = [ 'postal_code' ],
+        city = [ 'locality' ],
+        state = [ 'administrative_area_level_1' ],
+        country = [ 'country' ]
       ;
       
       /*
@@ -339,6 +349,7 @@
         var parts = {
           name: '',
           road: '',
+          postcode: '',
           city: '',
           state: '',
           country: ''
@@ -348,6 +359,8 @@
             parts.name = detail.long_name;
           } else if(utils.anyMatchInArray(detail.types, road)){
             parts.road = detail.long_name;
+          } else if(utils.anyMatchInArray(detail.types, postcode)){
+            parts.postcode = detail.long_name;
           } else if(utils.anyMatchInArray(detail.types, city)){
             parts.city = detail.long_name;
           } else if(utils.anyMatchInArray(detail.types, state)){
@@ -368,6 +381,7 @@
             lat: result.geometry.location.lat,
             address: {
               name: details.name,
+              postcode: details.postcode,
               road: details.road,
               city: details.city,
               state: details.state,
@@ -385,64 +399,68 @@
     getSource: function() {
       return this.layer.getSource();
     },
-    addLayer: function(){
-      var
-        this_ = this,
-        map = this.geocoder.getMap(),
-        found
-      ;
+    addLayer: function() {
+      var this_ = this, found = false;
+      var map = this.geocoder.getMap();
 
       map.getLayers().forEach(function(layer){
-        found = (layer === this_.layer) ? true : false;
+        if (layer === this_.layer) found = true;
       });
-      if(found === false){
+      if (!found) {
         map.addLayer(this.layer);
       }
     },
-    getProvider: function(options){
+    getProvider: function(options) {
       var
+        params,
         provider = Geocoder.Nominatim.providers[options.provider],
         providers_names = Geocoder.Nominatim.providers.names,
         requires_key = [
           providers_names.MAPQUEST,
+          providers_names.PELIAS,
           providers_names.GOOGLE
         ],
         langs_photon = ['de', 'it', 'fr', 'en']
       ;
       
-      if(options.provider == providers_names.MAPQUEST
-        || options.provider == providers_names.OSM){
-        
-        provider.params.q = options.query;
-        provider.params.limit = 
-          options.limit || provider.params.limit;
-        provider.params['accept-language'] =
-          options.lang || provider.params['accept-language'];
-      
-        if(options.provider == providers_names.MAPQUEST){
-          provider.params.key = options.key;
-        }
-
-      } else if(options.provider == providers_names.PHOTON){
-        
-        provider.params.q = options.query;
-        provider.params.limit = 
-          options.limit || provider.params.limit;
-        
-        options.lang = options.lang.toLowerCase();
-        provider.params.lang = (langs_photon.indexOf(options.lang) > -1) 
-          ? options.lang
-          : provider.params.lang;
-          
-      } else if(options.provider == providers_names.GOOGLE){
-        
-        provider.params.key = options.key;
-        provider.params.address = options.query;
-        provider.params.language =
-          options.lang || provider.params.language;
-        
+      switch(options.provider) {
+        case providers_names.OSM:
+        case providers_names.MAPQUEST:
+          params = {
+            q: options.query,
+            limit: options.limit,
+            'accept-language': options.lang
+          };
+          provider.params = utils.mergeOptions(provider.params, params);
+          break;
+        case providers_names.PHOTON:
+          options.lang = options.lang.toLowerCase();
+          params = {
+            q: options.query,
+            limit: options.limit || provider.params.limit,
+            lang: (langs_photon.indexOf(options.lang) > -1) ? 
+              options.lang : provider.params.lang
+          };
+          provider.params = utils.mergeOptions(provider.params, params);
+          break;
+        case providers_names.GOOGLE:
+          params = {
+            address: options.query,
+            language: options.lang
+          };
+          provider.params = utils.mergeOptions(provider.params, params);
+          break;
+        case providers_names.PELIAS:
+          params = {
+            text: options.query,
+            size: options.limit
+          };
+          provider.params = utils.mergeOptions(provider.params, params);
+          break;
       }
-      
+      if (requires_key.indexOf(options.provider) > -1) {
+        provider.params.key = options.key;
+      }
       return provider;
     }
   };
@@ -459,7 +477,8 @@
       OSM: 'osm',
       MAPQUEST: 'mapquest',
       GOOGLE: 'google',
-      PHOTON: 'photon'
+      PHOTON: 'photon',
+      PELIAS: 'pelias'
     },
     osm: {
       url: 'http://nominatim.openstreetmap.org/search/',
@@ -488,6 +507,14 @@
         key: '',
         address: '',
         language: 'en-US'
+      }
+    },
+    pelias: {
+      url: 'https://search.mapzen.com/v1/search',
+      params: {
+        key: '',
+        text: '',
+        size: 10
       }
     },
     photon: {
@@ -523,8 +550,7 @@
       '<button type="button" class="ol-geocoder-btn-search"></button>',
       '<input type="text"',
         ' class="ol-geocoder-input-search"',
-        ' placeholder="Search"',
-      '>',
+        ' placeholder="Search">',
     '</div>',
     '<ul class="ol-geocoder-result"></ul>'
   ].join('');

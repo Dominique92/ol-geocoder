@@ -9,10 +9,11 @@ You can see [here a demo](http://rawgit.com/jonataswalker/ol3-geocoder/master/ex
 ## Providers
 The plugin supports (for now) the following providers:
 
-* [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim)
-* [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/) - requires KEY.
-* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro) - requires KEY.
-* [Photon](http://photon.komoot.de/)
+* [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) &mdash; `'osm'`.
+* [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/) - requires KEY  &mdash; `'mapquest'`.
+* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro) - requires KEY  &mdash; `'google'`.
+* [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
+* [Mapzen Search/Pelias](https://mapzen.com/projects/search) - requires KEY  &mdash; `'pelias'`.
 
 ## How to use it?
 ##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.geocoder)
@@ -60,7 +61,7 @@ geocoder.on('addresschosen', function(evt){
 Maybe later we will have other types like `'reverse'`. So for now just pass `'nominatim'`.
 
 ###### `options` is an object with the following possible properties:
-* `provider`    : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`; Your preferable provider;
+* `provider`    : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`; Your preferable provider;
 * `key`         : ''; API Key if required;
 * `placeholder` : 'Search for an address'; Placeholder for text input;
 * `featureStyle`: `ol.style.Style`; Feature style;
