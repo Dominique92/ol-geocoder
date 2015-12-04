@@ -19,7 +19,7 @@ The plugin supports (for now) the following providers:
 ##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.geocoder)
 Load CSS and Javascript:
 ```HTML
-<link href="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css"  rel="stylesheet">
+<link href="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css" rel="stylesheet">
 <script src="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js"></script>
 ```
 ##### Self hosted
