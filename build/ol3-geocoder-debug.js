@@ -1,5 +1,12 @@
+// Geocoder Nominatim for OpenLayers 3.
+// https://github.com/jonataswalker/ol3-geocoder
+// Version: v1.5.0
+// Built: 2015-12-04T14:41:08-0200
+
 (function(win, doc) {
   'use strict';
+
+  // @preserve Foo Bar
 
   this.Geocoder = (function() {
 
