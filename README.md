@@ -1,5 +1,5 @@
 # OpenLayers 3 Control Geocoder
-A geocoder extension for OpenLayers 3.
+A geocoder extension for OpenLayers 3 (at least v3.11.0).
 
 ![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol3-geocoder/screenshots/images/anim.gif)
 
