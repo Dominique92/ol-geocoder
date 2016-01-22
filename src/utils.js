@@ -1,10 +1,10 @@
-(function(win, doc){
+(function(window, document){
   
   var getXhr = function() {
     var xhr = false;
-    if (win.XMLHttpRequest) {
+    if (window.XMLHttpRequest) {
       xhr = new XMLHttpRequest();
-    } else if (win.ActiveXObject) {
+    } else if (window.ActiveXObject) {
       try {
         xhr = new ActiveXObject("Msxml2.XMLHTTP");
       } catch(e) {
@@ -116,7 +116,7 @@
       }
       
       if(timeout && utils.isNumeric(timeout)){
-        win.setTimeout(function(){
+        window.setTimeout(function(){
           utils._removeClass(el, c);
         }, timeout);
       }
@@ -152,7 +152,7 @@
         el.className = (el.className.replace(utils.classRegex(c), ' ')).trim();
       }
       if(timeout && utils.isNumeric(timeout)){
-        win.setTimeout(function() {
+        window.setTimeout(function() {
           utils._addClass(el, c);
         }, timeout);
       }
@@ -192,11 +192,11 @@
     },
     $: function(id){
       id = (id[0] === '#') ? id.substr(1, id.length) : id;
-      return doc.getElementById(id);
+      return document.getElementById(id);
     },
     isElement: function(obj){
       // DOM, Level2
-      if ("HTMLElement" in win) {
+      if ("HTMLElement" in window) {
         return (!!obj && obj instanceof HTMLElement);
       }
       // Older browsers
@@ -280,7 +280,7 @@
     createElement: function(node, html){
       var elem;
       if(Array.isArray(node)){
-        elem = doc.createElement(node[0]);
+        elem = document.createElement(node[0]);
         
         if(node[1].id) {
           elem.id = node[1].id;
@@ -301,10 +301,10 @@
           }
         }
       } else{
-        elem = doc.createElement(node);
+        elem = document.createElement(node);
       }
       elem.innerHTML = html;
-      var frag = doc.createDocumentFragment();
+      var frag = document.createDocumentFragment();
       
       while (elem.childNodes[0]) {
         frag.appendChild(elem.childNodes[0]);
@@ -327,4 +327,4 @@
       }
     }
   };
-})(win, doc);
+})(window, document);

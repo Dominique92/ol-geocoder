@@ -1,4 +1,4 @@
-(function(win, doc){
+(function(window, document){
   'use strict';
   
   this.Geocoder = (function() {
