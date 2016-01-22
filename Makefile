@@ -1,4 +1,4 @@
-LAST_VERSION	:= 1.5.0
+LAST_VERSION	:= 1.5.1
 NOW		:= $(shell date --iso=seconds)
 ROOT_DIR	:= $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 SRC_DIR 	:= $(ROOT_DIR)/src

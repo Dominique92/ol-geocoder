@@ -1,12 +1,10 @@
 // Geocoder Nominatim for OpenLayers 3.
 // https://github.com/jonataswalker/ol3-geocoder
-// Version: v1.5.0
-// Built: 2015-12-04T14:41:08-0200
+// Version: v1.5.1
+// Built: 2016-01-22T15:41:29-0200
 
-(function(win, doc) {
+(function(window, document) {
   'use strict';
-
-  // @preserve Foo Bar
 
   this.Geocoder = (function() {
 
@@ -80,6 +78,9 @@
 
         this.createControl();
         this.els = Geocoder.Nominatim.elements;
+        this.registered_listeners = {
+          map_click: false
+        };
         this.setListeners();
         return this;
       };
@@ -121,17 +122,36 @@
                 this_.query(q);
               }
             };
-
           this_.els.input_search.addEventListener('keydown', query, false);
           this_.els.btn_search.addEventListener('click', openSearch, false);
+        },
+        listenMapClick: function() {
+          if (this.registered_listeners.map_click) {
+            // already registered
+            return;
+          }
+
+          var this_ = this;
+          var map_element = this.geocoder.getMap().getTargetElement();
+          this.registered_listeners.map_click = true;
+
+          //one-time fire click
+          map_element.addEventListener('click', {
+            handleEvent: function(evt) {
+              this_.clearResults(true);
+              map_element.removeEventListener(evt.type, this, false);
+              this_.registered_listeners.map_click = false;
+            }
+          }, false);
         },
         expand: function() {
           utils.removeClass(this.els.input_search, 'ol-geocoder-loading');
           utils.addClass(this.els.control, this.constants.expanded_class);
           var input = this.els.input_search;
-          win.setTimeout(function() {
+          window.setTimeout(function() {
             input.focus();
           }, 100);
+          this.listenMapClick();
         },
         collapse: function() {
           this.els.input_search.value = "";
@@ -195,14 +215,7 @@
               }
               if (response__) {
                 this_.createList(response__);
-                var canvas = this_.geocoder.getMap().getTargetElement();
-                //one-time fire click
-                canvas.addEventListener('click', {
-                  handleEvent: function(evt) {
-                    this_.clearResults(true);
-                    canvas.removeEventListener(evt.type, this, false);
-                  }
-                }, false);
+                this_.listenMapClick();
               }
             },
             error: function() {
@@ -608,13 +621,13 @@
       ].join('');
     })(Geocoder);
 
-    (function(win, doc) {
+    (function(window, document) {
 
       var getXhr = function() {
         var xhr = false;
-        if (win.XMLHttpRequest) {
+        if (window.XMLHttpRequest) {
           xhr = new XMLHttpRequest();
-        } else if (win.ActiveXObject) {
+        } else if (window.ActiveXObject) {
           try {
             xhr = new ActiveXObject("Msxml2.XMLHTTP");
           } catch (e) {
@@ -726,7 +739,7 @@
           }
 
           if (timeout && utils.isNumeric(timeout)) {
-            win.setTimeout(function() {
+            window.setTimeout(function() {
               utils._removeClass(el, c);
             }, timeout);
           }
@@ -761,7 +774,7 @@
             el.className = (el.className.replace(utils.classRegex(c), ' ')).trim();
           }
           if (timeout && utils.isNumeric(timeout)) {
-            win.setTimeout(function() {
+            window.setTimeout(function() {
               utils._addClass(el, c);
             }, timeout);
           }
@@ -801,11 +814,11 @@
         },
         $: function(id) {
           id = (id[0] === '#') ? id.substr(1, id.length) : id;
-          return doc.getElementById(id);
+          return document.getElementById(id);
         },
         isElement: function(obj) {
           // DOM, Level2
-          if ("HTMLElement" in win) {
+          if ("HTMLElement" in window) {
             return (!!obj && obj instanceof HTMLElement);
           }
           // Older browsers
@@ -892,7 +905,7 @@
         createElement: function(node, html) {
           var elem;
           if (Array.isArray(node)) {
-            elem = doc.createElement(node[0]);
+            elem = document.createElement(node[0]);
 
             if (node[1].id) {
               elem.id = node[1].id;
@@ -913,10 +926,10 @@
               }
             }
           } else {
-            elem = doc.createElement(node);
+            elem = document.createElement(node);
           }
           elem.innerHTML = html;
-          var frag = doc.createDocumentFragment();
+          var frag = document.createDocumentFragment();
 
           while (elem.childNodes[0]) {
             frag.appendChild(elem.childNodes[0]);
@@ -939,7 +952,7 @@
           }
         }
       };
-    })(win, doc);
+    })(window, document);
     return Geocoder;
   })();
   var utils = Geocoder.Utils;
