@@ -13,7 +13,8 @@
     width: 31px;
     height: 31px;
     overflow: hidden;
-    transition: width .2s, height .2s;
+    -webkit-transition: width .2s, height .2s;
+            transition: width .2s, height .2s;
 }
 .ol-geocoder-search-expanded {
     width: 220px;
@@ -51,7 +52,9 @@ ul.ol-geocoder-result {
     overflow-x: hidden;
     overflow-y: auto;
     
-    transition: height 300ms ease-in;
+    -webkit-transition: height 300ms ease-in;
+    
+            transition: height 300ms ease-in;
 }
 ul.ol-geocoder-result li {
     width: 100%;
