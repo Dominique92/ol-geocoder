@@ -29,6 +29,9 @@
 
     this.createControl();
     this.els = Geocoder.Nominatim.elements;
+    this.registered_listeners = {
+      map_click: false
+    };
     this.setListeners();
     return this;
   };
@@ -69,17 +72,36 @@
           }
         }
       ;
-      
       this_.els.input_search.addEventListener('keydown', query, false);
       this_.els.btn_search.addEventListener('click', openSearch, false);
+    },
+    listenMapClick: function() {
+      if(this.registered_listeners.map_click) {
+        // already registered
+        return;
+      }
+ 
+      var this_ = this;
+      var map_element = this.geocoder.getMap().getTargetElement();
+      this.registered_listeners.map_click = true;
+      
+      //one-time fire click
+      map_element.addEventListener('click', {
+        handleEvent: function (evt) {
+          this_.clearResults(true);
+          map_element.removeEventListener(evt.type, this, false);
+          this_.registered_listeners.map_click = false;
+        }
+      }, false);
     },
     expand: function(){
       utils.removeClass(this.els.input_search, 'ol-geocoder-loading');
       utils.addClass(this.els.control, this.constants.expanded_class);
       var input = this.els.input_search;
-      win.setTimeout(function(){
+      window.setTimeout(function(){
         input.focus();
       }, 100);
+      this.listenMapClick();
     },
     collapse: function(){
       this.els.input_search.value = "";
@@ -144,14 +166,7 @@
           }
           if(response__){
             this_.createList(response__);
-            var canvas = this_.geocoder.getMap().getTargetElement();
-            //one-time fire click
-            canvas.addEventListener('click', {
-              handleEvent: function (evt) {
-                this_.clearResults(true);
-                canvas.removeEventListener(evt.type, this, false);
-              }
-            }, false);
+            this_.listenMapClick();
           }
         },
         error: function(){
