@@ -1,7 +1,7 @@
 // Geocoder Nominatim for OpenLayers 3.
 // https://github.com/jonataswalker/ol3-geocoder
-// Version: v1.5.0
-// Built: 2016-01-22T15:30:52-0200
+// Version: v1.5.1
+// Built: 2016-01-22T15:41:29-0200
 
 (function(window, document) {
   'use strict';
