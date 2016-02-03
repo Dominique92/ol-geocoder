@@ -12,7 +12,7 @@ The plugin supports (for now) the following providers:
 
 * [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) &mdash; `'osm'`.
 * [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/) - requires KEY  &mdash; `'mapquest'`.
-* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro) - requires KEY  &mdash; `'google'`.
+* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro) - requires KEY  &mdash; `'google'`. See [#16](https://github.com/jonataswalker/ol3-geocoder/issues/16).
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
 * [Mapzen Search/Pelias](https://mapzen.com/projects/search) - requires KEY  &mdash; `'pelias'`.
 
