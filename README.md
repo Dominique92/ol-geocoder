@@ -78,3 +78,12 @@ Returns the layer `{ol.layer.Vector}` created by Geocoder control.
 
 #### `geocoder.getSource()`
 Returns the source `{ol.source.Vector}` created by Geocoder control.
+
+## Events
+
+##### Triggered when an address is chosen
+```javascript
+geocoder.on('addresschosen', function(evt){
+  // it's up to you
+});
+```
