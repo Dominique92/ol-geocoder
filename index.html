@@ -20,6 +20,11 @@
 
           <h1 id="project_title">ol3-geocoder</h1>
           <h2 id="project_tagline">A geocoder extension for OpenLayers 3.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jonataswalker/ol3-geocoder/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jonataswalker/ol3-geocoder/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
     </div>
 
@@ -27,12 +32,12 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h2>
-<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h2>
 
 <p>You can see <a href="http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html">here a demo</a> or on <a href="http://jsfiddle.net/jonataswalker/c4qv9afb/">jsFiddle</a> if you prefer.</p>
 
 <h2>
-<a id="providers" class="anchor" href="#providers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Providers</h2>
+<a id="providers" class="anchor" href="#providers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Providers</h2>
 
 <p>The plugin supports (for now) the following providers:</p>
 
@@ -50,10 +55,10 @@
 </ul>
 
 <h2>
-<a id="how-to-use-it" class="anchor" href="#how-to-use-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use it?</h2>
+<a id="how-to-use-it" class="anchor" href="#how-to-use-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use it?</h2>
 
 <h5>
-<a id="cdn-hosted---jsdelivr" class="anchor" href="#cdn-hosted---jsdelivr" aria-hidden="true"><span class="octicon octicon-link"></span></a>CDN Hosted - <a href="http://www.jsdelivr.com/projects/openlayers.geocoder">jsDelivr</a>
+<a id="cdn-hosted---jsdelivr" class="anchor" href="#cdn-hosted---jsdelivr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CDN Hosted - <a href="http://www.jsdelivr.com/projects/openlayers.geocoder">jsDelivr</a>
 </h5>
 
 <p>Load CSS and Javascript:</p>
@@ -62,12 +67,12 @@
 &lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
 <h5>
-<a id="self-hosted" class="anchor" href="#self-hosted" aria-hidden="true"><span class="octicon octicon-link"></span></a>Self hosted</h5>
+<a id="self-hosted" class="anchor" href="#self-hosted" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Self hosted</h5>
 
 <p>Download <a href="https://github.com/jonataswalker/ol3-geocoder/releases/latest">latest release</a> and (obviously) load CSS and Javascript.</p>
 
 <h5>
-<a id="instantiate-with-some-options-and-add-the-control" class="anchor" href="#instantiate-with-some-options-and-add-the-control" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instantiate with some options and add the Control</h5>
+<a id="instantiate-with-some-options-and-add-the-control" class="anchor" href="#instantiate-with-some-options-and-add-the-control" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Instantiate with some options and add the Control</h5>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> geocoder <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Geocoder</span>(<span class="pl-s"><span class="pl-pds">'</span>nominatim<span class="pl-pds">'</span></span>, {
   provider<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>mapquest<span class="pl-pds">'</span></span>,
@@ -80,7 +85,7 @@
 <span class="pl-smi">map</span>.<span class="pl-en">addControl</span>(geocoder);</pre></div>
 
 <h5>
-<a id="listen-and-do-something-when-an-address-is-chosen" class="anchor" href="#listen-and-do-something-when-an-address-is-chosen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listen and do something when an address is chosen</h5>
+<a id="listen-and-do-something-when-an-address-is-chosen" class="anchor" href="#listen-and-do-something-when-an-address-is-chosen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Listen and do something when an address is chosen</h5>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">geocoder</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>addresschosen<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">evt</span>){
   <span class="pl-k">var</span>
@@ -93,23 +98,23 @@
 });</pre></div>
 
 <h1>
-<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h1>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API</h1>
 
 <h2>
-<a id="constructor" class="anchor" href="#constructor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Constructor</h2>
+<a id="constructor" class="anchor" href="#constructor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Constructor</h2>
 
 <h4>
-<a id="new-geocodercontrol_type-options" class="anchor" href="#new-geocodercontrol_type-options" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>new Geocoder(control_type, options)</code>
+<a id="new-geocodercontrol_type-options" class="anchor" href="#new-geocodercontrol_type-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>new Geocoder(control_type, options)</code>
 </h4>
 
 <h6>
-<a id="control_type-string" class="anchor" href="#control_type-string" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>control_type</code> <code>{String}</code>
+<a id="control_type-string" class="anchor" href="#control_type-string" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>control_type</code> <code>{String}</code>
 </h6>
 
 <p>Maybe later we will have other types like <code>'reverse'</code>. So for now just pass <code>'nominatim'</code>.</p>
 
 <h6>
-<a id="options-is-an-object-with-the-following-possible-properties" class="anchor" href="#options-is-an-object-with-the-following-possible-properties" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>options</code> is an object with the following possible properties:</h6>
+<a id="options-is-an-object-with-the-following-possible-properties" class="anchor" href="#options-is-an-object-with-the-following-possible-properties" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>options</code> is an object with the following possible properties:</h6>
 
 <ul>
 <li>
@@ -131,16 +136,16 @@
 </ul>
 
 <h2>
-<a id="methods" class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods</h2>
+<a id="methods" class="anchor" href="#methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Methods</h2>
 
 <h4>
-<a id="geocodergetlayer" class="anchor" href="#geocodergetlayer" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>geocoder.getLayer()</code>
+<a id="geocodergetlayer" class="anchor" href="#geocodergetlayer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>geocoder.getLayer()</code>
 </h4>
 
 <p>Returns the layer <code>{ol.layer.Vector}</code> created by Geocoder control.</p>
 
 <h4>
-<a id="geocodergetsource" class="anchor" href="#geocodergetsource" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>geocoder.getSource()</code>
+<a id="geocodergetsource" class="anchor" href="#geocodergetsource" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>geocoder.getSource()</code>
 </h4>
 
 <p>Returns the source <code>{ol.source.Vector}</code> created by Geocoder control.</p>
