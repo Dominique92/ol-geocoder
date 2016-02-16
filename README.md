@@ -1,6 +1,5 @@
 # OpenLayers 3 Control Geocoder
-A geocoder extension for OpenLayers 3.
-Requires OpenLayers v3.11.0 or higher.
+A geocoder extension for OpenLayers 3. **Requires** OpenLayers **v3.11.0** or higher.
 
 ![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol3-geocoder/screenshots/images/anim.gif)
 
@@ -78,3 +77,12 @@ Returns the layer `{ol.layer.Vector}` created by Geocoder control.
 
 #### `geocoder.getSource()`
 Returns the source `{ol.source.Vector}` created by Geocoder control.
+
+## Events
+
+##### Triggered when an address is chosen
+```javascript
+geocoder.on('addresschosen', function(evt){
+  // it's up to you
+});
+```
