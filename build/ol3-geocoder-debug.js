@@ -1,7 +1,7 @@
 // Geocoder Nominatim for OpenLayers 3.
 // https://github.com/jonataswalker/ol3-geocoder
-// Version: v1.5.1
-// Built: 2016-01-22T15:41:29-0200
+// Version: v1.5.2
+// Built: 2016-03-15T08:13:30-0300
 
 (function(window, document) {
   'use strict';
@@ -277,7 +277,12 @@
 
           var
             map = this.geocoder.getMap(),
-            coord = utils.to3857([place.lon, place.lat]),
+            view = map.getView(),
+            projection = view.getProjection(),
+            coord = ol.proj.transform(
+              [parseFloat(place.lon), parseFloat(place.lat)],
+              'EPSG:4326', projection
+            ),
             resolution = 2.388657133911758,
             duration = 500,
             obj = {
@@ -288,16 +293,16 @@
             },
             pan = ol.animation.pan({
               duration: duration,
-              source: map.getView().getCenter()
+              source: view.getCenter()
             }),
             zoom = ol.animation.zoom({
               duration: duration,
-              resolution: map.getView().getResolution()
+              resolution: view.getResolution()
             });
 
           map.beforeRender(pan, zoom);
-          map.getView().setCenter(coord);
-          map.getView().setResolution(resolution);
+          view.setCenter(coord);
+          view.setResolution(resolution);
           this.createFeature(obj);
         },
         createFeature: function(obj) {
