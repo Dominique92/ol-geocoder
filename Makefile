@@ -1,6 +1,5 @@
-LAST_VERSION	:= 1.5.1
-NOW		:= $(shell date --iso=seconds)
 ROOT_DIR	:= $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+NOW		:= $(shell date --iso=seconds)
 SRC_DIR 	:= $(ROOT_DIR)/src
 BUILD_DIR 	:= $(ROOT_DIR)/build
 JS_DEBUG 	:= $(BUILD_DIR)/ol3-geocoder-debug.js
@@ -8,6 +7,8 @@ JS_FINAL 	:= $(BUILD_DIR)/ol3-geocoder.js
 CSS_COMBINED 	:= $(BUILD_DIR)/ol3-geocoder.css
 CSS_FINAL 	:= $(BUILD_DIR)/ol3-geocoder.min.css
 TMPFILE 	:= $(BUILD_DIR)/tmp
+PACKAGE_JSON 	:= $(ROOT_DIR)/package.json
+LAST_VERSION	:= $(shell cat $(PACKAGE_JSON) | node -pe "JSON.parse(require('fs').readFileSync('/dev/stdin').toString()).version")
 
 JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 		   $(SRC_DIR)/base.js \
@@ -17,17 +18,17 @@ JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
 
 CSS_FILES 	:= $(SRC_DIR)/ol3-geocoder.css
 
-CLEANCSS 	:= /usr/local/bin/cleancss
+CLEANCSS 	:= ./node_modules/.bin/cleancss
 CLEANCSSFLAGS 	:= --skip-restructuring
-POSTCSS 	:= /usr/bin/postcss
+POSTCSS 	:= ./node_modules/.bin/postcss
 POSTCSSFLAGS 	:= --use autoprefixer -b "last 2 versions"
-JSHINT 		:= /usr/bin/jshint
-UGLIFYJS 	:= /usr/bin/uglifyjs
+JSHINT 		:= ./node_modules/.bin/jshint
+UGLIFYJS 	:= ./node_modules/.bin/uglifyjs
 UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 --lint -c warnings=true
-JS_BEAUTIFY	:= /usr/bin/js-beautify
+JS_BEAUTIFY	:= ./node_modules/.bin/js-beautify
 BEAUTIFYFLAGS 	:= -f - --indent-size 2 --preserve-newlines
-NODEMON 	:= /usr/bin/nodemon
-PARALLELSHELL 	:= /usr/bin/parallelshell
+NODEMON 	:= ./node_modules/.bin/nodemon
+PARALLELSHELL 	:= ./node_modules/.bin/parallelshell
 
 # just to create variables like NODEMON_JS_FLAGS when called
 define NodemonFlags
@@ -58,28 +59,28 @@ build-js: combine-js jshint uglifyjs addheader
 build-css: combine-css cleancss
 	@echo "Build CSS ... OK"
 
-uglifyjs:
-	@$(UGLIFYJS) $(JS_DEBUG) $(UGLIFYJSFLAGS) > $(JS_FINAL)
+uglifyjs: $(JS_DEBUG)
+	@$(UGLIFYJS) $^ $(UGLIFYJSFLAGS) > $(JS_FINAL)
 
-jshint:
-	@$(JSHINT) $(JS_DEBUG)
+jshint: $(JS_DEBUG)
+	@$(JSHINT) $^
 
-addheader-debug:
-	@echo "$$HEADER" | cat - $(JS_DEBUG) > $(TMPFILE) && mv $(TMPFILE) $(JS_DEBUG)
+addheader-debug: $(JS_DEBUG)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
 
-addheader-min:
-	@echo "$$HEADER" | cat - $(JS_FINAL) > $(TMPFILE) && mv $(TMPFILE) $(JS_FINAL)
+addheader-min: $(JS_FINAL)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
 
 addheader: addheader-debug addheader-min
 
-cleancss:
-	@cat $(CSS_COMBINED) | $(CLEANCSS) $(CLEANCSSFLAGS) > $(CSS_FINAL)
+cleancss: $(CSS_COMBINED)
+	@cat $^ | $(CLEANCSS) $(CLEANCSSFLAGS) > $(CSS_FINAL)
 
-combine-js:
-	@cat $(JS_FILES) | $(JS_BEAUTIFY) $(BEAUTIFYFLAGS) > $(JS_DEBUG)
+combine-js: $(JS_FILES)
+	@cat $^ | $(JS_BEAUTIFY) $(BEAUTIFYFLAGS) > $(JS_DEBUG)
 
-combine-css:
-	@cat $(CSS_FILES) | $(POSTCSS) $(POSTCSSFLAGS) > $(CSS_COMBINED)
+combine-css: $(CSS_FILES)
+	@cat $^ | $(POSTCSS) $(POSTCSSFLAGS) > $(CSS_COMBINED)
 
 watch-js: $(JS_FILES)
 	$(eval $(call NodemonFlags,js))
