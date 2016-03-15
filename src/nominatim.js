@@ -228,7 +228,12 @@
       
       var
         map = this.geocoder.getMap(),
-        coord = utils.to3857([place.lon, place.lat]),
+        view = map.getView(),
+        projection = view.getProjection(),
+        coord = ol.proj.transform(
+          [parseFloat(place.lon), parseFloat(place.lat)],
+          'EPSG:4326', projection
+        ),
         resolution = 2.388657133911758, duration = 500,
         obj = {
           coord: coord,
@@ -238,17 +243,17 @@
         },
         pan = ol.animation.pan({
           duration: duration,
-          source: map.getView().getCenter()
+          source: view.getCenter()
         }),
         zoom = ol.animation.zoom({
           duration: duration,
-          resolution: map.getView().getResolution()
+          resolution: view.getResolution()
         })
       ;
       
       map.beforeRender(pan, zoom);
-      map.getView().setCenter(coord);
-      map.getView().setResolution(resolution);
+      view.setCenter(coord);
+      view.setResolution(resolution);
       this.createFeature(obj);
     },
     createFeature: function(obj){
