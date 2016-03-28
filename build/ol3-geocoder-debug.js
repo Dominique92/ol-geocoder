@@ -1,7 +1,7 @@
 // Geocoder Nominatim for OpenLayers 3.
 // https://github.com/jonataswalker/ol3-geocoder
-// Version: v1.5.2
-// Built: 2016-03-15T08:13:30-0300
+// Version: v1.6.0
+// Built: 2016-03-28T09:56:51-0300
 
 (function(window, document) {
   'use strict';
@@ -177,6 +177,7 @@
               key: options.key,
               query: query,
               lang: options.lang,
+              countrycodes: options.countrycodes,
               limit: options.limit
             });
 
@@ -489,13 +490,13 @@
               providers_names.GOOGLE
             ],
             langs_photon = ['de', 'it', 'fr', 'en'];
-
           switch (options.provider) {
             case providers_names.OSM:
             case providers_names.MAPQUEST:
               params = {
                 q: options.query,
                 limit: options.limit,
+                countrycodes: options.countrycodes,
                 'accept-language': options.lang
               };
               provider.params = utils.mergeOptions(provider.params, params);
@@ -554,6 +555,7 @@
             q: '',
             addressdetails: 1,
             limit: 10,
+            countrycodes: '',
             'accept-language': 'en-US'
           }
         },
@@ -565,6 +567,7 @@
             q: '',
             addressdetails: 1,
             limit: 10,
+            countrycodes: '',
             'accept-language': 'en-US'
           }
         },
