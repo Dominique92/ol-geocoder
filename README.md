@@ -41,11 +41,9 @@ map.addControl(geocoder);
 ##### Listen and do something when an address is chosen
 ```javascript
 geocoder.on('addresschosen', function(evt){
-  var
-    feature = evt.feature,
-    coord = evt.coordinate,
-    address_html = feature.get('address_html')
-  ;
+  var feature = evt.feature,
+      coord = evt.coordinate,
+      address_html = feature.get('address_html');
   content.innerHTML = '<p>'+address_html+'</p>';
   overlay.setPosition(coord);
 });
@@ -62,11 +60,12 @@ Maybe later we will have other types like `'reverse'`. So for now just pass `'no
 
 ###### `options` is an object with the following possible properties:
 * `provider`    : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`; Your preferable provider;
-* `key`         : ''; API Key if required;
-* `placeholder` : 'Search for an address'; Placeholder for text input;
+* `key`         : `''`; API Key if required;
+* `placeholder` : `'Search for an address'`; Placeholder for text input;
 * `featureStyle`: `ol.style.Style`; Feature style;
 * `lang`        : `'en-US'`; Preferable language;
 * `limit`       : `5`; Limit of results;
+* `countrycodes`: `''`; Only valid for `osm` and `mapquest`; Limit search results to a specific country (or a list of countries). This is an [ISO 3166-1alpha2 code] (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), e.g. `gb` for the United Kingdom, `br` for Brazil, etc;
 * `keepOpen`    : `false`; Whether the results keep openned;
 * `debug`       : `false`; If true logs provider's response;
 
@@ -84,5 +83,6 @@ Returns the source `{ol.source.Vector}` created by Geocoder control.
 ```javascript
 geocoder.on('addresschosen', function(evt){
   // it's up to you
+  console.info(evt);
 });
 ```
