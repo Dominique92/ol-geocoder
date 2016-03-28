@@ -127,6 +127,7 @@
           key: options.key,
           query: query,
           lang: options.lang,
+          countrycodes: options.countrycodes,
           limit: options.limit
         })
       ;
@@ -442,13 +443,13 @@
         ],
         langs_photon = ['de', 'it', 'fr', 'en']
       ;
-      
       switch(options.provider) {
         case providers_names.OSM:
         case providers_names.MAPQUEST:
           params = {
             q: options.query,
             limit: options.limit,
+            countrycodes: options.countrycodes,
             'accept-language': options.lang
           };
           provider.params = utils.mergeOptions(provider.params, params);
@@ -507,6 +508,7 @@
         q: '',
         addressdetails: 1,
         limit: 10,
+        countrycodes: '',
         'accept-language': 'en-US'
       }
     },
@@ -518,6 +520,7 @@
         q: '',
         addressdetails: 1,
         limit: 10,
+        countrycodes: '',
         'accept-language': 'en-US'
       }
     },
