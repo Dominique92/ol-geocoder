@@ -1,11 +1,11 @@
 /**
  * @constructor
  * @extends {ol.control.Control}
- * @fires {Geocoder.EventType}
+ * @fires {G.EventType}
  * @param {string} control_type Nominatim|Reverse.
  * @param {object|undefined} opt_options Options.
  */
-var Geocoder = function(control_type, opt_options){
+G.Base = function(control_type, opt_options){
   utils.assert(typeof control_type === 'string', '@param `control_type`' +
     ' should be string type!'
   );
@@ -15,25 +15,25 @@ var Geocoder = function(control_type, opt_options){
   
   control_type = control_type || 'nominatim';
   
-  var nominatim = new Geocoder.Nominatim(this, opt_options);
-  this.layer = nominatim.layer;
+  G.$base = this;
+  G.$nominatim = new G.Nominatim(opt_options);
   
   ol.control.Control.call(this, {
-    element: nominatim.els.container
+    element: G.$nominatim.container
   });
 };
-ol.inherits(Geocoder, ol.control.Control);
+ol.inherits(G.Base, ol.control.Control);
 
 /**
  * @return {ol.source.Vector} Returns the source created by this control
  */
-Geocoder.prototype.getSource = function(){
-  return this.layer.getSource();
+G.Base.prototype.getSource = function(){
+  return this.getLayer().getSource();
 };
 
 /**
  * @return {ol.layer.Vector} Returns the layer created by this control
  */
-Geocoder.prototype.getLayer = function(){
-  return this.layer;
+G.Base.prototype.getLayer = function(){
+  return G.$nominatim.layer;
 };

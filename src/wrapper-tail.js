@@ -1,4 +1,2 @@
-    return Geocoder;
-  })();
-  var utils = Geocoder.Utils;
-}).call(this, window, document);
+  return G.Base;
+}));
