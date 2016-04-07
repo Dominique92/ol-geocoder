@@ -20,13 +20,25 @@
 
           <h1 id="project_title">ol3-geocoder</h1>
           <h2 id="project_tagline">A geocoder extension for OpenLayers 3.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jonataswalker/ol3-geocoder/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jonataswalker/ol3-geocoder/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h2>
+        <h1>
+<a id="openlayers-3-control-geocoder" class="anchor" href="#openlayers-3-control-geocoder" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OpenLayers 3 Control Geocoder</h1>
+
+<p>A geocoder extension for <a href="http://openlayers.org/">OpenLayers 3</a>. <strong>Requires</strong> OpenLayers <strong>v3.11.0</strong> or higher.</p>
+
+<p><img src="https://raw.githubusercontent.com/jonataswalker/ol3-geocoder/screenshots/images/anim.gif" alt="geocoder anim"></p>
+
+<h2>
 <a id="demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h2>
 
 <p>You can see <a href="http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html">here a demo</a> or on <a href="http://jsfiddle.net/jonataswalker/c4qv9afb/">jsFiddle</a> if you prefer.</p>
@@ -42,7 +54,7 @@
 <li>
 <a href="http://open.mapquestapi.com/nominatim/">MapQuest Geocoding API</a> - requires KEY  — <code>'mapquest'</code>.</li>
 <li>
-<a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding API</a> - requires KEY  — <code>'google'</code>.</li>
+<a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding API</a> - requires KEY  — <code>'google'</code>. See <a href="https://github.com/jonataswalker/ol3-geocoder/issues/16">#16</a>.</li>
 <li>
 <a href="http://photon.komoot.de/">Photon</a>  — <code>'photon'</code>.</li>
 <li>
@@ -58,7 +70,7 @@
 
 <p>Load CSS and Javascript:</p>
 
-<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">link</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css<span class="pl-pds">"</span></span>  <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span>&gt;
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">link</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css<span class="pl-pds">"</span></span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span>&gt;
 &lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
 <h5>
@@ -83,11 +95,9 @@
 <a id="listen-and-do-something-when-an-address-is-chosen" class="anchor" href="#listen-and-do-something-when-an-address-is-chosen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Listen and do something when an address is chosen</h5>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">geocoder</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>addresschosen<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">evt</span>){
-  <span class="pl-k">var</span>
-    feature <span class="pl-k">=</span> <span class="pl-smi">evt</span>.<span class="pl-smi">feature</span>,
-    coord <span class="pl-k">=</span> <span class="pl-smi">evt</span>.<span class="pl-smi">coordinate</span>,
-    address_html <span class="pl-k">=</span> <span class="pl-smi">feature</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>address_html<span class="pl-pds">'</span></span>)
-  ;
+  <span class="pl-k">var</span> feature <span class="pl-k">=</span> <span class="pl-smi">evt</span>.<span class="pl-smi">feature</span>,
+      coord <span class="pl-k">=</span> <span class="pl-smi">evt</span>.<span class="pl-smi">coordinate</span>,
+      address_html <span class="pl-k">=</span> <span class="pl-smi">feature</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>address_html<span class="pl-pds">'</span></span>);
   <span class="pl-smi">content</span>.<span class="pl-smi">innerHTML</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;p&gt;<span class="pl-pds">'</span></span><span class="pl-k">+</span>address_html<span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">'</span>&lt;/p&gt;<span class="pl-pds">'</span></span>;
   <span class="pl-smi">overlay</span>.<span class="pl-en">setPosition</span>(coord);
 });</pre></div>
@@ -115,15 +125,17 @@
 <li>
 <code>provider</code>    : <code>'osm'</code> (default), <code>'mapquest'</code>, <code>'google'</code>, <code>'photon'</code>, <code>'pelias'</code>; Your preferable provider;</li>
 <li>
-<code>key</code>         : ''; API Key if required;</li>
+<code>key</code>         : <code>''</code>; API Key if required;</li>
 <li>
-<code>placeholder</code> : 'Search for an address'; Placeholder for text input;</li>
+<code>placeholder</code> : <code>'Search for an address'</code>; Placeholder for text input;</li>
 <li>
 <code>featureStyle</code>: <code>ol.style.Style</code>; Feature style;</li>
 <li>
 <code>lang</code>        : <code>'en-US'</code>; Preferable language;</li>
 <li>
 <code>limit</code>       : <code>5</code>; Limit of results;</li>
+<li>
+<code>countrycodes</code>: <code>''</code>; Only valid for <code>osm</code> and <code>mapquest</code>; Limit search results to a specific country (or a list of countries). This is an <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1alpha2 code</a>, e.g. <code>gb</code> for the United Kingdom, <code>br</code> for Brazil, etc;</li>
 <li>
 <code>keepOpen</code>    : <code>false</code>; Whether the results keep openned;</li>
 <li>
@@ -144,6 +156,17 @@
 </h4>
 
 <p>Returns the source <code>{ol.source.Vector}</code> created by Geocoder control.</p>
+
+<h2>
+<a id="events" class="anchor" href="#events" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Events</h2>
+
+<h5>
+<a id="triggered-when-an-address-is-chosen" class="anchor" href="#triggered-when-an-address-is-chosen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Triggered when an address is chosen</h5>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">geocoder</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>addresschosen<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">evt</span>){
+  <span class="pl-c">// it's up to you</span>
+  <span class="pl-en">console</span>.<span class="pl-c1">info</span>(evt);
+});</pre></div>
       </section>
     </div>
 
