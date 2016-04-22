@@ -1,19 +1,36 @@
 {
   "name": "ol3-geocoder",
-  "version": "1.7.0",
+  "version": "2.0.0",
   "description": "A geocoder extension for OpenLayers 3.",
-  "main": "ol3-geocoder.js",
   "author": "Jonatas Walker",
+  "homepage": "https://github.com/jonataswalker/ol3-geocoder",
   "license": "MIT",
+  "main": "build/ol3-geocoder.js",
+  "rollup": {
+    "entry": "src/js/base.js",
+    "dest": "build/ol3-geocoder-debug.js",
+    "moduleName": "Geocoder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jonataswalker/ol3-geocoder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jonataswalker/ol3-geocoder/issues"
+  },
   "devDependencies": {
-    "eslint": "latest",
-    "js-beautify": "latest",
-    "uglify-js": "latest",
-    "clean-css": "latest",
-    "autoprefixer": "latest",
-    "postcss-cli": "latest",
-    "nodemon": "latest",
-    "parallelshell": "latest"
+    "autoprefixer": "^6.3.6",
+    "clean-css": "^3.4.12",
+    "eslint": "^2.8.0",
+    "node-sass": "^3.4.2",
+    "node-sass-json-importer": "^1.0.6",
+    "nodemon": "^1.9.1",
+    "parallelshell": "^2.0.0",
+    "postcss-cli": "^2.5.1",
+    "rollup": "^0.25.8",
+    "rollup-plugin-buble": "^0.5.0",
+    "rollup-plugin-json": "^2.0.0",
+    "uglify-js": "^2.6.2"
   },
   "eslintConfig": {
     "env": {
@@ -43,11 +60,16 @@
       "no-undef": 2,
       "no-use-before-define": 2,
       "no-unused-vars": 1,
-      "no-unreachable": 2,
-      "strict": [1, "global"],
-      "key-spacing": 1,
+      "strict": [
+        1,
+        "global"
+      ],
+      "key-spacing": 0,
       "new-cap": 1,
-      "quotes": [2, "single"]
+      "quotes": [
+        1,
+        "single"
+      ]
     }
   }
 }

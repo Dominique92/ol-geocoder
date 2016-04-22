@@ -1,0 +1,14 @@
+{
+  "namespace": "ol3-geocoder",
+  "container_class": "-container",
+  "control_class": "-search",
+  "btn_search_class": "-btn-search",
+  "loading_class": "-loading",
+  "input_search_class": "-input-search",
+  "result_class": "-result",
+  "expanded_class": "-search-expanded",
+  "country_class": "-country",
+  "city_class": "-city",
+  "road_class": "-road",
+  "OL3_control_class": "ol-control"
+}
