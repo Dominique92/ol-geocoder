@@ -2,97 +2,134 @@ ROOT_DIR	:= $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 NOW		:= $(shell date --iso=seconds)
 SRC_DIR 	:= $(ROOT_DIR)/src
 BUILD_DIR 	:= $(ROOT_DIR)/build
-JS_DEBUG 	:= $(BUILD_DIR)/ol3-geocoder-debug.js
-JS_FINAL 	:= $(BUILD_DIR)/ol3-geocoder.js
+
+define GetFromPkg
+$(shell node -p "require('./package.json').$(1)")
+endef
+
+LAST_VERSION	:= $(call GetFromPkg,version)
+DESCRIPTION	:= $(call GetFromPkg,description)
+PROJECT_URL	:= $(call GetFromPkg,homepage)
+
+JS_DEBUG	:= $(ROOT_DIR)/$(call GetFromPkg,rollup.dest)
+JS_FINAL	:= $(ROOT_DIR)/$(call GetFromPkg,main)
+
+
 CSS_COMBINED 	:= $(BUILD_DIR)/ol3-geocoder.css
 CSS_FINAL 	:= $(BUILD_DIR)/ol3-geocoder.min.css
 TMPFILE 	:= $(BUILD_DIR)/tmp
-PACKAGE_JSON 	:= $(ROOT_DIR)/package.json
-LAST_VERSION	:= $(shell node -p "require('./package.json').version")
 
-JS_FILES 	:= $(SRC_DIR)/wrapper-head.js \
-		   $(SRC_DIR)/utils.js \
-		   $(SRC_DIR)/base.js \
-		   $(SRC_DIR)/nominatim.js \
-		   $(SRC_DIR)/wrapper-tail.js
+JS_SRC 		:= $(SRC_DIR)/js
+SASS_SRC 	:= $(SRC_DIR)/sass
+SASS_VENDOR_SRC	:= $(SASS_SRC)/vendor
 
-CSS_FILES 	:= $(SRC_DIR)/ol3-geocoder.css
+SASS_MAIN_FILE 	:= $(SASS_SRC)/main.scss
 
 NODE_MODULES	:= ./node_modules/.bin
+
 CLEANCSS 	:= $(NODE_MODULES)/cleancss
 CLEANCSSFLAGS 	:= --skip-restructuring
+
 POSTCSS 	:= $(NODE_MODULES)/postcss
-POSTCSSFLAGS 	:= --use autoprefixer -b "last 2 versions"
+POSTCSSFLAGS 	:= --use autoprefixer -b "last 3 versions, ie >= 9" --replace
+
 ESLINT 		:= $(NODE_MODULES)/eslint
 UGLIFYJS 	:= $(NODE_MODULES)/uglifyjs
 UGLIFYJSFLAGS 	:= --mangle --mangle-regex --screw-ie8 -c warnings=false
-JS_BEAUTIFY	:= $(NODE_MODULES)/js-beautify
-BEAUTIFYFLAGS 	:= -f - --indent-size 2 --preserve-newlines
+
 NODEMON 	:= $(NODE_MODULES)/nodemon
 PARALLELSHELL 	:= $(NODE_MODULES)/parallelshell
+SASS	 	:= $(NODE_MODULES)/node-sass
+SASSFLAGS	:= --importer node_modules/node-sass-json-importer/dist/node-sass-json-importer.js
 
-# just to create variables like NODEMON_JS_FLAGS when called
-define NodemonFlags
-	UP_LANG = $(shell echo $(1) | tr '[:lower:]' '[:upper:]')
-	NODEMON_$$(UP_LANG)_FLAGS := --on-change-only --watch "$(SRC_DIR)" --ext "$(1)" --exec "make build-$(1)"
-endef
+ROLLUP	 	:= $(NODE_MODULES)/rollup
+ROLLUPFLAGS 	:= -c config/rollup.config.js
 
 define HEADER
-// Geocoder Nominatim for OpenLayers 3.
-// https://github.com/jonataswalker/ol3-geocoder
-// Version: v$(LAST_VERSION)
-// Built: $(NOW)
+/**
+ * $(DESCRIPTION)
+ * $(PROJECT_URL)
+ * Version: v$(LAST_VERSION)
+ * Built: $(NOW)
+ */
 
 endef
 export HEADER
 
 # targets
-
 .PHONY: ci
 ci: build
 
+.PHONY: build-watch
 build-watch: build watch
 
+.PHONY: watch
 watch:
-	$(PARALLELSHELL) "make watch-js" "make watch-css"
+	$(PARALLELSHELL) "make watch-js" "make watch-sass"
 
+.PHONY: build
 build: build-js build-css
 
-build-js: combine-js lint uglifyjs addheader
-	@echo `date +'%H:%M:%S'` " - build JS ... OK"
+.PHONY: build-js
+build-js: bundle-js lint uglifyjs add-js-header
+	@echo `date +'%H:%M:%S'` "Build JS ... OK"
 
-build-css: combine-css cleancss
-	@echo `date +'%H:%M:%S'` " - build CSS ... OK"
+.PHONY: build-css
+build-css: compile-sass prefix-css cleancss add-css-header
+	@echo `date +'%H:%M:%S'` "Build CSS ... OK"
 
-uglifyjs: $(JS_DEBUG)
-	@$(UGLIFYJS) $^ $(UGLIFYJSFLAGS) > $(JS_FINAL)
+.PHONY: compile-sass
+compile-sass: $(SASS_MAIN_FILE)
+	@$(SASS) $(SASSFLAGS) $^ $(CSS_COMBINED)
 
-lint: $(JS_DEBUG)
-	@$(ESLINT) $^
+.PHONY: prefix-css
+prefix-css: $(CSS_COMBINED)
+	@$(POSTCSS) $(POSTCSSFLAGS) $^
 
-addheader-debug: $(JS_DEBUG)
-	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
-
-addheader-min: $(JS_FINAL)
-	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
-
-addheader: addheader-debug addheader-min
-
+.PHONY: build
 cleancss: $(CSS_COMBINED)
 	@cat $^ | $(CLEANCSS) $(CLEANCSSFLAGS) > $(CSS_FINAL)
 
-combine-js: $(JS_FILES)
-	@cat $^ | $(JS_BEAUTIFY) $(BEAUTIFYFLAGS) > $(JS_DEBUG)
+.PHONY: bundle-js
+bundle-js:
+	@$(ROLLUP) $(ROLLUPFLAGS)
 
-combine-css: $(CSS_FILES)
-	@cat $^ | $(POSTCSS) $(POSTCSSFLAGS) > $(CSS_COMBINED)
+.PHONY: lint
+lint: $(JS_DEBUG)
+	@$(ESLINT) $^
 
-watch-js: $(JS_FILES)
-	$(eval $(call NodemonFlags,js))
-	@$(NODEMON) $(NODEMON_JS_FLAGS)
+.PHONY: uglifyjs
+uglifyjs: $(JS_DEBUG)
+	@$(UGLIFYJS) $^ $(UGLIFYJSFLAGS) > $(JS_FINAL)
 
-watch-css: $(CSS_FILES)
-	$(eval $(call NodemonFlags,css))
-	@$(NODEMON) $(NODEMON_CSS_FLAGS)
+.PHONY: add-js-header-debug
+add-js-header-debug: $(JS_DEBUG)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
+
+.PHONY: add-js-header-min
+add-js-header-min: $(JS_FINAL)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
+
+.PHONY: add-js-header
+add-js-header: add-js-header-debug add-js-header-min
+
+.PHONY: add-css-header-debug
+add-css-header-debug: $(CSS_COMBINED)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
+
+.PHONY: add-css-header-min
+add-css-header-min: $(CSS_FINAL)
+	@echo "$$HEADER" | cat - $^ > $(TMPFILE) && mv $(TMPFILE) $^
+
+.PHONY: add-css-header
+add-css-header: add-css-header-debug add-css-header-min
+
+.PHONY: watch-js
+watch-js: $(JS_SRC)
+	@$(NODEMON) --on-change-only --watch $^ --ext js --exec "make build-js"
+
+.PHONY: watch-sass
+watch-sass: $(SASS_SRC)
+	@$(NODEMON) --on-change-only --watch $^ --ext scss --ignore $(SASS_VENDOR_SRC) --exec "make build-css"
 	
 .DEFAULT_GOAL := build

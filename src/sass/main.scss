@@ -1,0 +1,34 @@
+// dependencies
+@import "partials/functions";
+@import "partials/mixins";
+
+// global project variables
+
+@import "../../sass-vars.json";
+
+$control-width: 31px;
+$control-height: 31px;
+$control-expand-width: 220px;
+$control-expand-height: 35px;
+$input-width: 180px;
+$input-left: 32px;
+$input-top: 2px;
+
+$result-width: 260px;
+$result-max-height: 300px;
+$result-left: $input-left;
+$result-top: sum-pixel($control-expand-height, $input-top);
+
+$btn-search-width: 25px;
+$btn-search-height: 25px;
+$btn-search-top: $input-top;
+$btn-search-left: 2px;
+
+
+$font-big: 16px;
+$font-medium: 14px;
+$font-small: 12px;
+
+
+// partials
+@import "partials/grids";
