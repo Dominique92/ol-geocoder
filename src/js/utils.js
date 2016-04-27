@@ -42,8 +42,36 @@ export default {
       when: obj => { when.ready = obj.ready; }
     };
   },
+  now() {
+    // Polyfill for window.performance.now()
+    // @license http://opensource.org/licenses/MIT
+    // copyright Paul Irish 2015
+    // https://gist.github.com/paulirish/5438650
+    if ('performance' in window == false) {
+      window.performance = {};
+    }
+    
+    Date.now = (Date.now || function () {  // thanks IE8
+      return new Date().getTime();
+    });
+    
+    if ('now' in window.performance == false) {
+      
+      let nowOffset = Date.now();
+      
+      if (performance.timing && performance.timing.navigationStart){
+        nowOffset = performance.timing.navigationStart
+      }
+      
+      window.performance.now = function now(){
+        return Date.now() - nowOffset;
+      }
+    }
+    
+    return window.performance.now();
+  },
   randomId(prefix) {
-    const id = window.performance.now().toString(36);
+    const id = this.now().toString(36);
     return prefix ? prefix + id : id;
   },
   to3857(coord) {
