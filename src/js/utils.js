@@ -74,18 +74,6 @@ export default {
     const id = this.now().toString(36);
     return prefix ? prefix + id : id;
   },
-  to3857(coord) {
-    return ol.proj.transform(
-      [parseFloat(coord[0]), parseFloat(coord[1])],
-      'EPSG:4326', 'EPSG:3857'
-    );
-  },
-  to4326(coord) {
-    return ol.proj.transform(
-      [parseFloat(coord[0]), parseFloat(coord[1])],
-      'EPSG:3857', 'EPSG:4326'
-    );
-  },
   isNumeric(str) {
     return /^\d+$/.test(str);
   },
@@ -189,6 +177,10 @@ export default {
       }
     }
   },
+  /**
+   * @param {String} id DOM node id.
+   * @return {Element} DOM node.
+   */
   $(id) {
     id = (id[0] === '#') ? id.substr(1, id.length) : id;
     return document.getElementById(id);
@@ -259,7 +251,7 @@ export default {
   * obj2's if non existent in obj1
   * @returns obj3 a new object based on obj1 and obj2
   */
-  mergeOptions: function(obj1, obj2){
+  mergeOptions(obj1, obj2) {
     let obj3 = {};
     for (let attr1 in obj1) { obj3[attr1] = obj1[attr1]; }
     for (let attr2 in obj2) { obj3[attr2] = obj2[attr2]; }
