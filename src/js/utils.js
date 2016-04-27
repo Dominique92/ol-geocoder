@@ -74,18 +74,6 @@ export default {
     const id = this.now().toString(36);
     return prefix ? prefix + id : id;
   },
-  to3857(coord) {
-    return ol.proj.transform(
-      [parseFloat(coord[0]), parseFloat(coord[1])],
-      'EPSG:4326', 'EPSG:3857'
-    );
-  },
-  to4326(coord) {
-    return ol.proj.transform(
-      [parseFloat(coord[0]), parseFloat(coord[1])],
-      'EPSG:3857', 'EPSG:4326'
-    );
-  },
   isNumeric(str) {
     return /^\d+$/.test(str);
   },
