@@ -1,8 +1,8 @@
 /**
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Version: v2.0.0
- * Built: 2016-04-22T16:55:20-0300
+ * Version: v2.0.1
+ * Built: 2016-04-30T13:42:19-0300
  */
 
 (function (global, factory) {
@@ -126,21 +126,37 @@
 	      when: function ( obj ) { when.ready = obj.ready; }
 	    };
 	  },
+	  now: function now() {
+	    // Polyfill for window.performance.now()
+	    // @license http://opensource.org/licenses/MIT
+	    // copyright Paul Irish 2015
+	    // https://gist.github.com/paulirish/5438650
+	    if ('performance' in window == false) {
+	      window.performance = {};
+	    }
+	    
+	    Date.now = (Date.now || function () {  // thanks IE8
+	      return new Date().getTime();
+	    });
+	    
+	    if ('now' in window.performance == false) {
+	      
+	      var nowOffset = Date.now();
+	      
+	      if (performance.timing && performance.timing.navigationStart){
+	        nowOffset = performance.timing.navigationStart
+	      }
+	      
+	      window.performance.now = function now(){
+	        return Date.now() - nowOffset;
+	      }
+	    }
+	    
+	    return window.performance.now();
+	  },
 	  randomId: function randomId(prefix) {
-	    var id = window.performance.now().toString(36);
+	    var id = this.now().toString(36);
 	    return prefix ? prefix + id : id;
-	  },
-	  to3857: function to3857(coord) {
-	    return ol.proj.transform(
-	      [parseFloat(coord[0]), parseFloat(coord[1])],
-	      'EPSG:4326', 'EPSG:3857'
-	    );
-	  },
-	  to4326: function to4326(coord) {
-	    return ol.proj.transform(
-	      [parseFloat(coord[0]), parseFloat(coord[1])],
-	      'EPSG:3857', 'EPSG:4326'
-	    );
 	  },
 	  isNumeric: function isNumeric(str) {
 	    return /^\d+$/.test(str);
