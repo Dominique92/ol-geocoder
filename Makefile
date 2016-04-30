@@ -45,6 +45,9 @@ SASSFLAGS	:= --importer node_modules/node-sass-json-importer/dist/node-sass-json
 ROLLUP	 	:= $(NODE_MODULES)/rollup
 ROLLUPFLAGS 	:= -c config/rollup.config.js
 
+CONSTRUCTOR_END	:= //__end_of_constructor__
+OL_INHERIT	:= ol.inherits(Base, ol.control.Control);
+
 define HEADER
 /**
  * $(DESCRIPTION)
@@ -71,7 +74,7 @@ watch:
 build: build-js build-css
 
 .PHONY: build-js
-build-js: bundle-js lint uglifyjs add-js-header
+build-js: bundle-js ol-inherit lint uglifyjs add-js-header
 	@echo `date +'%H:%M:%S'` "Build JS ... OK"
 
 .PHONY: build-css
@@ -93,6 +96,10 @@ cleancss: $(CSS_COMBINED)
 .PHONY: bundle-js
 bundle-js:
 	@$(ROLLUP) $(ROLLUPFLAGS)
+
+.PHONY: ol-inherit
+ol-inherit: $(JS_DEBUG)
+	@perl -pi -e 's@$(CONSTRUCTOR_END)@\n\n$(OL_INHERIT)@g' $^
 
 .PHONY: lint
 lint: $(JS_DEBUG)

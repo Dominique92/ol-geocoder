@@ -28,7 +28,7 @@ export default class Base {
     ol.control.Control.call(this, {
       element: Base.Nominatim.container
     });
-  }
+  } //__end_of_constructor__
 
   /**
    * @return {ol.layer.Vector} Returns the layer created by this control
@@ -44,4 +44,4 @@ export default class Base {
     return this.getLayer().getSource();
   }
 }
-ol.inherits(Base, ol.control.Control);
+
