@@ -1,8 +1,8 @@
 /**
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Version: v2.0.0
- * Built: 2016-04-30T13:32:44-0300
+ * Version: v2.0.1
+ * Built: 2016-04-30T13:57:19-0300
  */
 
 (function (global, factory) {
