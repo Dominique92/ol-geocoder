@@ -49,6 +49,8 @@ export class Nominatim {
       'div', { classname: vars.namespace + vars.container_class }
     ], Nominatim.html);
     
+    console.info(container);
+    
     const elements = {
       container: container,
       control: 
@@ -75,6 +77,7 @@ export class Nominatim {
       },
       query = evt => {
         if (evt.keyCode == 13) { //enter key
+          evt.preventDefault();
           const q = utils.htmlEscape(this.els.input_search.value);
           this.query(q);
         }
@@ -328,10 +331,14 @@ export class Nominatim {
 }
 
 Nominatim.html = [
-  `<div class="${vars.namespace + vars.control_class} ${vars.OL3_control_class}">`,
-  `<button type="button" class="${vars.namespace + vars.btn_search_class}"></button>`,
-  '<input type="text" ',
-  `class="${vars.namespace + vars.input_search_class}" placeholder="Search">`,
+  '<div class="',
+      vars.namespace + vars.control_class, ' ', vars.OL3_control_class, '">',
+    '<button type="button" class="',
+      vars.namespace + vars.btn_search_class, '"></button>',
+    '<form>',
+      '<input type="text" class="',
+        vars.namespace + vars.input_search_class, '" placeholder="Search">',
+    '</form>',
   '</div>',
-  `<ul class="${vars.namespace + vars.result_class}"></ul>`
+  '<ul class="', vars.namespace + vars.result_class, '"></ul>'
 ].join('');
