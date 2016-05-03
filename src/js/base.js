@@ -7,7 +7,7 @@ import * as vars from '../../sass-vars.json';
  * @class Base
  * @extends {ol.control.Control}
  */
-export default class Base {
+export default class Base extends ol.control.Control {
   /**
    * @constructor
    * @param {string} control_type Nominatim|Reverse.
@@ -25,10 +25,10 @@ export default class Base {
     
     Base.Nominatim = new Nominatim(this);
     
-    ol.control.Control.call(this, {
+    super({
       element: Base.Nominatim.container
     });
-  } //__end_of_constructor__
+  }
 
   /**
    * @return {ol.layer.Vector} Returns the layer created by this control

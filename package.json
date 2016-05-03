@@ -21,14 +21,14 @@
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "clean-css": "^3.4.12",
-    "eslint": "^2.8.0",
+    "eslint": "^2.9.0",
     "node-sass": "^3.4.2",
     "node-sass-json-importer": "^1.0.6",
     "nodemon": "^1.9.1",
     "parallelshell": "^2.0.0",
     "postcss-cli": "^2.5.1",
-    "rollup": "^0.25.8",
-    "rollup-plugin-buble": "^0.5.0",
+    "rollup": "^0.26.1",
+    "rollup-plugin-buble": "^0.6.0",
     "rollup-plugin-json": "^2.0.0",
     "uglify-js": "^2.6.2"
   },
