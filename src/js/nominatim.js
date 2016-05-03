@@ -49,8 +49,6 @@ export class Nominatim {
       'div', { classname: vars.namespace + vars.container_class }
     ], Nominatim.html);
     
-    console.info(container);
-    
     const elements = {
       container: container,
       control: 
