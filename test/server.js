@@ -12,7 +12,7 @@ var contentTypes = {
   jpeg  : 'image/jpeg'
 };
 
-var ip_server = '127.0.0.1:8585';
+var ip_server = '127.0.0.1:8888';
 var listening = server.listen(ip_server, function(req, res) {
   var file_path = fs.workingDirectory + req.url;
   var ext = req.url.substring(req.url.indexOf('.') + 1);
@@ -37,12 +37,11 @@ if (!listening) {
   phantom.exit();
 }
 
-page.open('http://' + ip_server + '/nominatim.html', function (status) {
+page.open('http://' + ip_server + '/test/nominatim.html', function (status) {
   if (status !== 'success') {
     console.log('Unable to access network');
     phantom.exit();
   } else {
     console.log('Up and running!');
-    phantom.exit();
   }
 });

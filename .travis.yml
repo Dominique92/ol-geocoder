@@ -1,5 +1,3 @@
-sudo: false
-
 language: node_js
 
 node_js:
@@ -9,10 +7,9 @@ before_install:
   - mkdir travis-phantomjs
   - wget https://github.com/BIGjuevos/phantomjs-builds/archive/v2.1.1.tar.gz -O $PWD/travis-phantomjs/v2.1.1.tar.gz
   - tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs
-  - export PATH=$PATH:$PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/
-  - cd test/
+  - which phantomjs
+  - sudo ln -sf $PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/phantomjs /usr/local/bin/phantomjs
   - "phantomjs --version"
-  - "phantomjs server.js"
   - xvfb-run -a phantomjs server.js
 
 before_script:
