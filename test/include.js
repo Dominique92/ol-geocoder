@@ -21,14 +21,15 @@ var contentTypes = {
   jpeg  : 'image/jpeg'
 };
 
-server.listen(config.port, function(req, res) {
+var ip_server = '127.0.0.1:' + config.port;
+server.listen(ip_server, function(req, res) {
   var file_path = fs.workingDirectory + req.url;
   var ext = req.url.substring(req.url.indexOf('.') + 1);
   var file = '';
   
   res.statusCode = 200;
   res.headers = {
-    'Cache': 'no-cache', 
+    'Cache': 'no-cache',
     'Content-Type': contentTypes[ext] || 'text/html'
   };
   if (fs.isReadable(file_path)) {
