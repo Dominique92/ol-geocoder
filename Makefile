@@ -1,7 +1,10 @@
+SHELL		:= /bin/bash
 ROOT_DIR	:= $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 NOW		:= $(shell date --iso=seconds)
 SRC_DIR 	:= $(ROOT_DIR)/src
 BUILD_DIR 	:= $(ROOT_DIR)/build
+TEST_DIR 	:= $(ROOT_DIR)/test/spec/
+TEST_INC_FILE 	:= $(ROOT_DIR)/test/include.js
 
 define GetFromPkg
 $(shell node -p "require('./package.json').$(1)")
@@ -25,6 +28,7 @@ SASS_VENDOR_SRC	:= $(SASS_SRC)/vendor
 
 SASS_MAIN_FILE 	:= $(SASS_SRC)/main.scss
 
+
 NODE_MODULES	:= ./node_modules/.bin
 
 CLEANCSS 	:= $(NODE_MODULES)/cleancss
@@ -45,6 +49,9 @@ SASSFLAGS	:= --importer node_modules/node-sass-json-importer/dist/node-sass-json
 ROLLUP	 	:= $(NODE_MODULES)/rollup
 ROLLUPFLAGS 	:= -c config/rollup.config.js
 
+CASPERJS 	:= $(NODE_MODULES)/casperjs
+CASPERJSFLAGS 	:= test $(TEST_DIR) --includes=$(TEST_INC_FILE) --ssl-protocol=any --ignore-ssl-errors=true
+
 define HEADER
 /**
  * $(DESCRIPTION)
@@ -58,7 +65,7 @@ export HEADER
 
 # targets
 .PHONY: ci
-ci: build
+ci: build test
 
 .PHONY: build-watch
 build-watch: build watch
@@ -66,6 +73,10 @@ build-watch: build watch
 .PHONY: watch
 watch:
 	$(PARALLELSHELL) "make watch-js" "make watch-sass"
+
+.PHONY: test
+test:
+	@$(CASPERJS) $(CASPERJSFLAGS)
 
 .PHONY: build
 build: build-js build-css

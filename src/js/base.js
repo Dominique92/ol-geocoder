@@ -1,13 +1,13 @@
 import { Nominatim } from './nominatim';
 import utils from './utils';
 import * as constants from './constants';
-import * as vars from '../../sass-vars.json';
+import * as vars from '../../config/vars.json';
 
 /**
  * @class Base
  * @extends {ol.control.Control}
  */
-export default class Base {
+export default class Base extends ol.control.Control {
   /**
    * @constructor
    * @param {string} control_type Nominatim|Reverse.
@@ -25,7 +25,7 @@ export default class Base {
     
     Base.Nominatim = new Nominatim(this);
     
-    ol.control.Control.call(this, {
+    super({
       element: Base.Nominatim.container
     });
   }
@@ -44,4 +44,3 @@ export default class Base {
     return this.getLayer().getSource();
   }
 }
-ol.inherits(Base, ol.control.Control);

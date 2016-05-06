@@ -1,6 +1,6 @@
 {
   "name": "ol3-geocoder",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A geocoder extension for OpenLayers 3.",
   "author": "Jonatas Walker",
   "homepage": "https://github.com/jonataswalker/ol3-geocoder",
@@ -18,17 +18,22 @@
   "bugs": {
     "url": "https://github.com/jonataswalker/ol3-geocoder/issues"
   },
+  "dependencies": {
+    "openlayers": "^3.14.0"
+  },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
+    "casperjs": "^1.1.1",
     "clean-css": "^3.4.12",
-    "eslint": "^2.8.0",
+    "eslint": "^2.9.0",
+    "express": "^4.13.4",
     "node-sass": "^3.4.2",
     "node-sass-json-importer": "^1.0.6",
     "nodemon": "^1.9.1",
     "parallelshell": "^2.0.0",
     "postcss-cli": "^2.5.1",
-    "rollup": "^0.25.8",
-    "rollup-plugin-buble": "^0.5.0",
+    "rollup": "^0.26.1",
+    "rollup-plugin-buble": "^0.6.0",
     "rollup-plugin-json": "^2.0.0",
     "uglify-js": "^2.6.2"
   },

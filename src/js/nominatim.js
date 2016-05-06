@@ -1,4 +1,4 @@
-import * as vars from '../../sass-vars.json';
+import * as vars from '../../config/vars.json';
 import * as constants from './constants';
 import utils from './utils';
 import { Photon } from './providers/photon';
@@ -75,6 +75,7 @@ export class Nominatim {
       },
       query = evt => {
         if (evt.keyCode == 13) { //enter key
+          evt.preventDefault();
           const q = utils.htmlEscape(this.els.input_search.value);
           this.query(q);
         }
@@ -328,10 +329,24 @@ export class Nominatim {
 }
 
 Nominatim.html = [
-  `<div class="${vars.namespace + vars.control_class} ${vars.OL3_control_class}">`,
-  `<button type="button" class="${vars.namespace + vars.btn_search_class}"></button>`,
-  '<input type="text" ',
-  `class="${vars.namespace + vars.input_search_class}" placeholder="Search">`,
+  '<div class="',
+      vars.namespace + vars.control_class,
+      ' ',
+      vars.OL3_control_class,
+      '">',
+    '<button',
+      ' type="button"',
+      ' class="' + vars.namespace + vars.btn_search_class +'">',
+    '</button>',
+    '<form id="'+ vars.form_id +'" action="javascript:void(0);">',
+      '<input',
+        ' type="text"',
+        ' id="'+ vars.input_query_id +'"',
+        ' class="'+ vars.namespace + vars.input_search_class + '"',
+        ' placeholder="Search ...">',
+    '</form>',
   '</div>',
-  `<ul class="${vars.namespace + vars.result_class}"></ul>`
+  '<ul class="',
+    vars.namespace + vars.result_class,
+  '"></ul>'
 ].join('');

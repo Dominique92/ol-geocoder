@@ -1,8 +1,8 @@
 /**
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Version: v2.0.0
- * Built: 2016-04-22T16:55:20-0300
+ * Version: v2.0.1
+ * Built: 2016-05-05T16:48:36-0300
  */
 
 (function (global, factory) {
@@ -16,13 +16,15 @@
 	var control_class = "-search";
 	var btn_search_class = "-btn-search";
 	var loading_class = "-loading";
-	var input_search_class = "-input-search";
 	var result_class = "-result";
 	var expanded_class = "-search-expanded";
 	var country_class = "-country";
 	var city_class = "-city";
 	var road_class = "-road";
 	var OL3_control_class = "ol-control";
+	var form_id = "form-geocoder";
+	var input_search_class = "-input-search";
+	var input_query_id = "gcd-input";
 
 	var eventType = {
 	  ADDRESSCHOSEN: 'addresschosen'
@@ -126,21 +128,37 @@
 	      when: function ( obj ) { when.ready = obj.ready; }
 	    };
 	  },
+	  now: function now() {
+	    // Polyfill for window.performance.now()
+	    // @license http://opensource.org/licenses/MIT
+	    // copyright Paul Irish 2015
+	    // https://gist.github.com/paulirish/5438650
+	    if ('performance' in window == false) {
+	      window.performance = {};
+	    }
+	    
+	    Date.now = (Date.now || function () {  // thanks IE8
+	      return new Date().getTime();
+	    });
+	    
+	    if ('now' in window.performance == false) {
+	      
+	      var nowOffset = Date.now();
+	      
+	      if (performance.timing && performance.timing.navigationStart){
+	        nowOffset = performance.timing.navigationStart
+	      }
+	      
+	      window.performance.now = function now(){
+	        return Date.now() - nowOffset;
+	      }
+	    }
+	    
+	    return window.performance.now();
+	  },
 	  randomId: function randomId(prefix) {
-	    var id = window.performance.now().toString(36);
+	    var id = this.now().toString(36);
 	    return prefix ? prefix + id : id;
-	  },
-	  to3857: function to3857(coord) {
-	    return ol.proj.transform(
-	      [parseFloat(coord[0]), parseFloat(coord[1])],
-	      'EPSG:4326', 'EPSG:3857'
-	    );
-	  },
-	  to4326: function to4326(coord) {
-	    return ol.proj.transform(
-	      [parseFloat(coord[0]), parseFloat(coord[1])],
-	      'EPSG:3857', 'EPSG:4326'
-	    );
 	  },
 	  isNumeric: function isNumeric(str) {
 	    return /^\d+$/.test(str);
@@ -743,6 +761,7 @@
 	    },
 	    query = function ( evt ) {
 	      if (evt.keyCode == 13) { //enter key
+	        evt.preventDefault();
 	        var q = utils.htmlEscape(this$1.els.input_search.value);
 	        this$1.query(q);
 	      }
@@ -1003,53 +1022,72 @@
 	};
 
 	Nominatim.html = [
-	  ("<div class=\"" + (namespace + control_class) + " " + (OL3_control_class) + "\">"),
-	  ("<button type=\"button\" class=\"" + (namespace + btn_search_class) + "\"></button>"),
-	  '<input type="text" ',
-	  ("class=\"" + (namespace + input_search_class) + "\" placeholder=\"Search\">"),
+	  '<div class="',
+	      namespace + control_class,
+	      ' ',
+	      OL3_control_class,
+	      '">',
+	    '<button',
+	      ' type="button"',
+	      ' class="' + namespace + btn_search_class +'">',
+	    '</button>',
+	    '<form id="'+ form_id +'" action="javascript:void(0);">',
+	      '<input',
+	        ' type="text"',
+	        ' id="'+ input_query_id +'"',
+	        ' class="'+ namespace + input_search_class + '"',
+	        ' placeholder="Search ...">',
+	    '</form>',
 	  '</div>',
-	  ("<ul class=\"" + (namespace + result_class) + "\"></ul>")
+	  '<ul class="',
+	    namespace + result_class,
+	  '"></ul>'
 	].join('');
 
 	/**
 	 * @class Base
 	 * @extends {ol.control.Control}
 	 */
-	var Base = function Base(control_type, opt_options) {
-	  if ( control_type === void 0 ) control_type = 'nominatim';
+	var Base = (function (superclass) {
+	  function Base(control_type, opt_options) {
+	    if ( control_type === void 0 ) control_type = 'nominatim';
 	    if ( opt_options === void 0 ) opt_options = {};
 
 	    utils.assert(typeof control_type == 'string',
-	    '@param `control_type` should be string type!'
-	  );
-	  utils.assert(typeof opt_options == 'object',
-	    '@param `opt_options` should be object type!'
-	  );
+	      '@param `control_type` should be string type!'
+	    );
+	    utils.assert(typeof opt_options == 'object',
+	      '@param `opt_options` should be object type!'
+	    );
 	    
-	  this.options = utils.mergeOptions(defaultOptions, opt_options);
+	    this.options = utils.mergeOptions(defaultOptions, opt_options);
 	    
-	  Base.Nominatim = new Nominatim(this);
+	    Base.Nominatim = new Nominatim(this);
 	    
-	  ol.control.Control.call(this, {
-	    element: Base.Nominatim.container
-	  });
-	};
+	    superclass.call(this, {
+	      element: Base.Nominatim.container
+	    });
+	  }
 
-	/**
-	 * @return {ol.layer.Vector} Returns the layer created by this control
-	 */
-	Base.prototype.getLayer = function getLayer() {
-	  return Base.Nominatim.layer;
-	};
+	  Base.prototype = Object.create( superclass && superclass.prototype );
+	  Base.prototype.constructor = Base;
 
-	/**
-	 * @return {ol.source.Vector} Returns the source created by this control
-	 */
-	Base.prototype.getSource = function getSource() {
-	  return this.getLayer().getSource();
-	};
+	  /**
+	   * @return {ol.layer.Vector} Returns the layer created by this control
+	   */
+	  Base.prototype.getLayer = function getLayer() {
+	    return Base.Nominatim.layer;
+	  };
 
-	ol.inherits(Base, ol.control.Control);
+	  /**
+	   * @return {ol.source.Vector} Returns the source created by this control
+	   */
+	  Base.prototype.getSource = function getSource() {
+	    return this.getLayer().getSource();
+	  };
+
+	  return Base;
+	}(ol.control.Control));
 
 	return Base;
 
