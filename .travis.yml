@@ -10,10 +10,11 @@ before_install:
   - wget https://github.com/BIGjuevos/phantomjs-builds/archive/v2.1.1.tar.gz -O $PWD/travis-phantomjs/v2.1.1.tar.gz
   - tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs
   - export PATH=$PATH:$PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/
-
-before_script:
   - "phantomjs --version"
   - "phantomjs test/server.js"
+  - xvfb-run -a phantomjs test/server.js
+
+before_script:
   
 script:
   - xvfb-run -a make ci
