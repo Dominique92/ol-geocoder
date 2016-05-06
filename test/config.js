@@ -27,7 +27,6 @@ exports.geocoder_opts = {
 exports.query = 'New York';
 
 var port = 8888;
-
 exports.port = port;
 exports.url = 'http://127.0.0.1:' + port + '/test/nominatim.html';
 

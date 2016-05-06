@@ -1,8 +1,3 @@
-
-casper.test.on('exit', function() {
-  server.close();
-});
-
 casper.test.begin('Assert DOM Elements', 13, function(test) {
   casper.start(config.url, function() {
     this.viewport(1024, 768);
@@ -62,4 +57,3 @@ casper.test.begin('assert constructor properties', 6, function (test) {
 
   test.done();
 });
-
