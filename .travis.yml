@@ -13,6 +13,7 @@ before_install:
 
 before_script:
   - "phantomjs --version"
+  - "phantomjs test/server.js"
   
 script:
   - xvfb-run -a make ci
