@@ -10,7 +10,7 @@ before_install:
   - which phantomjs
   - sudo ln -sf $PWD/travis-phantomjs/phantomjs-builds-2.1.1/bin/phantomjs /usr/local/phantomjs/bin/phantomjs
   - "phantomjs --version"
-  - xvfb-run -a phantomjs test/server.js &
+  #- xvfb-run -a phantomjs test/server.js &
 
 before_script:
   
