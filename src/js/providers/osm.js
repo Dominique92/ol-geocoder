@@ -8,7 +8,7 @@ export class OpenStreet {
   constructor() {
     
     this.settings = {
-      url: 'http://nominatim.openstreetmap.org/search/',
+      url: '//nominatim.openstreetmap.org/search/',
       params: {
         q: '',
         format: 'json',

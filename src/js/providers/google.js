@@ -10,7 +10,7 @@ export class Google {
   constructor() {
     
     this.settings = {
-      url: 'https://maps.googleapis.com/maps/api/geocode/json',
+      url: '//maps.googleapis.com/maps/api/geocode/json',
       params: {
         address: '',
         key: '',

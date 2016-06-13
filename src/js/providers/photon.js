@@ -8,7 +8,7 @@ export class Photon {
   constructor() {
     
     this.settings = {
-      url: 'http://photon.komoot.de/api/',
+      url: '//photon.komoot.de/api/',
       params: {
         q: '',
         limit: 10,

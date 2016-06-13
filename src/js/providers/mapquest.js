@@ -8,7 +8,7 @@ export class MapQuest {
   constructor() {
     
     this.settings = {
-      url: 'http://open.mapquestapi.com/nominatim/v1/search.php',
+      url: '//open.mapquestapi.com/nominatim/v1/search.php',
       params: {
         q: '',
         key: '',
