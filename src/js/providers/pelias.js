@@ -8,7 +8,7 @@ export class Pelias {
   constructor() {
     
     this.settings = {
-      url: 'https://search.mapzen.com/v1/search',
+      url: '//search.mapzen.com/v1/search',
       params: {
         text: '',
         key: '',
