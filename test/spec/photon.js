@@ -1,7 +1,27 @@
 casper.test.begin('Assert Photon provider', 5, function(test) {
-  casper.start(config.url, function() {
-    this.viewport(1024, 768);
-  }).thenClick(elements.button);
+  casper.start(config.url).waitFor(function() {
+    return casper.evaluate(function() {
+      return window.domready === true;
+    });
+  });
+  
+  casper.thenEvaluate(function(options) {
+    var map = new ol.Map({
+      target: 'map',
+      layers: [],
+      view: new ol.View({
+        center: [0, 0],
+        zoom: 1
+      })
+    });
+    
+    options.provider = 'photon';
+    
+    var geocoder = new Geocoder('nominatim', options);
+    map.addControl(geocoder);
+  }, config.geocoder_opts);
+  
+  casper.thenClick(elements.button);
   
   casper.waitForSelector(elements.control_expanded, function() {
     test.assertExists(elements.control_expanded);
@@ -24,7 +44,7 @@ casper.test.begin('Assert Photon provider', 5, function(test) {
   });
   
   casper.waitForResource(function testResource(resource) {
-    return resource.url.indexOf(config.providers.photon) === 0;
+    return resource.url.indexOf(config.providers.photon) > -1;
   }, function onReceived() {
     test.assertVisible(elements.list);
     test.assertEval(function(els) {

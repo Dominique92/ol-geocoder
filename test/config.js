@@ -31,5 +31,6 @@ exports.port = port;
 exports.url = 'http://127.0.0.1:' + port + '/test/nominatim.html';
 
 exports.providers = {
-  photon: 'http://photon.komoot.de/api/'
+  photon: '//photon.komoot.de/api/',
+  osm: '//nominatim.openstreetmap.org/search/'
 };
