@@ -1,4 +1,5 @@
-casper.test.begin('Assert Photon provider', 5, function(test) {
+casper.test.begin('Assert OSM provider', 5, function(test) {
+  
   casper.start(config.url).waitFor(function() {
     return casper.evaluate(function() {
       return window.domready === true;
@@ -15,7 +16,7 @@ casper.test.begin('Assert Photon provider', 5, function(test) {
       })
     });
     
-    options.provider = 'photon';
+    options.provider = 'osm';
     
     var geocoder = new Geocoder('nominatim', options);
     map.addControl(geocoder);
@@ -44,7 +45,7 @@ casper.test.begin('Assert Photon provider', 5, function(test) {
   });
   
   casper.waitForResource(function testResource(resource) {
-    return resource.url.indexOf(config.providers.photon) > -1;
+    return resource.url.indexOf(config.providers.osm) > -1;
   }, function onReceived() {
     test.assertVisible(elements.list);
     test.assertEval(function(els) {

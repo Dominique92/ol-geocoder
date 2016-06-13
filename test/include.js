@@ -2,31 +2,24 @@ var require = patchRequire(require);
 
 // path here is relative to where this will be injected
 var config      = require('../config');
-var vars        = require('../../config/vars.json');
-var ol          = require('openlayers');
-var Geocoder    = require('../../build/ol3-geocoder');
 var server      = require('webserver').create();
 var fs          = require('fs');
 
-var elements = config.elements;
-var geocoder = new Geocoder('nominatim', config.geocoder_opts);
+// server
+server.listen('127.0.0.1:' + config.port, function(req, res) {
+  var file_path = fs.workingDirectory + req.url,
+      ext = req.url.substring(req.url.indexOf('.') + 1),
+      file = '',
+      contentTypes = {
+        png   : 'image/png',
+        gif   : 'image/gif',
+        jpg   : 'image/jpeg',
+        jpeg  : 'image/jpeg',
+        css   : 'text/css',
+        html  : 'text/html',
+        js    : 'application/javascript'
+      };
 
-var contentTypes = {
-  css   : 'text/css',
-  html  : 'text/html',
-  js    : 'application/javascript',
-  png   : 'image/png',
-  gif   : 'image/gif',
-  jpg   : 'image/jpeg',
-  jpeg  : 'image/jpeg'
-};
-
-var ip_server = '127.0.0.1:' + config.port;
-server.listen(ip_server, function(req, res) {
-  var file_path = fs.workingDirectory + req.url;
-  var ext = req.url.substring(req.url.indexOf('.') + 1);
-  var file = '';
-  
   res.statusCode = 200;
   res.headers = {
     'Cache': 'no-cache',
@@ -39,6 +32,14 @@ server.listen(ip_server, function(req, res) {
   }
   res.write(file);
   res.close();
+});
+
+casper.on('resource.received', function(resource) {
+//   this.echo(resource.url + " is OK", "INFO");
+});
+
+casper.on('remote.message', function(msg) {
+//   this.echo(msg + " is remote.message", "INFO");
 });
 
 // test suites completion listener

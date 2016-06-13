@@ -1,7 +1,38 @@
-casper.test.begin('Assert DOM Elements', 13, function(test) {
-  casper.start(config.url, function() {
-    this.viewport(1024, 768);
+var ol          = require('openlayers');
+var Geocoder    = require('../../build/ol3-geocoder');
+var vars        = require('../../config/vars.json');
 
+var elements = config.elements;
+
+casper.options.viewportSize = { width: 1024, height: 768 };
+casper.options.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X)';
+casper.options.pageSettings.loadImages = true;
+casper.options.pageSettings.loadPlugins = true;
+casper.options.pageSettings.webSecurityEnabled = false;
+casper.options.pageSettings.localToRemoteUrlAccessEnabled = true;
+
+casper.test.begin('Assert DOM Elements', 13, function(test) {
+  casper.start(config.url).waitFor(function() {
+    return casper.evaluate(function() {
+      return window.domready === true;
+    });
+  });
+  
+  casper.thenEvaluate(function(options) {
+    var map = new ol.Map({
+      target: 'map',
+      layers: [],
+      view: new ol.View({
+        center: [0, 0],
+        zoom: 1
+      })
+    });
+    
+    var geocoder = new Geocoder('nominatim', options);
+    map.addControl(geocoder);
+  }, config.geocoder_opts);
+  
+  casper.then(function() {
     test.assertExists(elements.container);
     test.assertExists(elements.control);
     test.assertExists(elements.button);
@@ -32,6 +63,7 @@ casper.test.begin('Assert DOM Elements', 13, function(test) {
 });
 
 casper.test.begin('assertInstanceOf() tests', 3, function (test) {
+  var geocoder = new Geocoder('nominatim', config.geocoder_opts);
   test.assertInstanceOf(geocoder, ol.control.Control, 
       'Ok, new Geocoder() is ol.control.Control');
   test.assertInstanceOf(geocoder.getLayer(), ol.layer.Vector, 
@@ -42,6 +74,7 @@ casper.test.begin('assertInstanceOf() tests', 3, function (test) {
 });
 
 casper.test.begin('assert constructor properties', 6, function (test) {
+  var geocoder = new Geocoder('nominatim', config.geocoder_opts);
   test.assertTruthy(geocoder.options.provider == config.geocoder_opts.provider, 
       'Ok, provider is the same');
   test.assertTruthy(geocoder.options.lang == config.geocoder_opts.lang, 
