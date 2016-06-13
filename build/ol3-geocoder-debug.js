@@ -1,8 +1,8 @@
 /**
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Version: v2.0.1
- * Built: 2016-04-30T13:57:19-0300
+ * Version: v2.0.2
+ * Built: 2016-06-13T15:57:04-0300
  */
 
 (function (global, factory) {
@@ -16,13 +16,15 @@
 	var control_class = "-search";
 	var btn_search_class = "-btn-search";
 	var loading_class = "-loading";
-	var input_search_class = "-input-search";
 	var result_class = "-result";
 	var expanded_class = "-search-expanded";
 	var country_class = "-country";
 	var city_class = "-city";
 	var road_class = "-road";
 	var OL3_control_class = "ol-control";
+	var form_id = "form-geocoder";
+	var input_search_class = "-input-search";
+	var input_query_id = "gcd-input";
 
 	var eventType = {
 	  ADDRESSCHOSEN: 'addresschosen'
@@ -400,7 +402,7 @@
 	var Photon = function Photon() {
 	    
 	  this.settings = {
-	    url: 'http://photon.komoot.de/api/',
+	    url: '//photon.komoot.de/api/',
 	    params: {
 	      q: '',
 	      limit: 10,
@@ -449,7 +451,7 @@
 	var OpenStreet = function OpenStreet() {
 	    
 	  this.settings = {
-	    url: 'http://nominatim.openstreetmap.org/search/',
+	    url: '//nominatim.openstreetmap.org/search/',
 	    params: {
 	      q: '',
 	      format: 'json',
@@ -500,7 +502,7 @@
 	var MapQuest = function MapQuest() {
 	    
 	  this.settings = {
-	    url: 'http://open.mapquestapi.com/nominatim/v1/search.php',
+	    url: '//open.mapquestapi.com/nominatim/v1/search.php',
 	    params: {
 	      q: '',
 	      key: '',
@@ -553,7 +555,7 @@
 	var Pelias = function Pelias() {
 	    
 	  this.settings = {
-	    url: 'https://search.mapzen.com/v1/search',
+	    url: '//search.mapzen.com/v1/search',
 	    params: {
 	      text: '',
 	      key: '',
@@ -599,7 +601,7 @@
 	var Google = function Google() {
 	    
 	  this.settings = {
-	    url: 'https://maps.googleapis.com/maps/api/geocode/json',
+	    url: '//maps.googleapis.com/maps/api/geocode/json',
 	    params: {
 	      address: '',
 	      key: '',
@@ -759,6 +761,7 @@
 	    },
 	    query = function ( evt ) {
 	      if (evt.keyCode == 13) { //enter key
+	        evt.preventDefault();
 	        var q = utils.htmlEscape(this$1.els.input_search.value);
 	        this$1.query(q);
 	      }
@@ -1019,53 +1022,72 @@
 	};
 
 	Nominatim.html = [
-	  ("<div class=\"" + (namespace + control_class) + " " + (OL3_control_class) + "\">"),
-	  ("<button type=\"button\" class=\"" + (namespace + btn_search_class) + "\"></button>"),
-	  '<input type="text" ',
-	  ("class=\"" + (namespace + input_search_class) + "\" placeholder=\"Search\">"),
+	  '<div class="',
+	      namespace + control_class,
+	      ' ',
+	      OL3_control_class,
+	      '">',
+	    '<button',
+	      ' type="button"',
+	      ' class="' + namespace + btn_search_class +'">',
+	    '</button>',
+	    '<form id="'+ form_id +'" action="javascript:void(0);">',
+	      '<input',
+	        ' type="text"',
+	        ' id="'+ input_query_id +'"',
+	        ' class="'+ namespace + input_search_class + '"',
+	        ' placeholder="Search ...">',
+	    '</form>',
 	  '</div>',
-	  ("<ul class=\"" + (namespace + result_class) + "\"></ul>")
+	  '<ul class="',
+	    namespace + result_class,
+	  '"></ul>'
 	].join('');
 
 	/**
 	 * @class Base
 	 * @extends {ol.control.Control}
 	 */
-	var Base = function Base(control_type, opt_options) {
-	  if ( control_type === void 0 ) control_type = 'nominatim';
+	var Base = (function (superclass) {
+	  function Base(control_type, opt_options) {
+	    if ( control_type === void 0 ) control_type = 'nominatim';
 	    if ( opt_options === void 0 ) opt_options = {};
 
 	    utils.assert(typeof control_type == 'string',
-	    '@param `control_type` should be string type!'
-	  );
-	  utils.assert(typeof opt_options == 'object',
-	    '@param `opt_options` should be object type!'
-	  );
+	      '@param `control_type` should be string type!'
+	    );
+	    utils.assert(typeof opt_options == 'object',
+	      '@param `opt_options` should be object type!'
+	    );
 	    
-	  this.options = utils.mergeOptions(defaultOptions, opt_options);
+	    this.options = utils.mergeOptions(defaultOptions, opt_options);
 	    
-	  Base.Nominatim = new Nominatim(this);
+	    Base.Nominatim = new Nominatim(this);
 	    
-	  ol.control.Control.call(this, {
-	    element: Base.Nominatim.container
-	  });
-	}; 
+	    superclass.call(this, {
+	      element: Base.Nominatim.container
+	    });
+	  }
 
-ol.inherits(Base, ol.control.Control);
+	  Base.prototype = Object.create( superclass && superclass.prototype );
+	  Base.prototype.constructor = Base;
 
-	/**
-	 * @return {ol.layer.Vector} Returns the layer created by this control
-	 */
-	Base.prototype.getLayer = function getLayer() {
-	  return Base.Nominatim.layer;
-	};
+	  /**
+	   * @return {ol.layer.Vector} Returns the layer created by this control
+	   */
+	  Base.prototype.getLayer = function getLayer() {
+	    return Base.Nominatim.layer;
+	  };
 
-	/**
-	 * @return {ol.source.Vector} Returns the source created by this control
-	 */
-	Base.prototype.getSource = function getSource() {
-	  return this.getLayer().getSource();
-	};
+	  /**
+	   * @return {ol.source.Vector} Returns the source created by this control
+	   */
+	  Base.prototype.getSource = function getSource() {
+	    return this.getLayer().getSource();
+	  };
+
+	  return Base;
+	}(ol.control.Control));
 
 	return Base;
 
