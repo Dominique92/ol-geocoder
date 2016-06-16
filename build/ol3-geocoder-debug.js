@@ -1,8 +1,8 @@
 /**
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Version: v2.0.2
- * Built: 2016-06-13T15:57:04-0300
+ * Version: v2.1.0
+ * Built: 2016-06-16T11:50:12-0300
  */
 
 (function (global, factory) {
@@ -79,6 +79,7 @@
 	  lang: 'en-US',
 	  limit: 5,
 	  keepOpen: false,
+	  preventDefault: false,
 	  debug: false
 	};
 
@@ -155,6 +156,24 @@
 	    }
 	    
 	    return window.performance.now();
+	  },
+	  flyTo: function flyTo(map, coord, duration, resolution) {
+	    resolution = resolution || 2.388657133911758;
+	    duration = duration || 500;
+
+	    var view = map.getView();
+	    var pan = ol.animation.pan({
+	      duration: duration,
+	      source: view.getCenter()
+	    });
+	    var zoom = ol.animation.zoom({
+	      duration: duration,
+	      resolution: view.getResolution()
+	    });
+	    
+	    map.beforeRender(pan, zoom);
+	    view.setCenter(coord);
+	    view.setResolution(resolution);
 	  },
 	  randomId: function randomId(prefix) {
 	    var id = this.now().toString(36);
@@ -347,7 +366,7 @@
 	  * obj2's if non existent in obj1
 	  * @returns obj3 a new object based on obj1 and obj2
 	  */
-	  mergeOptions: function(obj1, obj2){
+	  mergeOptions: function mergeOptions(obj1, obj2) {
 	    var obj3 = {};
 	    for (var attr1 in obj1) { obj3[attr1] = obj1[attr1]; }
 	    for (var attr2 in obj2) { obj3[attr2] = obj2[attr2]; }
@@ -854,56 +873,44 @@
 	};
 	  
 	Nominatim.prototype.chosen = function chosen(place, address_html, address_obj, address_original) {
+	  var map = this.Base.getMap();
+	  var coord = ol.proj.transform([parseFloat(place.lon), parseFloat(place.lat)], 
+	    'EPSG:4326', map.getView().getProjection());
+	  var address = {
+	    formatted: address_html,
+	    details: address_obj,
+	    original: address_original
+	  };
+	    
 	  if(this.options.keepOpen === false){
 	    this.clearResults(true);
 	  }
 	    
-	  var map = this.Base.getMap(),
-	      view = map.getView(),
-	      projection = view.getProjection(),
-	      coord = ol.proj.transform(
-	        [parseFloat(place.lon), parseFloat(place.lat)],
-	        'EPSG:4326', projection
-	      ),
-	      resolution = 2.388657133911758, duration = 500,
-	      obj = {
-	        coord: coord,
-	        address_html: address_html,
-	        address_obj: address_obj,
-	        address_original: address_original
-	      },
-	      pan = ol.animation.pan({
-	        duration: duration,
-	        source: view.getCenter()
-	      }),
-	      zoom = ol.animation.zoom({
-	        duration: duration,
-	        resolution: view.getResolution()
-	      });
-	    
-	  map.beforeRender(pan, zoom);
-	  view.setCenter(coord);
-	  view.setResolution(resolution);
-	  this.createFeature(obj);
+	  if(this.options.preventDefault === true) {
+	    this.Base.dispatchEvent({
+	      type: eventType.ADDRESSCHOSEN,
+	      address: address,
+	      coordinate: coord
+	    });
+	  } else {
+	    utils.flyTo(map, coord);
+	    var feature = this.createFeature(coord, address);
+	      
+	    this.Base.dispatchEvent({
+	      type: eventType.ADDRESSCHOSEN,
+	      address: address,
+	      feature: feature,
+	      coordinate: coord
+	    });
+	  }
 	};
 
-	Nominatim.prototype.createFeature = function createFeature(obj) {
-	  var feature = new ol.Feature({
-	    address_html: obj.address_html,
-	    address_obj: obj.address_obj,
-	    address_original: obj.address_original,
-	    geometry: new ol.geom.Point(obj.coord)
-	  });
-	    
+	Nominatim.prototype.createFeature = function createFeature(coord) {
+	  var feature = new ol.Feature(new ol.geom.Point(coord));
 	  this.addLayer();
 	  feature.setStyle(this.options.featureStyle);
 	  feature.setId(utils.randomId('geocoder-ft-'));
 	  this.getSource().addFeature(feature);
-	  this.Base.dispatchEvent({
-	    type: eventType.ADDRESSCHOSEN,
-	    feature: feature,
-	    coordinate: obj.coord,
-	  });
 	};
 	  
 	Nominatim.prototype.addressTemplate = function addressTemplate(address) {

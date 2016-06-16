@@ -31,12 +31,12 @@
   //Listen when an address is chosen
   geocoder.on('addresschosen', function(evt){
     var feature = evt.feature,
-        coord = evt.coordinate,
-        address_html = feature.get('address_html');
+        coord = evt.coordinate;
 
-    content.innerHTML = '<p>'+address_html+'</p>';
+    content.innerHTML = '<p>'+ evt.address.formatted +'</p>';
     overlay.setPosition(coord);
   });
+
 
   /**
   * Popup
