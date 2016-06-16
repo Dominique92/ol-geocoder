@@ -164,56 +164,44 @@ export class Nominatim {
   }
   
   chosen(place, address_html, address_obj, address_original) {
+    const map = this.Base.getMap();
+    const coord = ol.proj.transform([parseFloat(place.lon), parseFloat(place.lat)], 
+      'EPSG:4326', map.getView().getProjection());
+    const address = {
+      formatted: address_html,
+      details: address_obj,
+      original: address_original
+    };
+    
     if(this.options.keepOpen === false){
       this.clearResults(true);
     }
     
-    let map = this.Base.getMap(),
-        view = map.getView(),
-        projection = view.getProjection(),
-        coord = ol.proj.transform(
-          [parseFloat(place.lon), parseFloat(place.lat)],
-          'EPSG:4326', projection
-        ),
-        resolution = 2.388657133911758, duration = 500,
-        obj = {
-          coord: coord,
-          address_html: address_html,
-          address_obj: address_obj,
-          address_original: address_original
-        },
-        pan = ol.animation.pan({
-          duration: duration,
-          source: view.getCenter()
-        }),
-        zoom = ol.animation.zoom({
-          duration: duration,
-          resolution: view.getResolution()
-        });
-    
-    map.beforeRender(pan, zoom);
-    view.setCenter(coord);
-    view.setResolution(resolution);
-    this.createFeature(obj);
+    if(this.options.preventDefault === true) {
+      this.Base.dispatchEvent({
+        type: constants.eventType.ADDRESSCHOSEN,
+        address: address,
+        coordinate: coord
+      });
+    } else {
+      utils.flyTo(map, coord);
+      const feature = this.createFeature(coord, address);
+      
+      this.Base.dispatchEvent({
+        type: constants.eventType.ADDRESSCHOSEN,
+        address: address,
+        feature: feature,
+        coordinate: coord
+      });
+    }
   }
 
-  createFeature(obj) {
-    const feature = new ol.Feature({
-      address_html: obj.address_html,
-      address_obj: obj.address_obj,
-      address_original: obj.address_original,
-      geometry: new ol.geom.Point(obj.coord)
-    });
-    
+  createFeature(coord) {
+    const feature = new ol.Feature(new ol.geom.Point(coord));
     this.addLayer();
     feature.setStyle(this.options.featureStyle);
     feature.setId(utils.randomId('geocoder-ft-'));
     this.getSource().addFeature(feature);
-    this.Base.dispatchEvent({
-      type: constants.eventType.ADDRESSCHOSEN,
-      feature: feature,
-      coordinate: obj.coord,
-    });
   }
   
   addressTemplate(address) {

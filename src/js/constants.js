@@ -51,5 +51,6 @@ export const defaultOptions = {
   lang: 'en-US',
   limit: 5,
   keepOpen: false,
+  preventDefault: false,
   debug: false
 };
