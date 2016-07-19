@@ -8,7 +8,7 @@
         maxZoom: 20
       }),
       baseLayer = new ol.layer.Tile({
-        source: new ol.source.MapQuest({ layer: 'osm' })
+        source: new ol.source.OSM()
       }),
       map = new ol.Map({
         target: doc.getElementById('map'),
