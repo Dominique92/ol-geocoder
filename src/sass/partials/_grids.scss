@@ -44,7 +44,7 @@ ul.#{$namespace}#{$result_class} {
     list-style: none;
     padding: 0;
     margin: 0;
-    
+
     background-color: white;
     border-radius: 4px;
     border-top: none;
@@ -53,7 +53,7 @@ ul.#{$namespace}#{$result_class} {
     overflow-x: hidden;
     overflow-y: auto;
     box-shadow: 0 1px 7px rgba(0, 0, 0, 0.8);
-    
+
     transition: max-height 300ms ease-in;
 
 	> li {
@@ -80,7 +80,7 @@ ul.#{$namespace}#{$result_class} {
 }
 .#{$namespace}#{$road_class} {
     @include font-size($font-medium);
-    font-weight: 700;
+    font-weight: 500;
     color: #000;
 }
 .#{$namespace}#{$city_class} {
