@@ -41,6 +41,7 @@ export const providers = {
   MAPQUEST: 'mapquest',
   GOOGLE: 'google',
   PHOTON: 'photon',
+  BING: 'bing',
   PELIAS: 'pelias'
 };
 

@@ -6,6 +6,7 @@ import { OpenStreet } from './providers/osm';
 import { MapQuest } from './providers/mapquest';
 import { Pelias } from './providers/pelias';
 import { Google } from './providers/google';
+import { Bing } from './providers/bing';
 
 /**
  * @class Nominatim
@@ -26,7 +27,7 @@ export class Nominatim {
     
     this.options = base.options;
     this.options.provider = this.options.provider.toLowerCase();
-
+    
     this.els = this.createControl();
     this.container = this.els.container;
     this.registered_listeners = {
@@ -40,6 +41,7 @@ export class Nominatim {
     this.MapQuest = new MapQuest();
     this.Pelias = new Pelias();
     this.Google = new Google();
+    this.Bing = new Bing();
     
     return this;
   }
@@ -86,6 +88,7 @@ export class Nominatim {
   
   query(q) {
     let this_ = this,
+        ajax = {},
         options = this.options,
         input = this.els.input_search,
         provider = this.getProvider({
@@ -100,7 +103,15 @@ export class Nominatim {
     this.clearResults();
     utils.addClass(input, vars.namespace + vars.loading_class);
     
-    utils.json(provider.url, provider.params).when({
+    ajax.url = provider.url;
+    ajax.data = provider.params;
+    
+    if (options.provider === constants.providers.BING) {
+      ajax.data_type = 'jsonp';
+      ajax.callbackName = provider.callbackName;
+    }
+    
+    utils.json(ajax).when({
       ready: response => {
         if (options.debug) {
           console.info(response);
@@ -130,7 +141,11 @@ export class Nominatim {
             break;
           case constants.providers.GOOGLE:
             response__ = response.results.length > 0 ?
-            this.Google.handleResponse(response.results) : undefined;
+              this.Google.handleResponse(response.results) : undefined;
+            break;
+          case constants.providers.BING:
+            response__ = response.resourceSets[0].resources.length > 0 ?
+              this.Bing.handleResponse(response.resourceSets[0].resources) : undefined;
             break;
         }
         if(response__){
@@ -250,6 +265,9 @@ export class Nominatim {
         break;
       case constants.providers.PELIAS:
         provider = this.Pelias.getParameters(options);
+        break;
+      case constants.providers.BING:
+        provider = this.Bing.getParameters(options);
         break;
     }
     return provider;
