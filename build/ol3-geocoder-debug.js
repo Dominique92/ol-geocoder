@@ -1,8 +1,8 @@
 /**
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Version: v2.1.0
- * Built: 2016-06-16T11:50:12-0300
+ * Version: v2.2.0
+ * Built: 2016-07-29T12:53:37-03:00
  */
 
 (function (global, factory) {
@@ -69,6 +69,7 @@
 	  MAPQUEST: 'mapquest',
 	  GOOGLE: 'google',
 	  PHOTON: 'photon',
+	  BING: 'bing',
 	  PELIAS: 'pelias'
 	};
 
@@ -109,6 +110,8 @@
 	  },
 	  json: function json(url, data) {
 	    var xhr = new XMLHttpRequest(),
+	        url_ = '',
+	        data_type = '',
 	        when = {},
 	        onload = function () {
 	          if (xhr.status === 200) {
@@ -118,17 +121,65 @@
 	        onerror = function () {
 	          console.info('Cannot XHR ' + JSON.stringify(url));
 	        };
-	    url = this.encodeUrlXhr(url, data);
-	    xhr.open('GET', url, true);
-	    xhr.setRequestHeader('Accept','application/json');
-	    xhr.onload = onload;
-	    xhr.onerror = onerror;
-	    xhr.send(null);
+
+	    if(typeof url === 'object') {
+	      url_ = url.url;
+	      data = url.data;
+	      data_type = url.data_type || 'json';
+	    } else {
+	      url_ = url;
+	    }
 	    
+	    url_ = this.encodeUrlXhr(url_, data);
+	    
+	    if (data_type === 'jsonp') {
+	      this.jsonp(url_, url.callbackName, function(data) {
+	        when.ready.call(undefined, data);
+	      });
+	    } else {
+	      xhr.open('GET', url_, true);
+	      xhr.setRequestHeader('Accept','application/json');
+	      xhr.onload = onload;
+	      xhr.onerror = onerror;
+	      xhr.send(null);
+	    }
+
 	    return {
-	      when: function ( obj ) { when.ready = obj.ready; }
+	      when: function (obj) { when.ready = obj.ready; }
 	    };
 	  },
+	  jsonp: function jsonp(url, key, callback) {
+	    // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
+	    var head = document.head,
+	        script = document.createElement('script'),
+	        // generate minimally unique name for callback function
+	        callbackName = 'f' + Math.round(Math.random() * Date.now());
+
+	    // set request url
+	    script.setAttribute('src',
+	        /*  add callback parameter to the url
+	            where key is the parameter key supplied
+	            and callbackName is the parameter value */
+	        (url + (url.indexOf('?') > 0 ? '&' : '?') + key + '=' + callbackName));
+
+	    /*  place jsonp callback on window,
+	        the script sent by the server should call this
+	        function as it was passed as a url parameter */
+	    window[callbackName] = function(json) {
+	      window[callbackName] = undefined;
+
+	      // clean up script tag created for request
+	      setTimeout(function() {
+	        head.removeChild(script);
+	      }, 0);
+
+	      // hand data back to the user
+	      callback(json);
+	    };
+
+	    // actually make the request
+	    head.appendChild(script);
+	  },  
 	  now: function now() {
 	    // Polyfill for window.performance.now()
 	    // @license http://opensource.org/licenses/MIT
@@ -195,7 +246,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function ( each ) { this$1.addClass(each, classname) });
+	      element.forEach(function (each) { this$1.addClass(each, classname) });
 	      return;
 	    }
 	    
@@ -209,9 +260,9 @@
 	    }
 	  },
 	  _addClass: function _addClass(el, c, timeout) {
-	    // use native if available
 	    var this$1 = this;
 
+	    // use native if available
 	    if (el.classList) {
 	      el.classList.add(c);
 	    } else {
@@ -232,7 +283,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function ( each ) { this$1.removeClass(each, classname, timeout) });
+	      element.forEach(function (each) { this$1.removeClass(each, classname, timeout) });
 	      return;
 	    }
 	    
@@ -277,7 +328,7 @@
 	    var this$1 = this;
 
 	    if (Array.isArray(element)) {
-	      element.forEach(function ( each ) { this$1.toggleClass(each, classname) });
+	      element.forEach(function (each) { this$1.toggleClass(each, classname) });
 	      return;
 	    }
 	    
@@ -315,16 +366,17 @@
 	    while(array.length) array.pop();
 	  },
 	  anyMatchInArray: function anyMatchInArray(source, target) {
-	    return source.some(function ( each ) { return target.indexOf(each) >= 0; });
+	    return source.some(function (each) { return target.indexOf(each) >= 0; });
 	  },
 	  everyMatchInArray: function everyMatchInArray(arr1, arr2) {
-	    return arr2.every(function ( each ) { return arr1.indexOf(each) >= 0; });
+	    return arr2.every(function (each) { return arr1.indexOf(each) >= 0; });
 	  },
 	  anyItemHasValue: function anyItemHasValue(obj, has) {
+	    var this$1 = this;
 	    if ( has === void 0 ) has = false;
 
 	    for(var key in obj) {
-	      if(!this.isEmpty(obj[key])) {
+	      if(!this$1.isEmpty(obj[key])) {
 	        has = true;
 	      }
 	    }
@@ -342,7 +394,7 @@
 	    }
 	  },
 	  getChildren: function getChildren(node, tag) {
-	    return [].filter.call(node.childNodes, function ( el ) { return tag ? 
+	    return [].filter.call(node.childNodes, function (el) { return tag ? 
 	        el.nodeType == 1 && el.tagName.toLowerCase() == tag : el.nodeType == 1; });
 	  },
 	  template: function template(html, row) {
@@ -432,7 +484,7 @@
 	    
 	};
 	  
-	Photon.prototype.getParameters = function getParameters(options) {
+	Photon.prototype.getParameters = function getParameters (options) {
 	  options.lang = options.lang.toLowerCase();
 	    
 	  return {
@@ -446,8 +498,8 @@
 	  };
 	};
 	  
-	Photon.prototype.handleResponse = function handleResponse(results) {
-	  return results.map(function ( result ) { return ({
+	Photon.prototype.handleResponse = function handleResponse (results) {
+	  return results.map(function (result) { return ({
 	    lon: result.geometry.coordinates[0],
 	    lat: result.geometry.coordinates[1],
 	    address: {
@@ -482,7 +534,7 @@
 	  };
 	};
 	  
-	OpenStreet.prototype.getParameters = function getParameters(options) {
+	OpenStreet.prototype.getParameters = function getParameters (options) {
 	  return {
 	    url: this.settings.url,
 	    params: {
@@ -496,8 +548,8 @@
 	  };
 	};
 	  
-	OpenStreet.prototype.handleResponse = function handleResponse(results) {
-	  return results.map(function ( result ) { return ({
+	OpenStreet.prototype.handleResponse = function handleResponse (results) {
+	  return results.map(function (result) { return ({
 	    lon: result.lon,
 	    lat: result.lat,
 	    address: {
@@ -534,7 +586,7 @@
 	  };
 	};
 	  
-	MapQuest.prototype.getParameters = function getParameters(options) {
+	MapQuest.prototype.getParameters = function getParameters (options) {
 	  return {
 	    url: this.settings.url,
 	    params: {
@@ -549,8 +601,8 @@
 	  };
 	};
 	  
-	MapQuest.prototype.handleResponse = function handleResponse(results) {
-	  return results.map(function ( result ) { return ({
+	MapQuest.prototype.handleResponse = function handleResponse (results) {
+	  return results.map(function (result) { return ({
 	    lon: result.lon,
 	    lat: result.lat,
 	    address: {
@@ -583,7 +635,7 @@
 	  };
 	};
 	  
-	Pelias.prototype.getParameters = function getParameters(options) {
+	Pelias.prototype.getParameters = function getParameters (options) {
 	  return {
 	    url: this.settings.url,
 	    params: {
@@ -594,8 +646,8 @@
 	  };
 	};
 	  
-	Pelias.prototype.handleResponse = function handleResponse(results) {
-	  return results.map(function ( result ) { return ({
+	Pelias.prototype.handleResponse = function handleResponse (results) {
+	  return results.map(function (result) { return ({
 	    lon: result.geometry.coordinates[0],
 	    lat: result.geometry.coordinates[1],
 	    address: {
@@ -629,7 +681,7 @@
 	  };
 	};
 	  
-	Google.prototype.getParameters = function getParameters(options) {
+	Google.prototype.getParameters = function getParameters (options) {
 	  return {
 	    url: this.settings.url,
 	    params: {
@@ -640,7 +692,7 @@
 	  };
 	};
 	  
-	Google.prototype.handleResponse = function handleResponse(results) {
+	Google.prototype.handleResponse = function handleResponse (results) {
 	  var name = [
 	          'point_of_interest',
 	          'establishment',
@@ -661,7 +713,7 @@
 	  /*
 	   * @param {Array} details - address_components
 	   */
-	  var getDetails = function ( details ) {
+	  var getDetails = function (details) {
 	    var parts = {
 	      name: '',
 	      road: '',
@@ -670,7 +722,7 @@
 	      state: '',
 	      country: ''
 	    };
-	    details.forEach(function ( detail ) {
+	    details.forEach(function (detail) {
 	      if(utils.anyMatchInArray(detail.types, name)){
 	        parts.name = detail.long_name;
 	      } else if(utils.anyMatchInArray(detail.types, road)){
@@ -690,7 +742,7 @@
 	    
 	  var array = [];
 	    
-	  results.forEach(function ( result ) {
+	  results.forEach(function (result) {
 	    var details = getDetails(result.address_components);
 	    if(utils.anyItemHasValue(details)){
 	      array.push({
@@ -716,6 +768,50 @@
 	};
 
 	/**
+	 * @class Bing
+	 */
+	var Bing = function Bing() {
+	  this.settings = {
+	    url: '//dev.virtualearth.net/REST/v1/Locations',
+	    callbackName: 'jsonp',
+	    params: {
+	      query: '',
+	      key: '',
+	      includeNeighborhood: 0,
+	      maxResults: 10
+	    }
+	  };
+	};
+	  
+	Bing.prototype.getParameters = function getParameters (options) {
+	  return {
+	    url: this.settings.url,
+	    callbackName: this.settings.callbackName,
+	    params: {
+	      query: options.query,
+	      key: options.key,
+	      includeNeighborhood: 
+	        options.includeNeighborhood || this.settings.params.includeNeighborhood,
+	      maxResults: options.maxResults || this.settings.params.maxResults
+	    }
+	  };
+	};
+	  
+	Bing.prototype.handleResponse = function handleResponse (results) {
+	  return results.map(function (result) { return ({
+	    lon: result.point.coordinates[1],
+	    lat: result.point.coordinates[0],
+	    address: {
+	      name: result.name
+	    },
+	    original: {
+	      formatted: result.address.formattedAddress,
+	      details: result.address
+	    }
+	  }); });
+	};
+
+	/**
 	 * @class Nominatim
 	 */
 	var Nominatim = function Nominatim(base) {
@@ -729,7 +825,7 @@
 	    
 	  this.options = base.options;
 	  this.options.provider = this.options.provider.toLowerCase();
-
+	    
 	  this.els = this.createControl();
 	  this.container = this.els.container;
 	  this.registered_listeners = {
@@ -743,11 +839,12 @@
 	  this.MapQuest = new MapQuest();
 	  this.Pelias = new Pelias();
 	  this.Google = new Google();
+	  this.Bing = new Bing();
 	    
 	  return this;
 	};
 	  
-	Nominatim.prototype.createControl = function createControl() {
+	Nominatim.prototype.createControl = function createControl () {
 	  var container = utils.createElement([
 	    'div', { classname: namespace + container_class }
 	  ], Nominatim.html);
@@ -768,17 +865,17 @@
 	  return elements;
 	};
 	  
-	Nominatim.prototype.setListeners = function setListeners() {
-	  var this$1 = this;
+	Nominatim.prototype.setListeners = function setListeners () {
+	    var this$1 = this;
 
-	    var openSearch = function () {
+	  var openSearch = function () {
 	      if(utils.hasClass(this$1.els.control, namespace + expanded_class)) {
 	        this$1.collapse();
 	      } else {
 	        this$1.expand();
 	      }
 	    },
-	    query = function ( evt ) {
+	    query = function (evt) {
 	      if (evt.keyCode == 13) { //enter key
 	        evt.preventDefault();
 	        var q = utils.htmlEscape(this$1.els.input_search.value);
@@ -789,10 +886,11 @@
 	  this.els.btn_search.addEventListener('click', openSearch, false);
 	};
 	  
-	Nominatim.prototype.query = function query(q) {
-	  var this$1 = this;
+	Nominatim.prototype.query = function query (q) {
+	    var this$1 = this;
 
-	    var this_ = this,
+	  var this_ = this,
+	      ajax = {},
 	      options = this.options,
 	      input = this.els.input_search,
 	      provider = this.getProvider({
@@ -807,8 +905,16 @@
 	  this.clearResults();
 	  utils.addClass(input, namespace + loading_class);
 	    
-	  utils.json(provider.url, provider.params).when({
-	    ready: function ( response ) {
+	  ajax.url = provider.url;
+	  ajax.data = provider.params;
+	    
+	  if (options.provider === providers.BING) {
+	    ajax.data_type = 'jsonp';
+	    ajax.callbackName = provider.callbackName;
+	  }
+	    
+	  utils.json(ajax).when({
+	    ready: function (response) {
 	      if (options.debug) {
 	        console.info(response);
 	      }
@@ -837,7 +943,11 @@
 	          break;
 	        case providers.GOOGLE:
 	          response__ = response.results.length > 0 ?
-	          this$1.Google.handleResponse(response.results) : undefined;
+	            this$1.Google.handleResponse(response.results) : undefined;
+	          break;
+	        case providers.BING:
+	          response__ = response.resourceSets[0].resources.length > 0 ?
+	            this$1.Bing.handleResponse(response.resourceSets[0].resources) : undefined;
 	          break;
 	      }
 	      if(response__){
@@ -854,16 +964,16 @@
 	  });
 	};
 	  
-	Nominatim.prototype.createList = function createList(response) {
-	  var this$1 = this;
+	Nominatim.prototype.createList = function createList (response) {
+	    var this$1 = this;
 
-	    var ul = this.els.result_container;
-	  response.forEach(function ( row ) {
+	  var ul = this.els.result_container;
+	  response.forEach(function (row) {
 	    var address_html = this$1.addressTemplate(row.address),
 	        html = '<a href="#">' + address_html + '</a>',
 	        li = utils.createElement('li', html);
 
-	    li.addEventListener('click', function ( evt ) {
+	    li.addEventListener('click', function (evt) {
 	      evt.preventDefault();
 	      this$1.chosen(row, address_html, row.address, row.original);
 	    }, false);
@@ -872,7 +982,7 @@
 	  });
 	};
 	  
-	Nominatim.prototype.chosen = function chosen(place, address_html, address_obj, address_original) {
+	Nominatim.prototype.chosen = function chosen (place, address_html, address_obj, address_original) {
 	  var map = this.Base.getMap();
 	  var coord = ol.proj.transform([parseFloat(place.lon), parseFloat(place.lat)], 
 	    'EPSG:4326', map.getView().getProjection());
@@ -905,7 +1015,7 @@
 	  }
 	};
 
-	Nominatim.prototype.createFeature = function createFeature(coord) {
+	Nominatim.prototype.createFeature = function createFeature (coord) {
 	  var feature = new ol.Feature(new ol.geom.Point(coord));
 	  this.addLayer();
 	  feature.setStyle(this.options.featureStyle);
@@ -913,7 +1023,7 @@
 	  this.getSource().addFeature(feature);
 	};
 	  
-	Nominatim.prototype.addressTemplate = function addressTemplate(address) {
+	Nominatim.prototype.addressTemplate = function addressTemplate (address) {
 	  var html = [];
 	  if (address.name) {
 	    html.push(
@@ -941,7 +1051,7 @@
 	  return utils.template(html.join('<br>'), address);
 	};
 	  
-	Nominatim.prototype.getProvider = function getProvider(options) {
+	Nominatim.prototype.getProvider = function getProvider (options) {
 	  var provider;
 
 	  switch(options.provider) {
@@ -960,14 +1070,17 @@
 	    case providers.PELIAS:
 	      provider = this.Pelias.getParameters(options);
 	      break;
+	    case providers.BING:
+	      provider = this.Bing.getParameters(options);
+	      break;
 	  }
 	  return provider;
 	};
 	  
-	Nominatim.prototype.expand = function expand() {
-	  var this$1 = this;
+	Nominatim.prototype.expand = function expand () {
+	    var this$1 = this;
 
-	    utils.removeClass(this.els.input_search, namespace + loading_class);
+	  utils.removeClass(this.els.input_search, namespace + loading_class);
 	  utils.addClass(this.els.control, namespace + expanded_class);
 	  window.setTimeout(function () {
 	    this$1.els.input_search.focus();
@@ -975,14 +1088,14 @@
 	  this.listenMapClick();
 	};
 
-	Nominatim.prototype.collapse = function collapse() {
+	Nominatim.prototype.collapse = function collapse () {
 	  this.els.input_search.value = '';
 	  this.els.input_search.blur();
 	  utils.removeClass(this.els.control, namespace + expanded_class);
 	  this.clearResults();
 	};
 	  
-	Nominatim.prototype.listenMapClick = function listenMapClick() {
+	Nominatim.prototype.listenMapClick = function listenMapClick () {
 	  if(this.registered_listeners.map_click) {
 	    // already registered
 	    return;
@@ -1002,7 +1115,7 @@
 	  }, false);
 	};
 	  
-	Nominatim.prototype.clearResults = function clearResults(collapse) {
+	Nominatim.prototype.clearResults = function clearResults (collapse) {
 	  if(collapse) {
 	    this.collapse();
 	  } else {
@@ -1010,17 +1123,17 @@
 	  }
 	};
 	  
-	Nominatim.prototype.getSource = function getSource() {
+	Nominatim.prototype.getSource = function getSource () {
 	  return this.layer.getSource();
 	};
 
-	Nominatim.prototype.addLayer = function addLayer() {
-	  var this$1 = this;
+	Nominatim.prototype.addLayer = function addLayer () {
+	    var this$1 = this;
 
-	    var found = false;
+	  var found = false;
 	  var map = this.Base.getMap();
 	    
-	  map.getLayers().forEach(function ( layer ) {
+	  map.getLayers().forEach(function (layer) {
 	    if (layer === this$1.layer) found = true;
 	  });
 	  if (!found) {
@@ -1076,20 +1189,21 @@
 	    });
 	  }
 
+	  if ( superclass ) Base.__proto__ = superclass;
 	  Base.prototype = Object.create( superclass && superclass.prototype );
 	  Base.prototype.constructor = Base;
 
 	  /**
 	   * @return {ol.layer.Vector} Returns the layer created by this control
 	   */
-	  Base.prototype.getLayer = function getLayer() {
+	  Base.prototype.getLayer = function getLayer () {
 	    return Base.Nominatim.layer;
 	  };
 
 	  /**
 	   * @return {ol.source.Vector} Returns the source created by this control
 	   */
-	  Base.prototype.getSource = function getSource() {
+	  Base.prototype.getSource = function getSource () {
 	    return this.getLayer().getSource();
 	  };
 
