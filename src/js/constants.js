@@ -53,5 +53,7 @@ export const defaultOptions = {
   limit: 5,
   keepOpen: false,
   preventDefault: false,
+  autoComplete: false,
+  autoCompleteMinLength: 2,
   debug: false
 };

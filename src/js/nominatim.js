@@ -68,22 +68,40 @@ export class Nominatim {
   }
   
   setListeners() {
-    let openSearch = () => {
-        if(utils.hasClass(this.els.control, vars.namespace + vars.expanded_class)) {
-          this.collapse();
-        } else {
-          this.expand();
-        }
-      },
-      query = evt => {
-        if (evt.keyCode == 13) { //enter key
-          evt.preventDefault();
-          const q = utils.htmlEscape(this.els.input_search.value);
-          this.query(q);
-        }
-      };
+    let timeout, last_query,
+        openSearch = () => {
+          if(utils.hasClass(this.els.control, vars.namespace + vars.expanded_class)) {
+            this.collapse();
+          } else {
+            this.expand();
+          }
+        },
+        query = evt => {
+          if (evt.keyCode == 13) { // enter key
+            evt.preventDefault();
+            this.query(evt.target.value);
+          }
+        },
+        autoComplete = evt => {
+          const query = evt.target.value;
+          
+          if (query != last_query) {
+            last_query = query;
+            
+            if (timeout) clearTimeout(timeout);
+            
+            timeout = setTimeout(() => {
+              if(query.length >= this.options.autoCompleteMinLength) {
+                this.query(query);
+              }
+            }, 200);
+          }
+        };
     this.els.input_search.addEventListener('keydown', query, false);
     this.els.btn_search.addEventListener('click', openSearch, false);
+    if (this.options.autoComplete) {
+      this.els.input_search.addEventListener('input', autoComplete, false);
+    }
   }
   
   query(q) {
