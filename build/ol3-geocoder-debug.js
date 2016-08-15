@@ -1,8 +1,8 @@
 /**
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Version: v2.2.0
- * Built: 2016-07-29T12:53:37-03:00
+ * Version: v2.3.0
+ * Built: 2016-08-15T11:57:59-03:00
  */
 
 (function (global, factory) {
@@ -81,6 +81,8 @@
 	  limit: 5,
 	  keepOpen: false,
 	  preventDefault: false,
+	  autoComplete: false,
+	  autoCompleteMinLength: 2,
 	  debug: false
 	};
 
@@ -868,22 +870,40 @@
 	Nominatim.prototype.setListeners = function setListeners () {
 	    var this$1 = this;
 
-	  var openSearch = function () {
-	      if(utils.hasClass(this$1.els.control, namespace + expanded_class)) {
-	        this$1.collapse();
-	      } else {
-	        this$1.expand();
-	      }
-	    },
-	    query = function (evt) {
-	      if (evt.keyCode == 13) { //enter key
-	        evt.preventDefault();
-	        var q = utils.htmlEscape(this$1.els.input_search.value);
-	        this$1.query(q);
-	      }
-	    };
+	  var timeout, last_query,
+	      openSearch = function () {
+	        if(utils.hasClass(this$1.els.control, namespace + expanded_class)) {
+	          this$1.collapse();
+	        } else {
+	          this$1.expand();
+	        }
+	      },
+	      query = function (evt) {
+	        if (evt.keyCode == 13) { // enter key
+	          evt.preventDefault();
+	          this$1.query(evt.target.value);
+	        }
+	      },
+	      autoComplete = function (evt) {
+	        var query = evt.target.value;
+	          
+	        if (query != last_query) {
+	          last_query = query;
+	            
+	          if (timeout) clearTimeout(timeout);
+	            
+	          timeout = setTimeout(function () {
+	            if(query.length >= this$1.options.autoCompleteMinLength) {
+	              this$1.query(query);
+	            }
+	          }, 200);
+	        }
+	      };
 	  this.els.input_search.addEventListener('keydown', query, false);
 	  this.els.btn_search.addEventListener('click', openSearch, false);
+	  if (this.options.autoComplete) {
+	    this.els.input_search.addEventListener('input', autoComplete, false);
+	  }
 	};
 	  
 	Nominatim.prototype.query = function query (q) {
