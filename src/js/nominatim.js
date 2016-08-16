@@ -117,10 +117,8 @@ export class Nominatim {
           countrycodes: options.countrycodes,
           limit: options.limit
         });
-    if(this.prev_params == provider.params){
-      return false;
-    }
-    this.prev_params = provider.params;
+    if (this.last_query === q) return;
+    this.last_query = q;
     this.clearResults();
     utils.addClass(input, vars.namespace + vars.loading_class);
     
