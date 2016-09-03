@@ -77,7 +77,10 @@ export class Nominatim {
           }
         },
         query = evt => {
-          if (evt.keyCode == 13) { // enter key
+          if ((evt.key && evt.key === 'Enter')    ||
+              (evt.which && evt.which === 13)     ||
+              (evt.keyCode && evt.keyCode === 13)
+          ) {
             evt.preventDefault();
             this.query(evt.target.value);
           }
@@ -97,7 +100,7 @@ export class Nominatim {
             }, 200);
           }
         };
-    this.els.input_search.addEventListener('keydown', query, false);
+    this.els.input_search.addEventListener('keyup', query, false);
     this.els.btn_search.addEventListener('click', openSearch, false);
     if (this.options.autoComplete) {
       this.els.input_search.addEventListener('input', autoComplete, false);
@@ -121,7 +124,7 @@ export class Nominatim {
     this.clearResults();
     utils.addClass(input, vars.namespace + vars.loading_class);
     
-    ajax.url = provider.url;
+    ajax.url = document.location.protocol + provider.url;
     ajax.data = provider.params;
     
     if (options.provider === constants.providers.BING) {
@@ -367,6 +370,7 @@ Nominatim.html = [
         ' type="text"',
         ' id="'+ vars.input_query_id +'"',
         ' class="'+ vars.namespace + vars.input_search_class + '"',
+        ' autocomplete="off"',
         ' placeholder="Search ...">',
     '</form>',
   '</div>',

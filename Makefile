@@ -63,7 +63,7 @@ export HEADER
 
 # targets
 .PHONY: ci
-ci: build test
+ci: test
 
 .PHONY: build-watch
 build-watch: build watch
@@ -73,7 +73,7 @@ watch:
 	$(PARALLELSHELL) "make watch-js" "make watch-sass"
 
 .PHONY: test
-test:
+test: build
 	@$(CASPERJS) $(CASPERJSFLAGS)
 
 .PHONY: build
