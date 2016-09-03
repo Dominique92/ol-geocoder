@@ -120,7 +120,8 @@ export class Nominatim {
           countrycodes: options.countrycodes,
           limit: options.limit
         });
-
+    if (this.last_query === q) return;
+    this.last_query = q;
     this.clearResults();
     utils.addClass(input, vars.namespace + vars.loading_class);
     
