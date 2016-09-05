@@ -19,7 +19,7 @@
     "url": "https://github.com/jonataswalker/ol3-geocoder/issues"
   },
   "dependencies": {
-    "openlayers": "^3.17.1"
+    "openlayers": ">=3.11.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.7",
