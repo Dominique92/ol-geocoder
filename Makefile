@@ -65,6 +65,15 @@ export HEADER
 .PHONY: ci
 ci: test
 
+.PHONY: npm-install
+npm-install: install
+
+.PHONY: install
+install: package.json
+	@mkdir -p $(@D)
+	npm install
+	@touch $@
+
 .PHONY: build-watch
 build-watch: build watch
 
@@ -77,7 +86,7 @@ test: build
 	@$(CASPERJS) $(CASPERJSFLAGS)
 
 .PHONY: build
-build: build-js build-css
+build: install build-js build-css
 
 .PHONY: build-js
 build-js: bundle-js lint uglifyjs add-js-header
