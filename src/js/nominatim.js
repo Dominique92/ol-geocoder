@@ -24,17 +24,17 @@ export class Nominatim {
       name: this.layer_name,
       source: new ol.source.Vector()
     });
-    
+
     this.options = base.options;
     this.options.provider = this.options.provider.toLowerCase();
-    
+
     this.els = this.createControl();
     this.container = this.els.container;
     this.registered_listeners = {
       map_click: false
     };
     this.setListeners();
-    
+
     // providers
     this.Photon = new Photon();
     this.OpenStreet = new OpenStreet();
@@ -42,60 +42,60 @@ export class Nominatim {
     this.Pelias = new Pelias();
     this.Google = new Google();
     this.Bing = new Bing();
-    
+
     return this;
   }
-  
+
   createControl() {
     const container = utils.createElement([
       'div', { classname: vars.namespace + vars.container_class }
     ], Nominatim.html);
-    
+
     const elements = {
       container: container,
-      control: 
+      control:
         container.querySelector(`.${vars.namespace + vars.control_class}`),
-      btn_search: 
+      btn_search:
         container.querySelector(`.${vars.namespace + vars.btn_search_class}`),
-      input_search: 
+      input_search:
         container.querySelector(`.${vars.namespace + vars.input_search_class}`),
-      result_container: 
+      result_container:
         container.querySelector(`.${vars.namespace + vars.result_class}`)
     };
     //set placeholder from options
     elements.input_search.placeholder = this.options.placeholder;
     return elements;
   }
-  
+
   setListeners() {
     let timeout, last_query,
         openSearch = () => {
-          if(utils.hasClass(this.els.control, vars.namespace + vars.expanded_class)) {
+          if (utils.hasClass(this.els.control, vars.namespace + vars.expanded_class)) {
             this.collapse();
           } else {
             this.expand();
           }
         },
         query = evt => {
-          if ((evt.key && evt.key === 'Enter')    ||
-              (evt.which && evt.which === 13)     ||
-              (evt.keyCode && evt.keyCode === 13)
-          ) {
+          const hit = evt.key ? evt.key === 'Enter' :
+            evt.which ? evt.which === 13 :
+            evt.keyCode ? evt.keyCode === 13 : false;
+          if (hit) {
             evt.preventDefault();
             this.query(evt.target.value);
           }
         },
         autoComplete = evt => {
-          const query = evt.target.value;
-          
-          if (query != last_query) {
-            last_query = query;
-            
+          const value = evt.target.value;
+
+          if (value !== last_query) {
+            last_query = value;
+
             if (timeout) clearTimeout(timeout);
-            
+
             timeout = setTimeout(() => {
-              if(query.length >= this.options.autoCompleteMinLength) {
-                this.query(query);
+              if (value.length >= this.options.autoCompleteMinLength) {
+                this.query(value);
               }
             }, 200);
           }
@@ -106,10 +106,9 @@ export class Nominatim {
       this.els.input_search.addEventListener('input', autoComplete, false);
     }
   }
-  
+
   query(q) {
-    let this_ = this,
-        ajax = {},
+    let ajax = {},
         options = this.options,
         input = this.els.input_search,
         provider = this.getProvider({
@@ -124,26 +123,28 @@ export class Nominatim {
     this.last_query = q;
     this.clearResults();
     utils.addClass(input, vars.namespace + vars.loading_class);
-    
+
     ajax.url = document.location.protocol + provider.url;
     ajax.data = provider.params;
-    
+
     if (options.provider === constants.providers.BING) {
       ajax.data_type = 'jsonp';
       ajax.callbackName = provider.callbackName;
     }
-    
+
     utils.json(ajax).when({
       ready: response => {
         if (options.debug) {
+          /* eslint-disable no-console */
           console.info(response);
+          /* eslint-enable no-console */
         }
-        
+
         utils.removeClass(input, vars.namespace + vars.loading_class);
-        
+
         //will be fullfiled according to provider
         let response__;
-        
+
         switch (options.provider) {
           case constants.providers.OSM:
             response__ = response.length > 0 ?
@@ -170,20 +171,19 @@ export class Nominatim {
               this.Bing.handleResponse(response.resourceSets[0].resources) : undefined;
             break;
         }
-        if(response__){
+        if (response__) {
           this.createList(response__);
           this.listenMapClick();
         }
       },
       error: () => {
         utils.removeClass(input, vars.namespace + vars.loading_class);
-        const li = utils.createElement('li', 
-          '<h5>Error! No internet connection?</h5>');
+        const li = utils.createElement('li', '<h5>Error! No internet connection?</h5>');
         this.els.result_container.appendChild(li);
       }
     });
   }
-  
+
   createList(response) {
     const ul = this.els.result_container;
     response.forEach(row => {
@@ -195,26 +195,26 @@ export class Nominatim {
         evt.preventDefault();
         this.chosen(row, address_html, row.address, row.original);
       }, false);
-      
+
       ul.appendChild(li);
     });
   }
-  
+
   chosen(place, address_html, address_obj, address_original) {
     const map = this.Base.getMap();
-    const coord = ol.proj.transform([parseFloat(place.lon), parseFloat(place.lat)], 
+    const coord = ol.proj.transform([parseFloat(place.lon), parseFloat(place.lat)],
       'EPSG:4326', map.getView().getProjection());
     const address = {
       formatted: address_html,
       details: address_obj,
       original: address_original
     };
-    
-    if(this.options.keepOpen === false){
+
+    if (this.options.keepOpen === false) {
       this.clearResults(true);
     }
-    
-    if(this.options.preventDefault === true) {
+
+    if (this.options.preventDefault === true) {
       this.Base.dispatchEvent({
         type: constants.eventType.ADDRESSCHOSEN,
         address: address,
@@ -223,7 +223,7 @@ export class Nominatim {
     } else {
       utils.flyTo(map, coord);
       const feature = this.createFeature(coord, address);
-      
+
       this.Base.dispatchEvent({
         type: constants.eventType.ADDRESSCHOSEN,
         address: address,
@@ -240,7 +240,7 @@ export class Nominatim {
     feature.setId(utils.randomId('geocoder-ft-'));
     this.getSource().addFeature(feature);
   }
-  
+
   addressTemplate(address) {
     let html = [];
     if (address.name) {
@@ -268,11 +268,11 @@ export class Nominatim {
     }
     return utils.template(html.join('<br>'), address);
   }
-  
+
   getProvider(options) {
     let provider;
 
-    switch(options.provider) {
+    switch (options.provider) {
       case constants.providers.OSM:
         provider = this.OpenStreet.getParameters(options);
         break;
@@ -294,7 +294,7 @@ export class Nominatim {
     }
     return provider;
   }
-  
+
   expand() {
     utils.removeClass(this.els.input_search, vars.namespace + vars.loading_class);
     utils.addClass(this.els.control, vars.namespace + vars.expanded_class);
@@ -310,17 +310,17 @@ export class Nominatim {
     utils.removeClass(this.els.control, vars.namespace + vars.expanded_class);
     this.clearResults();
   }
-  
+
   listenMapClick() {
-    if(this.registered_listeners.map_click) {
+    if (this.registered_listeners.map_click) {
       // already registered
       return;
     }
-    
+
     const this_ = this;
     const map_element = this.Base.getMap().getTargetElement();
     this.registered_listeners.map_click = true;
-    
+
     //one-time fire click
     map_element.addEventListener('click', {
       handleEvent: function (evt) {
@@ -330,15 +330,15 @@ export class Nominatim {
       }
     }, false);
   }
-  
+
   clearResults(collapse) {
-    if(collapse) {
+    if (collapse) {
       this.collapse();
     } else {
       utils.removeAllChildren(this.els.result_container);
     }
   }
-  
+
   getSource() {
     return this.layer.getSource();
   }
@@ -346,7 +346,7 @@ export class Nominatim {
   addLayer() {
     let found = false;
     const map = this.Base.getMap();
-    
+
     map.getLayers().forEach(layer => {
       if (layer === this.layer) found = true;
     });
@@ -356,6 +356,7 @@ export class Nominatim {
   }
 }
 
+/* eslint-disable indent */
 Nominatim.html = [
   '<div class="',
       vars.namespace + vars.control_class,
@@ -364,13 +365,13 @@ Nominatim.html = [
       '">',
     '<button',
       ' type="button"',
-      ' class="' + vars.namespace + vars.btn_search_class +'">',
+      ' class="' + vars.namespace + vars.btn_search_class + '">',
     '</button>',
-    '<form id="'+ vars.form_id +'" action="javascript:void(0);">',
+    '<form id="' + vars.form_id + '" action="javascript:void(0);">',
       '<input',
         ' type="text"',
-        ' id="'+ vars.input_query_id +'"',
-        ' class="'+ vars.namespace + vars.input_search_class + '"',
+        ' id="' + vars.input_query_id + '"',
+        ' class="' + vars.namespace + vars.input_search_class + '"',
         ' autocomplete="off"',
         ' placeholder="Search ...">',
     '</form>',
@@ -379,3 +380,4 @@ Nominatim.html = [
     vars.namespace + vars.result_class,
   '"></ul>'
 ].join('');
+/* eslint-enable indent */

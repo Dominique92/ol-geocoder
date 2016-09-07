@@ -1,7 +1,6 @@
 import { Nominatim } from './nominatim';
 import utils from './utils';
 import * as constants from './constants';
-import * as vars from '../../config/vars.json';
 
 /**
  * @class Base
@@ -14,17 +13,17 @@ export default class Base extends ol.control.Control {
    * @param {object|undefined} opt_options Options.
    */
   constructor(control_type = 'nominatim', opt_options = {}) {
-    utils.assert(typeof control_type == 'string',
+    utils.assert(typeof control_type === 'string',
       '@param `control_type` should be string type!'
     );
-    utils.assert(typeof opt_options == 'object',
+    utils.assert(typeof opt_options === 'object',
       '@param `opt_options` should be object type!'
     );
-    
+
     this.options = utils.mergeOptions(constants.defaultOptions, opt_options);
-    
+
     Base.Nominatim = new Nominatim(this);
-    
+
     super({
       element: Base.Nominatim.container
     });
