@@ -62,6 +62,28 @@ endef
 export HEADER
 
 # targets
+.PHONY: default
+default: help
+
+.PHONY: help
+help:
+	@echo
+	@echo "The most common targets are:"
+	@echo
+	@echo "- install                 Install node dependencies"
+	@echo "- build                   Build JavaScript and CSS files"
+	@echo "- build-watch             Build files and watch for modifications"
+	@echo "- test                    Run unit tests in the console"
+	@echo "- help                    Display this help message"
+	@echo
+	@echo "Other less frequently used targets are:"
+	@echo
+	@echo "- lint                    Check the code with the linter"
+	@echo "- build-js                Build JavaScript files"
+	@echo "- build-css               Build CSS files"
+	@echo "- ci                      Run the full continuous integration process"
+	@echo
+
 .PHONY: ci
 ci: test
 
@@ -113,7 +135,7 @@ bundle-js:
 	@$(ROLLUP) $(ROLLUPFLAGS)
 
 .PHONY: lint
-lint: $(JS_DEBUG)
+lint: $(JS_SRC)
 	@$(ESLINT) $^
 
 .PHONY: uglifyjs
@@ -150,4 +172,4 @@ watch-js: $(JS_SRC)
 watch-sass: $(SASS_SRC)
 	@$(NODEMON) --on-change-only --watch $^ --ext scss --ignore $(SASS_VENDOR_SRC) --exec "make build-css"
 	
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := default

@@ -17,7 +17,7 @@ export class Bing {
       }
     };
   }
-  
+
   getParameters(options) {
     return {
       url: this.settings.url,
@@ -25,13 +25,13 @@ export class Bing {
       params: {
         query: options.query,
         key: options.key,
-        includeNeighborhood: 
+        includeNeighborhood:
           options.includeNeighborhood || this.settings.params.includeNeighborhood,
         maxResults: options.maxResults || this.settings.params.maxResults
       }
     };
   }
-  
+
   handleResponse(results) {
     return results.map(result => ({
       lon: result.point.coordinates[1],

@@ -6,7 +6,7 @@ export class MapQuest {
    * @constructor
    */
   constructor() {
-    
+
     this.settings = {
       url: '//open.mapquestapi.com/nominatim/v1/search.php',
       params: {
@@ -20,7 +20,7 @@ export class MapQuest {
       }
     };
   }
-  
+
   getParameters(options) {
     return {
       url: this.settings.url,
@@ -35,7 +35,7 @@ export class MapQuest {
       }
     };
   }
-  
+
   handleResponse(results) {
     return results.map(result => ({
       lon: result.lon,

@@ -6,7 +6,7 @@ export class Pelias {
    * @constructor
    */
   constructor() {
-    
+
     this.settings = {
       url: '//search.mapzen.com/v1/search',
       params: {
@@ -16,7 +16,7 @@ export class Pelias {
       }
     };
   }
-  
+
   getParameters(options) {
     return {
       url: this.settings.url,
@@ -27,7 +27,7 @@ export class Pelias {
       }
     };
   }
-  
+
   handleResponse(results) {
     return results.map(result => ({
       lon: result.geometry.coordinates[0],

@@ -8,7 +8,7 @@ export class Google {
    * @constructor
    */
   constructor() {
-    
+
     this.settings = {
       url: '//maps.googleapis.com/maps/api/geocode/json',
       params: {
@@ -18,7 +18,7 @@ export class Google {
       }
     };
   }
-  
+
   getParameters(options) {
     return {
       url: this.settings.url,
@@ -29,25 +29,25 @@ export class Google {
       }
     };
   }
-  
+
   handleResponse(results) {
     const name = [
-            'point_of_interest',
-            'establishment',
-            'natural_feature',
-            'airport'
-          ],
-          road = [
-            'street_address',
-            'route',
-            'sublocality_level_5',
-            'intersection'
-          ],
-          postcode = [ 'postal_code' ],
-          city = [ 'locality' ],
-          state = [ 'administrative_area_level_1' ],
-          country = [ 'country' ];
-    
+          'point_of_interest',
+          'establishment',
+          'natural_feature',
+          'airport'
+        ],
+        road = [
+          'street_address',
+          'route',
+          'sublocality_level_5',
+          'intersection'
+        ],
+        postcode = ['postal_code'],
+        city = ['locality'],
+        state = ['administrative_area_level_1'],
+        country = ['country'];
+
     /*
      * @param {Array} details - address_components
      */
@@ -61,28 +61,28 @@ export class Google {
         country: ''
       };
       details.forEach(detail => {
-        if(utils.anyMatchInArray(detail.types, name)){
+        if (utils.anyMatchInArray(detail.types, name)) {
           parts.name = detail.long_name;
-        } else if(utils.anyMatchInArray(detail.types, road)){
+        } else if (utils.anyMatchInArray(detail.types, road)) {
           parts.road = detail.long_name;
-        } else if(utils.anyMatchInArray(detail.types, postcode)){
+        } else if (utils.anyMatchInArray(detail.types, postcode)) {
           parts.postcode = detail.long_name;
-        } else if(utils.anyMatchInArray(detail.types, city)){
+        } else if (utils.anyMatchInArray(detail.types, city)) {
           parts.city = detail.long_name;
-        } else if(utils.anyMatchInArray(detail.types, state)){
+        } else if (utils.anyMatchInArray(detail.types, state)) {
           parts.state = detail.long_name;
-        } else if(utils.anyMatchInArray(detail.types, country)){
+        } else if (utils.anyMatchInArray(detail.types, country)) {
           parts.country = detail.long_name;
         }
       });
       return parts;
     };
-    
+
     let array = [];
-    
+
     results.forEach(result => {
       let details = getDetails(result.address_components);
-      if(utils.anyItemHasValue(details)){
+      if (utils.anyItemHasValue(details)) {
         array.push({
           lon: result.geometry.location.lng,
           lat: result.geometry.location.lat,
@@ -101,7 +101,7 @@ export class Google {
         });
       }
     });
-    
+
     return array;
   }
 }
