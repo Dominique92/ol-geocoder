@@ -70,7 +70,8 @@ export class Nominatim {
   setListeners() {
     let timeout, last_query,
         openSearch = () => {
-          if (utils.hasClass(this.els.control, vars.namespace + vars.expanded_class)) {
+          if (utils.hasClass(
+              this.els.control, vars.namespace + vars.expanded_class)) {
             this.collapse();
           } else {
             this.expand();
@@ -144,7 +145,7 @@ export class Nominatim {
 
         //will be fullfiled according to provider
         let response__;
-
+        /*eslint default-case: 0*/
         switch (options.provider) {
           case constants.providers.OSM:
             response__ = response.length > 0 ?
@@ -167,8 +168,9 @@ export class Nominatim {
               this.Google.handleResponse(response.results) : undefined;
             break;
           case constants.providers.BING:
-            response__ = response.resourceSets[0].resources.length > 0 ?
-              this.Bing.handleResponse(response.resourceSets[0].resources) : undefined;
+            response__ = response.resourceSets[0].resources.length > 0
+                ? this.Bing.handleResponse(response.resourceSets[0].resources)
+                : undefined;
             break;
         }
         if (response__) {
@@ -178,7 +180,8 @@ export class Nominatim {
       },
       error: () => {
         utils.removeClass(input, vars.namespace + vars.loading_class);
-        const li = utils.createElement('li', '<h5>Error! No internet connection?</h5>');
+        const li = utils.createElement('li',
+            '<h5>Error! No internet connection?</h5>');
         this.els.result_container.appendChild(li);
       }
     });
@@ -202,8 +205,9 @@ export class Nominatim {
 
   chosen(place, address_html, address_obj, address_original) {
     const map = this.Base.getMap();
-    const coord = ol.proj.transform([parseFloat(place.lon), parseFloat(place.lat)],
-      'EPSG:4326', map.getView().getProjection());
+    const coord = ol.proj.transform(
+        [parseFloat(place.lon), parseFloat(place.lat)],
+        'EPSG:4326', map.getView().getProjection());
     const address = {
       formatted: address_html,
       details: address_obj,
@@ -271,7 +275,7 @@ export class Nominatim {
 
   getProvider(options) {
     let provider;
-
+    /*eslint default-case: 0*/
     switch (options.provider) {
       case constants.providers.OSM:
         provider = this.OpenStreet.getParameters(options);
@@ -296,7 +300,8 @@ export class Nominatim {
   }
 
   expand() {
-    utils.removeClass(this.els.input_search, vars.namespace + vars.loading_class);
+    utils.removeClass(this.els.input_search,
+        vars.namespace + vars.loading_class);
     utils.addClass(this.els.control, vars.namespace + vars.expanded_class);
     window.setTimeout(() => {
       this.els.input_search.focus();

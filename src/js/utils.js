@@ -164,7 +164,9 @@ export default {
       return;
     }
 
-    const array = (Array.isArray(classname)) ? classname : classname.split(/\s+/);
+    const array = (Array.isArray(classname))
+        ? classname
+        : classname.split(/\s+/);
     let i = array.length;
 
     while (i--) {
@@ -201,7 +203,9 @@ export default {
       return;
     }
 
-    const array = (Array.isArray(classname)) ? classname : classname.split(/\s+/);
+    const array = (Array.isArray(classname))
+        ? classname
+        : classname.split(/\s+/);
     let i = array.length;
 
     while (i--) {
@@ -229,8 +233,9 @@ export default {
    */
   hasClass(element, c) {
     // use native if available
-    return (element.classList) ?
-      element.classList.contains(c) : this.classRegex(c).test(element.className);
+    return element.classList
+        ? element.classList.contains(c)
+        : this.classRegex(c).test(element.className);
   },
   /**
    * @param {Element|Array<Element>} element DOM node or array of nodes.
@@ -265,7 +270,8 @@ export default {
       return (!!obj && obj instanceof HTMLElement);
     }
     // Older browsers
-    return (!!obj && typeof obj === 'object' && obj.nodeType === 1 && !!obj.nodeName);
+    return (!!obj && typeof obj === 'object' && obj.nodeType === 1 &&
+        !!obj.nodeName);
   },
   getAllChildren(node, tag) {
     return [].slice.call(node.getElementsByTagName(tag));
@@ -303,8 +309,11 @@ export default {
     }
   },
   getChildren(node, tag) {
-    return [].filter.call(node.childNodes, el => tag ?
-        el.nodeType === 1 && el.tagName.toLowerCase() === tag : el.nodeType === 1);
+    return [].filter.call(
+      node.childNodes, el => tag
+        ? el.nodeType === 1 && el.tagName.toLowerCase() === tag
+        : el.nodeType === 1
+    );
   },
   template(html, row) {
     return html.replace(/\{ *([\w_-]+) *\}/g, (htm, key) => {

@@ -25,8 +25,8 @@ export class Bing {
       params: {
         query: options.query,
         key: options.key,
-        includeNeighborhood:
-          options.includeNeighborhood || this.settings.params.includeNeighborhood,
+        includeNeighborhood: options.includeNeighborhood ||
+            this.settings.params.includeNeighborhood,
         maxResults: options.maxResults || this.settings.params.maxResults
       }
     };
