@@ -40,7 +40,11 @@
   "eslintConfig": {
     "extends": "jwalker",
     "globals": {
-      "ol": true
+      "ol": true,
+      "casper": true,
+      "patchRequire": true,
+      "__utils__": true,
+      "phantom": true
     }
   }
 }
