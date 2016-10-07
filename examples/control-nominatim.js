@@ -1,6 +1,20 @@
-(function(win, doc){
+/* global Geocoder */
+/*eslint strict: 0*/
+
+(function (win, doc) {
   'use strict';
-  
+
+  /**
+  * Popup
+  **/
+  var container = doc.getElementById('popup'),
+      content = doc.getElementById('popup-content'),
+      closer = doc.getElementById('popup-closer'),
+      overlay = new ol.Overlay({
+        element: container,
+        offset: [0, -40]
+      });
+
   var olview = new ol.View({
         center: [0, 0],
         zoom: 3,
@@ -27,28 +41,15 @@
     keepOpen: true
   });
   map.addControl(geocoder);
-  
-  //Listen when an address is chosen
-  geocoder.on('addresschosen', function(evt){
-    var feature = evt.feature,
-        coord = evt.coordinate;
 
-    content.innerHTML = '<p>'+ evt.address.formatted +'</p>';
+  //Listen when an address is chosen
+  geocoder.on('addresschosen', function (evt) {
+    var coord = evt.coordinate;
+    content.innerHTML = '<p>' + evt.address.formatted + '</p>';
     overlay.setPosition(coord);
   });
 
-
-  /**
-  * Popup
-  **/
-  var container = doc.getElementById('popup'),
-      content = doc.getElementById('popup-content'),
-      closer = doc.getElementById('popup-closer'),
-      overlay = new ol.Overlay({
-        element: container,
-        offset: [0, -40]
-      });
-  closer.onclick = function() {
+  closer.onclick = function () {
     overlay.setPosition(undefined);
     closer.blur();
     return false;
