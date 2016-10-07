@@ -90,11 +90,19 @@ ci: test
 .PHONY: npm-install
 npm-install: install
 
-.PHONY: install
-install: package.json
+$(BUILD_DIR)/timestamps/node-modules-timestamp: package.json
 	@mkdir -p $(@D)
 	npm install
 	@touch $@
+
+.PHONY: install
+install: $(BUILD_DIR)/timestamps/node-modules-timestamp
+
+.PHONY: clean
+clean:
+	@rm -f $(BUILD_DIR)/timestamps/eslint-timestamp
+	@rm -f $(JS_FINAL)
+	@rm -f $(JS_DEBUG)
 
 .PHONY: build-watch
 build-watch: build watch
@@ -108,7 +116,7 @@ test: build
 	@$(CASPERJS) $(CASPERJSFLAGS)
 
 .PHONY: build
-build: install build-js build-css
+build: install clean build-js build-css
 
 .PHONY: build-js
 build-js: bundle-js lint uglifyjs add-js-header
@@ -126,7 +134,7 @@ compile-sass: $(SASS_MAIN_FILE)
 prefix-css: $(CSS_COMBINED)
 	@$(POSTCSS) $(POSTCSSFLAGS) $^
 
-.PHONY: build
+.PHONY: cleancss
 cleancss: $(CSS_COMBINED)
 	@cat $^ | $(CLEANCSS) $(CLEANCSSFLAGS) > $(CSS_FINAL)
 
@@ -134,9 +142,16 @@ cleancss: $(CSS_COMBINED)
 bundle-js:
 	@$(ROLLUP) $(ROLLUPFLAGS)
 
-.PHONY: lint
-lint: $(JS_SRC)
+$(BUILD_DIR)/timestamps/eslint-timestamp: $(SRC_DIR) \
+					  $(ROOT_DIR)/test/ \
+					  $(ROOT_DIR)/examples/
+	@mkdir -p $(@D)
+	@echo "Running eslint ..."
 	@$(ESLINT) $^
+	@touch $@
+
+.PHONY: lint
+lint: $(BUILD_DIR)/timestamps/eslint-timestamp
 
 .PHONY: uglifyjs
 uglifyjs: $(JS_DEBUG)
