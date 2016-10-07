@@ -31,7 +31,8 @@ export class MapQuest {
         addressdetails: 1,
         limit: options.limit || this.settings.params.limit,
         countrycodes: options.countrycodes || this.settings.params.countrycodes,
-        'accept-language': options.lang || this.settings.params['accept-language']
+        'accept-language':
+            options.lang || this.settings.params['accept-language']
       }
     };
   }
