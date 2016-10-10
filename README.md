@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/jonataswalker/ol3-geocoder.svg?branch=master)](https://travis-ci.org/jonataswalker/ol3-geocoder)
 
+[![NPM](https://nodei.co/npm/ol3-geocoder.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ol3-geocoder/)
+
 A geocoder extension for [OpenLayers 3](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
 ![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol3-geocoder/screenshots/images/anim.gif)
