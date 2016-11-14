@@ -92,7 +92,7 @@ npm-install: install
 
 $(BUILD_DIR)/timestamps/node-modules-timestamp: package.json
 	@mkdir -p $(@D)
-	npm install
+	yarn
 	@touch $@
 
 .PHONY: install
