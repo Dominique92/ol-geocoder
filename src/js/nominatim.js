@@ -7,6 +7,7 @@ import { MapQuest } from './providers/mapquest';
 import { Pelias } from './providers/pelias';
 import { Google } from './providers/google';
 import { Bing } from './providers/bing';
+import { Here } from './providers/here';
 
 /**
  * @class Nominatim
@@ -42,6 +43,7 @@ export class Nominatim {
     this.Pelias = new Pelias();
     this.Google = new Google();
     this.Bing = new Bing();
+    this.Here = new Here();
 
     return this;
   }
@@ -172,6 +174,11 @@ export class Nominatim {
                 ? this.Bing.handleResponse(response.resourceSets[0].resources)
                 : undefined;
             break;
+          case constants.provider.HERE:
+						response__ = (response.Response.View.length > 0 && response.Response.View[0].Result.length > 0) 
+              ? this.Here.handleResponse(response.Response.View[0].Result) 
+              : undefined;
+            break;
         }
         if (response__) {
           this.createList(response__);
@@ -294,6 +301,9 @@ export class Nominatim {
         break;
       case constants.providers.BING:
         provider = this.Bing.getParameters(options);
+        break;
+      case constants.providers.HERE:
+        provider = this.Here.getParameters(options);
         break;
     }
     return provider;

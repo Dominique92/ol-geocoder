@@ -42,7 +42,8 @@ export const providers = {
   GOOGLE: 'google',
   PHOTON: 'photon',
   BING: 'bing',
-  PELIAS: 'pelias'
+  PELIAS: 'pelias',
+  HERE: 'here'
 };
 
 export const defaultOptions = {
