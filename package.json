@@ -26,14 +26,13 @@
     "build": "npm-run-all clean build:js build:css",
     "watch": "npm-run-all --parallel watch:js watch:css",
     "build:watch": "npm-run-all build watch",
-    "build:js": "npm-run-all lint rollup minify",
+    "build:js": "npm-run-all lint rollup",
     "watch:js": "nodemon --on-change-only --watch src --ext js --exec 'npm run build:js'",
     "build:css": "node build-css",
     "watch:css": "nodemon --on-change-only --watch src --ext scss --exec 'npm run build:css'",
-    "rollup": "rollup -c",
-    "minify": "node minify",
+    "rollup": "node build-js",
     "clean": "rimraf build && mkdir build",
-    "lint": "eslint --ext .js *.js src/js/** test",
+    "lint": "eslint --ext .js *.js src test",
     "test": "npm run build && casperjs test test/spec --includes=test/include.js --ssl-protocol=any --ignore-ssl-errors=true"
   },
   "dependencies": {
