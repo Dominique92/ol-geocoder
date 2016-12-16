@@ -22,3 +22,54 @@
   @return $value;
 }
 
+// Strips the unit from a given number-unit-combination and returns the number.
+// @link: http://stackoverflow.com/a/12335841/1779999
+// @usage: parse-int(10px) => 10
+@function parse-int($number) {
+  @return $number / ($number * 0 + 1);
+}
+
+// Simply adds the em unit to a given number. This is used twice in the
+// function underneath, thus the need for a separate function.
+@function add-em-unit($number) {
+  @return $number * 1em;
+}
+
+// * Calculates em values for a given list of (px or em) values and a given em
+// * base. Multiply base values for nested em structures (last @usage example).
+// * @usage: em(10px, 1.125) => .55556em
+// *         em(24px, .875em) => 1.71429em
+// *         em(12px 0 7em rgba(0, 0, 0, .7), 1.75) => .42857em 0 4em rgba(0, 0, 0, 0.7)
+// *         em(12px) + em(3em) => 3.75em
+// *         em(23px, em(53px)) => .43396em
+// *         em(24px, 1.5 * 1.125) => .88889em
+
+@function em($values, $em-base: 1) {
+  $base-font-size: parse-int($base-font-size);
+  $em-base: parse-int($em-base);
+  $result: ();
+
+  @each $value in $values {
+    @if $value == 0 or type-of($value) != "number" {
+      $result: append($result, $value);
+    } @else {
+      $unit: unit($value);
+      $value: parse-int($value);
+
+      @if $unit == "px" {
+        $result: append($result, add-em-unit($value / ($base-font-size * $em-base)));
+      } @else if $unit == "em" {
+        $result: append($result, add-em-unit($value / $em-base));
+      }
+    }
+  }
+
+ // * If only one value is provided, output the instance of that object instead
+ // * of the whole list. This enables use cases like nested function invocations
+ // * (e.g. `em(2px, em(15px))`) or additions/subtractions (e.g. `em(5px) + em(32px)`).
+  @if length($result) == 1 {
+    @return nth($result, 1);
+  } @else {
+    @return $result;
+  }
+}
