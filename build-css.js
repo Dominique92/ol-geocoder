@@ -48,16 +48,19 @@ sass.render({
       const cssGzip = bytes(gzip.sync(css));
       const cssMinGzip = bytes(gzip.sync(cssMin));
 
-      console.log(boxen(
-        chalk.green.bold('CSS: ') +
-        chalk.yellow.bold(cssSize) + ', ' +
-        chalk.green.bold('Gzipped: ') +
-        chalk.yellow.bold(cssGzip) + '\n' +
-        chalk.green.bold('Minified: ') +
-        chalk.yellow.bold(cssMinSize) + ', ' +
-        chalk.green.bold('Minified Gzipped: ') +
-        chalk.yellow.bold(cssMinGzip), { padding: 1 }
-      ));
+      // eslint-disable-next-line no-console
+      console.log(boxen([
+        chalk.green.bold('CSS: '),
+        chalk.yellow.bold(cssSize), ', ',
+        chalk.green.bold('Gzipped: '),
+        chalk.yellow.bold(cssGzip), '\n',
+        chalk.green.bold('Minified: '),
+        chalk.yellow.bold(cssMinSize), ', ',
+        chalk.green.bold('Gzipped: '),
+        chalk.yellow.bold(cssMinGzip), '\n',
+        chalk.green.bold('Now: '),
+        chalk.yellow.bold(new Date())
+      ].join(''), { padding: 1 }));
     });
   });
 });
