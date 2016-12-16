@@ -2,7 +2,8 @@
 
 var ol = require('openlayers');
 var Geocoder = require('../../build/ol3-geocoder');
-var elements = config.elements;
+var vars = config.vars;
+var glassClasses = config.glassClasses;
 
 casper.options.viewportSize = { width: 1024, height: 768 };
 casper.options.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X)';
@@ -11,54 +12,45 @@ casper.options.pageSettings.loadPlugins = true;
 casper.options.pageSettings.webSecurityEnabled = false;
 casper.options.pageSettings.localToRemoteUrlAccessEnabled = true;
 
-casper.test.begin('Assert DOM Elements', 13, function (test) {
+casper.test.begin('Assert DOM Elements', 11, function (test) {
   casper.start(config.url).waitFor(function () {
-    return casper.evaluate(function () {
-      return window.domready === true;
-    });
+    return casper.evaluate(function () { return window.domready === true; });
   });
   casper.thenEvaluate(function (options) {
     var geocoder = new Geocoder('nominatim', options);
     var map = new ol.Map({
       target: 'map',
       layers: [],
-      view: new ol.View({
-        center: [0, 0],
-        zoom: 1
-      })
+      view: new ol.View({ center: [0, 0], zoom: 1 })
     });
     map.addControl(geocoder);
-  }, config.geocoder_opts);
+  }, config.geocoderOpts);
 
   casper.then(function () {
     // comparison
     var input_el = this.evaluate(function () {
-      return __utils__.findOne(elements.input_query);
+      return __utils__.findOne(vars.inputQuery);
     });
     test.assertEvalEquals(function () {
-      return __utils__.findOne(elements.input_query_class);
+      return __utils__.findOne(glassClasses.input);
     }, input_el, 'Ok, comparing input by id and class');
 
-    test.assertExists(elements.container);
-    test.assertExists(elements.control);
-    test.assertExists(elements.button);
-    test.assertExists(elements.form);
-    test.assertExists(elements.input_query);
-    test.assertExists(elements.input_query_class);
-    test.assertExists(elements.list);
+    test.assertExists(glassClasses.container);
+    test.assertExists(glassClasses.control);
+    test.assertExists(glassClasses.button);
+    test.assertExists(vars.inputQuery);
+    test.assertExists(glassClasses.input);
+    test.assertExists(glassClasses.result);
     // assert structure
-    test.assertExists(elements.container + ' > ' + elements.control);
-    test.assertExists(elements.container + ' > ' + elements.list);
-    test.assertExists(elements.control + ' > ' + elements.button);
-    test.assertExists(elements.control + ' > ' + elements.form);
-    test.assertExists(elements.form + ' > ' + elements.input_query);
-  }).run(function () {
-    test.done();
-  });
+    test.assertExists(glassClasses.container + ' > ' + glassClasses.control);
+    test.assertExists(glassClasses.container + ' > ' + glassClasses.result);
+    test.assertExists(glassClasses.control + ' > ' + glassClasses.button);
+    test.assertExists(glassClasses.control + '>' + vars.inputQuery);
+  }).run(function () { test.done(); });
 });
 
 casper.test.begin('assertInstanceOf() tests', 3, function (test) {
-  var geocoder = new Geocoder('nominatim', config.geocoder_opts);
+  var geocoder = new Geocoder('nominatim', config.geocoderOpts);
   test.assertInstanceOf(geocoder, ol.control.Control,
       'Ok, new Geocoder() is ol.control.Control');
   test.assertInstanceOf(geocoder.getLayer(), ol.layer.Vector,
@@ -69,19 +61,19 @@ casper.test.begin('assertInstanceOf() tests', 3, function (test) {
 });
 
 casper.test.begin('assert constructor properties', 6, function (test) {
-  var geocoder = new Geocoder('nominatim', config.geocoder_opts);
-  test.assertTruthy(geocoder.options.provider === config.geocoder_opts.provider,
+  var geocoder = new Geocoder('nominatim', config.geocoderOpts);
+  test.assertTruthy(geocoder.options.provider === config.geocoderOpts.provider,
       'Ok, provider is the same');
-  test.assertTruthy(geocoder.options.lang === config.geocoder_opts.lang,
+  test.assertTruthy(geocoder.options.lang === config.geocoderOpts.lang,
       'Ok, lang is the same');
   test.assertTruthy(
-      geocoder.options.placeholder === config.geocoder_opts.placeholder,
+      geocoder.options.placeholder === config.geocoderOpts.placeholder,
       'Ok, placeholder is the same');
-  test.assertTruthy(geocoder.options.limit === config.geocoder_opts.limit,
+  test.assertTruthy(geocoder.options.limit === config.geocoderOpts.limit,
       'Ok, limit is the same');
-  test.assertTruthy(geocoder.options.keepOpen === config.geocoder_opts.keepOpen,
+  test.assertTruthy(geocoder.options.keepOpen === config.geocoderOpts.keepOpen,
       'Ok, keepOpen is the same');
-  test.assertTruthy(geocoder.options.debug === config.geocoder_opts.debug,
+  test.assertTruthy(geocoder.options.debug === config.geocoderOpts.debug,
       'Ok, debug is the same');
   test.done();
 });
