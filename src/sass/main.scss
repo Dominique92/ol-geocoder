@@ -1,34 +1,18 @@
-// dependencies
+@import "../../config/vars.json";
 @import "partials/functions";
 @import "partials/mixins";
 
-// global project variables
+$base-font-size: 16px;
+$font-big: em(16px);
+$font-medium: em(14px);
+$font-small: em(12px);
+$z-index: 99;
 
-@import "../../config/vars.json";
+$glass: map-get($cssClasses, glass);
+$input-text: map-get($cssClasses, inputText);
 
-$control-width: 31px;
-$control-height: 31px;
-$control-expand-width: 220px;
-$control-expand-height: 35px;
-$input-width: 180px;
-$input-left: 32px;
-$input-top: 2px;
-
-$result-width: 260px;
-$result-max-height: 300px;
-$result-left: $input-left;
-$result-top: sum-pixel($control-expand-height, $input-top);
-
-$btn-search-width: 25px;
-$btn-search-height: 25px;
-$btn-search-top: $input-top;
-$btn-search-left: 2px;
-
-
-$font-big: 16px;
-$font-medium: 14px;
-$font-small: 12px;
-
-
-// partials
-@import "partials/grids";
+.#{map-get($cssClasses, namespace)} {
+  @import "glass";
+  @import "input-text";
+  @import "common";
+}

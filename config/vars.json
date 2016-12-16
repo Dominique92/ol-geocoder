@@ -1,16 +1,30 @@
 {
-  "namespace": "ol3-geocoder",
-  "container_class": "-container",
-  "control_class": "-search",
-  "btn_search_class": "-btn-search",
-  "loading_class": "-loading",
-  "result_class": "-result",
-  "expanded_class": "-search-expanded",
-  "country_class": "-country",
-  "city_class": "-city",
-  "road_class": "-road",
-  "OL3_control_class": "ol-control",
-  "form_id": "form-geocoder",
-  "input_search_class": "-input-search",
-  "input_query_id": "gcd-input"
+  "inputQueryId": "gcd-input-query",
+  "inputResetId": "gcd-input-reset",
+  "cssClasses": {
+    "namespace": "ol-geocoder",
+    "spin": "gcd-pseudo-rotate",
+    "hidden": "gcd-hidden",
+    "country": "gcd-country",
+    "city": "gcd-city",
+    "road": "gcd-road",
+    "olControl": "ol-control",
+    "glass": {
+      "container": "gcd-gl-container",
+      "control": "gcd-gl-control",
+      "button": "gcd-gl-btn",
+      "input": "gcd-gl-input",
+      "expanded": "gcd-gl-expanded",
+      "reset": "gcd-gl-reset",
+      "result": "gcd-gl-result"
+    },
+    "inputText": {
+      "container": "gcd-txt-container",
+      "control": "gcd-txt-control",
+      "input": "gcd-txt-input",
+      "reset": "gcd-txt-reset",
+      "icon": "gcd-txt-glass",
+      "result": "gcd-txt-result"
+    }
+  }
 }

@@ -34,12 +34,12 @@ rollup.rollup({
   const minified = minify(result.code, {
     fromString: true,
     outSourceMap: pkg.build.destMap.replace('build/', ''),
-    warnings: true,
+    warnings: false,
     mangle: true,
     output: { comments: /^!/ },
     compress: {
       screw_ie8: true,
-      drop_console: true
+      drop_console: false
     }
   });
 
@@ -51,16 +51,19 @@ rollup.rollup({
     const bundleGzip = bytes(gzip.sync(result.code));
     const minGzip = bytes(gzip.sync(minified.code));
 
-    console.log(boxen(
-      chalk.green.bold('Bundle: ') +
-      chalk.yellow.bold(bundleSize) + ', ' +
-      chalk.green.bold('Gzipped: ') +
-      chalk.yellow.bold(bundleGzip) + ' - ' +
-      chalk.green.bold('Minified: ') +
-      chalk.yellow.bold(minSize) + ', ' +
-      chalk.green.bold('Gzipped: ') +
-      chalk.yellow.bold(minGzip), { padding: 1 }
-    ));
+    // eslint-disable-next-line no-console
+    console.log(boxen([
+      chalk.green.bold('Bundle: '),
+      chalk.yellow.bold(bundleSize), ', ',
+      chalk.green.bold('Gzipped: '),
+      chalk.yellow.bold(bundleGzip), '\n',
+      chalk.green.bold('Minified: '),
+      chalk.yellow.bold(minSize), ', ',
+      chalk.green.bold('Gzipped: '),
+      chalk.yellow.bold(minGzip), '\n',
+      chalk.green.bold('Now: '),
+      chalk.yellow.bold(new Date())
+    ].join(''), { padding: 1 }));
 
     fs.writeFileSync(pkg.build.destMap, minified.map);
   });

@@ -4,17 +4,6 @@
 (function (win, doc) {
   'use strict';
 
-  /**
-  * Popup
-  **/
-  var container = doc.getElementById('popup'),
-      content = doc.getElementById('popup-content'),
-      closer = doc.getElementById('popup-closer'),
-      overlay = new ol.Overlay({
-        element: container,
-        offset: [0, -40]
-      });
-
   var olview = new ol.View({
         center: [0, 0],
         zoom: 3,
@@ -27,32 +16,29 @@
       map = new ol.Map({
         target: doc.getElementById('map'),
         view: olview,
-        loadTilesWhileAnimating: true,
-        loadTilesWhileInteracting: true,
         layers: [baseLayer]
       });
+
+  var popup = new ol.Overlay.Popup({
+    panMapIfOutOfView: false
+  });
+  map.addOverlay(popup);
 
   //Instantiate with some options and add the Control
   var geocoder = new Geocoder('nominatim', {
     provider: 'photon',
+    targetType: 'text-input',
     lang: 'en',
     placeholder: 'Search for ...',
     limit: 5,
-    keepOpen: true
+    keepOpen: false
   });
   map.addControl(geocoder);
 
   //Listen when an address is chosen
   geocoder.on('addresschosen', function (evt) {
-    var coord = evt.coordinate;
-    content.innerHTML = '<p>' + evt.address.formatted + '</p>';
-    overlay.setPosition(coord);
+    window.setTimeout(function () {
+      popup.show(evt.coordinate, evt.address.formatted);
+    }, 1000);
   });
-
-  closer.onclick = function () {
-    overlay.setPosition(undefined);
-    closer.blur();
-    return false;
-  };
-  map.addOverlay(overlay);
 })(window, document);

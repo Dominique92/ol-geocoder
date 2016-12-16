@@ -260,6 +260,43 @@ export default {
       }
     }
   },
+  /**
+   * Abstraction to querySelectorAll for increased
+   * performance and greater usability
+   * @param {String} selector
+   * @param {Element} context (optional)
+   * @param {Boolean} find_all (optional)
+   * @return (find_all) {Element} : {Array}
+   */
+  find(selector, context = window.document, find_all) {
+    let simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/,
+        periodRe = /\./g,
+        slice = Array.prototype.slice,
+        matches = [];
+
+    // Redirect call to the more performant function
+    // if it's a simple selector and return an array
+    // for easier usage
+    if (simpleRe.test(selector)) {
+      switch (selector[0]) {
+        case '#':
+          matches = [this.$(selector.substr(1))];
+          break;
+        case '.':
+          matches = slice.call(context.getElementsByClassName(
+              selector.substr(1).replace(periodRe, ' ')));
+          break;
+        default:
+          matches = slice.call(context.getElementsByTagName(selector));
+      }
+    } else {
+      // If not a simple selector, query the DOM as usual
+      // and return an array for easier usage
+      matches = slice.call(context.querySelectorAll(selector));
+    }
+
+    return (find_all) ? matches : matches[0];
+  },
   $(id) {
     id = (id[0] === '#') ? id.substr(1, id.length) : id;
     return document.getElementById(id);
@@ -291,22 +328,16 @@ export default {
   anyItemHasValue(obj, has = false) {
     const keys = Object.keys(obj);
     keys.forEach(key => {
-      if (!this.isEmpty(obj[key])) {
-        has = true;
-      }
+      if (!this.isEmpty(obj[key])) has = true;
     });
     return has;
   },
   removeAllChildren(node) {
-    while (node.firstChild) {
-      node.removeChild(node.firstChild);
-    }
+    while (node.firstChild) node.removeChild(node.firstChild);
   },
   removeAll(collection) {
     let node;
-    while ((node = collection[0])) {
-      node.parentNode.removeChild(node);
-    }
+    while ((node = collection[0])) node.parentNode.removeChild(node);
   },
   getChildren(node, tag) {
     return [].filter.call(
@@ -365,17 +396,13 @@ export default {
     elem.innerHTML = html;
     let frag = document.createDocumentFragment();
 
-    while (elem.childNodes[0]) {
-      frag.appendChild(elem.childNodes[0]);
-    }
+    while (elem.childNodes[0]) frag.appendChild(elem.childNodes[0]);
     elem.appendChild(frag);
     return elem;
   },
   assert(condition, message = 'Assertion failed') {
     if (!condition) {
-      if (typeof Error !== 'undefined') {
-        throw new Error(message);
-      }
+      if (typeof Error !== 'undefined') throw new Error(message);
       throw message; // Fallback
     }
   }

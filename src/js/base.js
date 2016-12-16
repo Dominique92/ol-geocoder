@@ -1,6 +1,7 @@
+import { Html } from './html';
 import { Nominatim } from './nominatim';
-import utils from './utils';
-import * as constants from './constants';
+import U from './utils';
+import * as C from './constants';
 
 /**
  * @class Base
@@ -9,31 +10,37 @@ import * as constants from './constants';
 export default class Base extends ol.control.Control {
   /**
    * @constructor
-   * @param {string} control_type Nominatim|Reverse.
-   * @param {object|undefined} opt_options Options.
+   * @param {string} type nominatim|reverse.
+   * @param {object} options Options.
    */
-  constructor(control_type = 'nominatim', opt_options = {}) {
-    utils.assert(typeof control_type === 'string',
-      '@param `control_type` should be string type!'
-    );
-    utils.assert(typeof opt_options === 'object',
-      '@param `opt_options` should be object type!'
-    );
+  constructor(type = C.controlType.NOMINATIM, options = {}) {
+    U.assert(typeof type === 'string', '@param `type` should be string!');
+    U.assert(typeof options === 'object',
+        '@param `options` should be object!');
 
-    this.options = utils.mergeOptions(constants.defaultOptions, opt_options);
+    this.options = U.mergeOptions(C.defaultOptions, options);
+    this.container = undefined;
 
-    Base.Nominatim = new Nominatim(this);
+    let $nominatim;
+    const $html = new Html(this);
+    console.log($html.els); // eslint-disable-line no-console
 
-    super({
-      element: Base.Nominatim.container
-    });
+    if (type === C.controlType.NOMINATIM) {
+      this.container = $html.els.container;
+      $nominatim = new Nominatim(this, $html.els);
+      this.layer = $nominatim.layer;
+    } else if (type === C.controlType.REVERSE) {
+      // TODO
+    }
+
+    super({ element: this.container });
   }
 
   /**
    * @return {ol.layer.Vector} Returns the layer created by this control
    */
   getLayer() {
-    return Base.Nominatim.layer;
+    return this.layer;
   }
 
   /**

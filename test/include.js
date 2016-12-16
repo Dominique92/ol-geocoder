@@ -1,4 +1,5 @@
-var require = patchRequire(require); // eslint-disable-line no-use-before-define
+// eslint-disable-next-line no-use-before-define
+var require = patchRequire(require);
 // path here is relative to where this will be injected
 var fs       = require('fs');
 var server   = require('webserver').create();
