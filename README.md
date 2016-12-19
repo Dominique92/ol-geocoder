@@ -44,6 +44,12 @@ Load CSS and Javascript:
 <link href="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css" rel="stylesheet">
 <script src="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js"></script>
 ```
+##### CDN Hosted - UNPKG
+Load CSS and Javascript:
+```HTML
+<link href="https://unpkg.com/ol3-geocoder/build/ol3-geocoder.min.css" rel="stylesheet">
+<script src="https://unpkg.com/ol3-geocoder/build/ol3-geocoder.js"></script>
+```
 ##### Self hosted
 Download [latest release](https://github.com/jonataswalker/ol3-geocoder/releases/latest) and (obviously) load CSS and Javascript.
 
@@ -54,6 +60,7 @@ var geocoder = new Geocoder('nominatim', {
   key: '__some_key__',
   lang: 'pt-BR', //en-US, fr-FR
   placeholder: 'Search for ...',
+  targetType: 'text-input',
   limit: 5,
   keepOpen: true
 });
@@ -66,7 +73,7 @@ geocoder.on('addresschosen', function(evt){
   var feature = evt.feature,
       coord = evt.coordinate,
       address = evt.address;
-
+  // some popup solution
   content.innerHTML = '<p>'+ address.formatted +'</p>';
   overlay.setPosition(coord);
 });
@@ -76,31 +83,31 @@ geocoder.on('addresschosen', function(evt){
 
 ## Constructor
 
-#### `new Geocoder(control_type, options)`
+#### `new Geocoder(type, options)`
 
-###### `control_type` `{String}`
-Maybe later we will have other types like `'reverse'`. So for now just pass `'nominatim'`.
+- `type` `{String}` - Maybe later we will have other types like `'reverse'`. So for now just pass `'nominatim'`.
 
-###### `options` is an object with the following possible properties:
-* `provider`             : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`, `'bing'`; Your preferable provider;
-* `key`                  : `''`; API Key if required;
-* `autoComplete`         : `false`; Search as you type;
-* `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;
-* `placeholder`          : `'Search for an address'`; Placeholder for text input;
-* `featureStyle`         : `ol.style.Style`; Feature style;
-* `lang`                 : `'en-US'`; Preferable language;
-* `limit`                : `5`; Limit of results;
-* `countrycodes`         : `''`; Only valid for `osm` and `mapquest`; Limit search results to a specific country (or a list of countries). This is an [ISO 3166-1alpha2 code] (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), e.g. `gb` for the United Kingdom, `br` for Brazil, etc;
-* `keepOpen`             : `false`; Whether the results keep openned;
-* `preventDefault`       : `false`; Whether panning (and creating marker) when an address is chosen;
-* `debug`                : `false`; If true logs provider's response;
+- `options` is an object with the following possible properties:
+  * `provider`             : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`, `'bing'`; Your preferable provider;
+  * `key`                  : `''`; API Key if required;
+  * `autoComplete`         : `false`; Search as you type;
+  * `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;
+  * `placeholder`          : `'Search for an address'`; Placeholder for text input;
+  * `targetType`           : `'glass-button'`; Can also be `'text-input'`;
+  * `featureStyle`         : `ol.style.Style`; Feature style;
+  * `lang`                 : `'en-US'`; Preferable language;
+  * `limit`                : `5`; Limit of results;
+  * `countrycodes`         : `''`; Only valid for `osm` and `mapquest`; Limit search results to a specific country (or a list of countries). This is an [ISO 3166-1alpha2 code] (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), e.g. `gb` for the United Kingdom, `br` for Brazil, etc;
+  * `keepOpen`             : `false`; Whether the results keep openned;
+  * `preventDefault`       : `false`; Whether panning (and creating marker) when an address is chosen;
+  * `debug`                : `false`; If true logs provider's response;
 
-## Methods
+## Instance Methods
 
-#### `geocoder.getLayer()`
+#### `getLayer()`
 Returns the layer `{ol.layer.Vector}` created by Geocoder control.
 
-#### `geocoder.getSource()`
+#### `getSource()`
 Returns the source `{ol.source.Vector}` created by Geocoder control.
 
 ## Events
