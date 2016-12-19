@@ -1,6 +1,6 @@
 {
   "name": "ol3-geocoder",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "A geocoder extension for OpenLayers 3.",
   "author": "Jonatas Walker",
   "homepage": "https://github.com/jonataswalker/ol3-geocoder",
