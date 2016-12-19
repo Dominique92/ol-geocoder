@@ -14,6 +14,9 @@ export default class Base extends ol.control.Control {
    * @param {object} options Options.
    */
   constructor(type = C.controlType.NOMINATIM, options = {}) {
+
+    if (!(this instanceof Base)) return new Base();
+
     U.assert(typeof type === 'string', '@param `type` should be string!');
     U.assert(typeof options === 'object',
         '@param `options` should be object!');
@@ -23,7 +26,6 @@ export default class Base extends ol.control.Control {
 
     let $nominatim;
     const $html = new Html(this);
-    console.log($html.els); // eslint-disable-line no-console
 
     if (type === C.controlType.NOMINATIM) {
       this.container = $html.els.container;
