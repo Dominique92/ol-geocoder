@@ -16,3 +16,19 @@ $input-text: map-get($cssClasses, inputText);
   @import "input-text";
   @import "common";
 }
+
+.#{map-get($cssClasses, road)} {
+  font-size: $font-medium;
+  font-weight: 500;
+  color: #000;
+}
+.#{map-get($cssClasses, city)} {
+  font-size: $font-small;
+  font-weight: normal;
+  color: #000;
+}
+.#{map-get($cssClasses, country)} {
+  font-size: $font-small;
+  font-weight: lighter;
+  color: #444;
+}
