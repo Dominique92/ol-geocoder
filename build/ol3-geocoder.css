@@ -1,8 +1,8 @@
 /*!
- * ol3-geocoder - v2.4.0
+ * ol3-geocoder - v2.4.1
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Built: Mon Dec 19 2016 11:15:29 GMT-0200 (BRST)
+ * Built: Fri Dec 30 2016 09:33:20 GMT-0200 (BRST)
  */
 .ol-geocoder.gcd-gl-container {
   position: absolute;
@@ -25,10 +25,10 @@
   .ol-geocoder .gcd-gl-input {
   position: absolute;
   z-index: 99;
-  top: 0.1875em;
+  top: 0.25em;
   left: 2.5em;
   width: 14.84375em;
-  padding: 0.3125em;
+  padding: 5px;
   border: 1px solid #ccc;
   font-family: inherit;
   font-size: 0.875em;
@@ -220,15 +220,15 @@
   to {
     -webkit-transform: rotate(360deg);
             transform: rotate(360deg); } }
-  .ol-geocoder .gcd-road {
+  .gcd-road {
   font-size: 0.875em;
   font-weight: 500;
   color: #000; }
-  .ol-geocoder .gcd-city {
+  .gcd-city {
   font-size: 0.75em;
   font-weight: normal;
   color: #000; }
-  .ol-geocoder .gcd-country {
+  .gcd-country {
   font-size: 0.75em;
   font-weight: lighter;
   color: #444; }
