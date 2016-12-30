@@ -220,6 +220,7 @@ export class Nominatim {
     feature.setStyle(this.options.featureStyle);
     feature.setId(U.randomId('geocoder-ft-'));
     this.getSource().addFeature(feature);
+    return feature;
   }
 
   addressTemplate(address) {
