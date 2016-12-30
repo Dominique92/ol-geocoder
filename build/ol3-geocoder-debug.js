@@ -1,8 +1,8 @@
 /*!
- * ol3-geocoder - v2.4.0
+ * ol3-geocoder - v2.4.1
  * A geocoder extension for OpenLayers 3.
  * https://github.com/jonataswalker/ol3-geocoder
- * Built: Mon Dec 19 2016 11:15:26 GMT-0200 (BRST)
+ * Built: Fri Dec 30 2016 09:33:16 GMT-0200 (BRST)
  */
 
 (function (global, factory) {
@@ -1140,6 +1140,7 @@ Nominatim.prototype.createFeature = function createFeature (coord) {
   feature.setStyle(this.options.featureStyle);
   feature.setId(utils.randomId('geocoder-ft-'));
   this.getSource().addFeature(feature);
+  return feature;
 };
 
 Nominatim.prototype.addressTemplate = function addressTemplate (address) {
