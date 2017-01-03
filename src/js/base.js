@@ -30,7 +30,6 @@ export default class Base extends ol.control.Control {
     let $nominatim;
     const $html = new Html(this);
 
-    console.log(type, C.controlType.NOMINATIM);
     if (type === C.controlType.NOMINATIM) {
       this.container = $html.els.container;
       $nominatim = new Nominatim(this, $html.els);
@@ -39,7 +38,6 @@ export default class Base extends ol.control.Control {
       // TODO
     }
 
-    console.log($html.els.container);
     super({ element: $html.els.container });
   }
 
