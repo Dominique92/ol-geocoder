@@ -38,7 +38,7 @@ export default class Base extends ol.control.Control {
       // TODO
     }
 
-    super({ element: $html.els.container });
+    super({ element: this.container });
   }
 
   /**
