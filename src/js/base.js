@@ -18,6 +18,9 @@ export default class Base extends ol.control.Control {
     if (!(this instanceof Base)) return new Base();
 
     U.assert(typeof type === 'string', '@param `type` should be string!');
+    U.assert(type === C.controlType.NOMINATIM || type === C.controlType.REVERSE,
+        `@param 'type' should be '${C.controlType.NOMINATIM}' or 
+        '${C.controlType.REVERSE}'!`);
     U.assert(typeof options === 'object',
         '@param `options` should be object!');
 
@@ -27,6 +30,7 @@ export default class Base extends ol.control.Control {
     let $nominatim;
     const $html = new Html(this);
 
+    console.log(type, C.controlType.NOMINATIM);
     if (type === C.controlType.NOMINATIM) {
       this.container = $html.els.container;
       $nominatim = new Nominatim(this, $html.els);
@@ -35,7 +39,8 @@ export default class Base extends ol.control.Control {
       // TODO
     }
 
-    super({ element: this.container });
+    console.log($html.els.container);
+    super({ element: $html.els.container });
   }
 
   /**
