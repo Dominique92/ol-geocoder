@@ -1,0 +1,13 @@
+.#{map-get($cssClasses, hidden)} {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.#{map-get($cssClasses, spin)}::after {
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg) }
+  to { transform: rotate(360deg) }
+}

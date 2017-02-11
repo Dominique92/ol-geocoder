@@ -1,7 +1,7 @@
+import { Html } from './html';
 import { Nominatim } from './nominatim';
-import utils from './utils';
-import * as constants from './constants';
-import * as vars from '../../config/vars.json';
+import U from './utils';
+import * as C from './constants';
 
 /**
  * @class Base
@@ -10,31 +10,42 @@ import * as vars from '../../config/vars.json';
 export default class Base extends ol.control.Control {
   /**
    * @constructor
-   * @param {string} control_type Nominatim|Reverse.
-   * @param {object|undefined} opt_options Options.
+   * @param {string} type nominatim|reverse.
+   * @param {object} options Options.
    */
-  constructor(control_type = 'nominatim', opt_options = {}) {
-    utils.assert(typeof control_type == 'string',
-      '@param `control_type` should be string type!'
-    );
-    utils.assert(typeof opt_options == 'object',
-      '@param `opt_options` should be object type!'
-    );
-    
-    this.options = utils.mergeOptions(constants.defaultOptions, opt_options);
-    
-    Base.Nominatim = new Nominatim(this);
-    
-    super({
-      element: Base.Nominatim.container
-    });
+  constructor(type = C.controlType.NOMINATIM, options = {}) {
+
+    if (!(this instanceof Base)) return new Base();
+
+    U.assert(typeof type === 'string', '@param `type` should be string!');
+    U.assert(type === C.controlType.NOMINATIM || type === C.controlType.REVERSE,
+        `@param 'type' should be '${C.controlType.NOMINATIM}' or 
+        '${C.controlType.REVERSE}'!`);
+    U.assert(typeof options === 'object',
+        '@param `options` should be object!');
+
+    this.options = U.mergeOptions(C.defaultOptions, options);
+    this.container = undefined;
+
+    let $nominatim;
+    const $html = new Html(this);
+
+    if (type === C.controlType.NOMINATIM) {
+      this.container = $html.els.container;
+      $nominatim = new Nominatim(this, $html.els);
+      this.layer = $nominatim.layer;
+    } else if (type === C.controlType.REVERSE) {
+      // TODO
+    }
+
+    super({ element: this.container });
   }
 
   /**
    * @return {ol.layer.Vector} Returns the layer created by this control
    */
   getLayer() {
-    return Base.Nominatim.layer;
+    return this.layer;
   }
 
   /**

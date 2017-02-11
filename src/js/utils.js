@@ -14,7 +14,7 @@ export default {
     }, []).join('&');
   },
   encodeUrlXhr(url, data) {
-    if(data && typeof(data) === 'object') {
+    if (data && typeof data === 'object') {
       const str_data = this.toQueryString(data);
       url += (/\?/.test(url) ? '&' : '?') + str_data;
     }
@@ -22,6 +22,8 @@ export default {
   },
   json(url, data) {
     let xhr = new XMLHttpRequest(),
+        url_ = '',
+        data_type = '',
         when = {},
         onload = () => {
           if (xhr.status === 200) {
@@ -29,45 +31,95 @@ export default {
           }
         },
         onerror = () => {
-          console.info('Cannot XHR ' + JSON.stringify(url));
+          console.error('Cannot XHR ' + JSON.stringify(url));
         };
-    url = this.encodeUrlXhr(url, data);
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Accept','application/json');
-    xhr.onload = onload;
-    xhr.onerror = onerror;
-    xhr.send(null);
-    
+
+    if (typeof url === 'object') {
+      url_ = url.url;
+      data = url.data;
+      data_type = url.data_type || 'json';
+    } else {
+      url_ = url;
+    }
+
+    url_ = this.encodeUrlXhr(url_, data);
+
+    if (data_type === 'jsonp') {
+      this.jsonp(url_, url.callbackName, function (res) {
+        when.ready.call(undefined, res);
+      });
+    } else {
+      xhr.open('GET', url_, true);
+      xhr.setRequestHeader('Accept','application/json');
+      xhr.onload = onload;
+      xhr.onerror = onerror;
+      xhr.send(null);
+    }
+
     return {
-      when: obj => { when.ready = obj.ready; }
+      when: obj => {
+        when.ready = obj.ready;
+      }
     };
+  },
+  jsonp(url, key, callback) {
+    // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
+    let head = document.head,
+        script = document.createElement('script'),
+        // generate minimally unique name for callback function
+        callbackName = 'f' + Math.round(Math.random() * Date.now());
+
+    // set request url
+    script.setAttribute('src',
+        /*  add callback parameter to the url
+            where key is the parameter key supplied
+            and callbackName is the parameter value */
+        (url + (url.indexOf('?') > 0 ? '&' : '?') + key + '=' + callbackName));
+
+    /*  place jsonp callback on window,
+        the script sent by the server should call this
+        function as it was passed as a url parameter */
+    window[callbackName] = function (json) {
+      window[callbackName] = undefined;
+
+      // clean up script tag created for request
+      setTimeout(function () {
+        head.removeChild(script);
+      }, 0);
+
+      // hand data back to the user
+      callback(json);
+    };
+
+    // actually make the request
+    head.appendChild(script);
   },
   now() {
     // Polyfill for window.performance.now()
     // @license http://opensource.org/licenses/MIT
     // copyright Paul Irish 2015
     // https://gist.github.com/paulirish/5438650
-    if ('performance' in window == false) {
+    if ('performance' in window === false) {
       window.performance = {};
     }
-    
+
     Date.now = (Date.now || function () {  // thanks IE8
       return new Date().getTime();
     });
-    
-    if ('now' in window.performance == false) {
-      
+
+    if ('now' in window.performance === false) {
+
       let nowOffset = Date.now();
-      
-      if (performance.timing && performance.timing.navigationStart){
-        nowOffset = performance.timing.navigationStart
+
+      if (performance.timing && performance.timing.navigationStart) {
+        nowOffset = performance.timing.navigationStart;
       }
-      
-      window.performance.now = function now(){
+
+      window.performance.now = function now() {
         return Date.now() - nowOffset;
-      }
+      };
     }
-    
+
     return window.performance.now();
   },
   flyTo(map, coord, duration, resolution) {
@@ -83,7 +135,7 @@ export default {
       duration: duration,
       resolution: view.getResolution()
     });
-    
+
     map.beforeRender(pan, zoom);
     view.setCenter(coord);
     view.setResolution(resolution);
@@ -106,29 +158,35 @@ export default {
    */
   addClass(element, classname, timeout) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.addClass(each, classname) });
+      element.forEach(each => {
+        this.addClass(each, classname);
+      });
       return;
     }
-    
-    const array = (Array.isArray(classname)) ? classname : classname.split(/\s+/);
+
+    const array = (Array.isArray(classname))
+        ? classname
+        : classname.split(/\s+/);
     let i = array.length;
-    
-    while(i--) {
+
+    while (i--) {
       if (!this.hasClass(element, array[i])) {
         this._addClass(element, array[i], timeout);
       }
     }
   },
-  _addClass(el, c, timeout) {
+  _addClass(el, klass, timeout) {
     // use native if available
     if (el.classList) {
-      el.classList.add(c);
+      el.classList.add(klass);
     } else {
-      el.className = (el.className +' '+ c).trim();
+      el.className = (el.className + ' ' + klass).trim();
     }
-    
+
     if (timeout && this.isNumeric(timeout)) {
-      window.setTimeout(() => { this._removeClass(el, c) }, timeout);
+      window.setTimeout(() => {
+        this._removeClass(el, klass);
+      }, timeout);
     }
   },
   /**
@@ -139,28 +197,32 @@ export default {
    */
   removeClass(element, classname, timeout) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.removeClass(each, classname, timeout) });
+      element.forEach(each => {
+        this.removeClass(each, classname, timeout);
+      });
       return;
     }
-    
-    const array = (Array.isArray(classname)) ? classname : classname.split(/\s+/);
+
+    const array = (Array.isArray(classname))
+        ? classname
+        : classname.split(/\s+/);
     let i = array.length;
-    
-    while(i--) {
+
+    while (i--) {
       if (this.hasClass(element, array[i])) {
         this._removeClass(element, array[i], timeout);
       }
     }
   },
-  _removeClass(el, c, timeout) {
+  _removeClass(el, klass, timeout) {
     if (el.classList) {
-      el.classList.remove(c);
+      el.classList.remove(klass);
     } else {
-      el.className = (el.className.replace(this.classRegex(c), ' ')).trim();
+      el.className = (el.className.replace(this.classRegex(klass), ' ')).trim();
     }
     if (timeout && this.isNumeric(timeout)) {
       window.setTimeout(() => {
-        this._addClass(el, c);
+        this._addClass(el, klass);
       }, timeout);
     }
   },
@@ -171,8 +233,9 @@ export default {
    */
   hasClass(element, c) {
     // use native if available
-    return (element.classList) ?
-      element.classList.contains(c) : this.classRegex(c).test(element.className);
+    return element.classList
+        ? element.classList.contains(c)
+        : this.classRegex(c).test(element.className);
   },
   /**
    * @param {Element|Array<Element>} element DOM node or array of nodes.
@@ -180,10 +243,12 @@ export default {
    */
   toggleClass(element, classname) {
     if (Array.isArray(element)) {
-      element.forEach(each => { this.toggleClass(each, classname) });
+      element.forEach(each => {
+        this.toggleClass(each, classname);
+      });
       return;
     }
-    
+
     // use native if available
     if (element.classList) {
       element.classList.toggle(classname);
@@ -195,6 +260,43 @@ export default {
       }
     }
   },
+  /**
+   * Abstraction to querySelectorAll for increased
+   * performance and greater usability
+   * @param {String} selector
+   * @param {Element} context (optional)
+   * @param {Boolean} find_all (optional)
+   * @return (find_all) {Element} : {Array}
+   */
+  find(selector, context = window.document, find_all) {
+    let simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/,
+        periodRe = /\./g,
+        slice = Array.prototype.slice,
+        matches = [];
+
+    // Redirect call to the more performant function
+    // if it's a simple selector and return an array
+    // for easier usage
+    if (simpleRe.test(selector)) {
+      switch (selector[0]) {
+        case '#':
+          matches = [this.$(selector.substr(1))];
+          break;
+        case '.':
+          matches = slice.call(context.getElementsByClassName(
+              selector.substr(1).replace(periodRe, ' ')));
+          break;
+        default:
+          matches = slice.call(context.getElementsByTagName(selector));
+      }
+    } else {
+      // If not a simple selector, query the DOM as usual
+      // and return an array for easier usage
+      matches = slice.call(context.querySelectorAll(selector));
+    }
+
+    return (find_all) ? matches : matches[0];
+  },
   $(id) {
     id = (id[0] === '#') ? id.substr(1, id.length) : id;
     return document.getElementById(id);
@@ -205,8 +307,8 @@ export default {
       return (!!obj && obj instanceof HTMLElement);
     }
     // Older browsers
-    return (!!obj && typeof obj === 'object' && 
-      obj.nodeType === 1 && !!obj.nodeName);
+    return (!!obj && typeof obj === 'object' && obj.nodeType === 1 &&
+        !!obj.nodeName);
   },
   getAllChildren(node, tag) {
     return [].slice.call(node.getElementsByTagName(tag));
@@ -215,7 +317,7 @@ export default {
     return (!str || 0 === str.length);
   },
   emptyArray(array) {
-    while(array.length) array.pop();
+    while (array.length) array.pop();
   },
   anyMatchInArray(source, target) {
     return source.some(each => target.indexOf(each) >= 0);
@@ -224,31 +326,29 @@ export default {
     return arr2.every(each => arr1.indexOf(each) >= 0);
   },
   anyItemHasValue(obj, has = false) {
-    for(let key in obj) {
-      if(!this.isEmpty(obj[key])) {
-        has = true;
-      }
-    }
+    const keys = Object.keys(obj);
+    keys.forEach(key => {
+      if (!this.isEmpty(obj[key])) has = true;
+    });
     return has;
   },
   removeAllChildren(node) {
-    while (node.firstChild) {
-      node.removeChild(node.firstChild);
-    }
+    while (node.firstChild) node.removeChild(node.firstChild);
   },
   removeAll(collection) {
     let node;
-    while ((node = collection[0])) {
-      node.parentNode.removeChild(node);
-    }
+    while ((node = collection[0])) node.parentNode.removeChild(node);
   },
   getChildren(node, tag) {
-    return [].filter.call(node.childNodes, el => tag ? 
-        el.nodeType == 1 && el.tagName.toLowerCase() == tag : el.nodeType == 1);
+    return [].filter.call(
+      node.childNodes, el => tag
+        ? el.nodeType === 1 && el.tagName.toLowerCase() === tag
+        : el.nodeType === 1
+    );
   },
   template(html, row) {
-    return html.replace(/\{ *([\w_-]+) *\}/g, (html, key) => {
-      let value = (row[key]  === undefined) ? '' : row[key];
+    return html.replace(/\{ *([\w_-]+) *\}/g, (htm, key) => {
+      let value = (row[key] === undefined) ? '' : row[key];
       return this.htmlEscape(value);
     });
   },
@@ -261,29 +361,29 @@ export default {
       .replace(/'/g, '&#039;');
   },
   /**
-  * Overwrites obj1's values with obj2's and adds 
-  * obj2's if non existent in obj1
-  * @returns obj3 a new object based on obj1 and obj2
-  */
+    * Overwrites obj1's values with obj2's and adds
+    * obj2's if non existent in obj1
+    * @returns obj3 a new object based on obj1 and obj2
+    */
   mergeOptions(obj1, obj2) {
     let obj3 = {};
-    for (let attr1 in obj1) { obj3[attr1] = obj1[attr1]; }
-    for (let attr2 in obj2) { obj3[attr2] = obj2[attr2]; }
+    for (let attr1 in obj1) obj3[attr1] = obj1[attr1];
+    for (let attr2 in obj2) obj3[attr2] = obj2[attr2];
     return obj3;
   },
   createElement(node, html) {
     let elem;
     if (Array.isArray(node)) {
       elem = document.createElement(node[0]);
-      
+
       if (node[1].id) elem.id = node[1].id;
       if (node[1].classname) elem.className = node[1].classname;
-      
+
       if (node[1].attr) {
         let attr = node[1].attr;
         if (Array.isArray(attr)) {
           let i = -1;
-          while(++i < attr.length) {
+          while (++i < attr.length) {
             elem.setAttribute(attr[i].name, attr[i].value);
           }
         } else {
@@ -295,18 +395,14 @@ export default {
     }
     elem.innerHTML = html;
     let frag = document.createDocumentFragment();
-    
-    while (elem.childNodes[0]) {
-      frag.appendChild(elem.childNodes[0]);
-    }
+
+    while (elem.childNodes[0]) frag.appendChild(elem.childNodes[0]);
     elem.appendChild(frag);
     return elem;
   },
   assert(condition, message = 'Assertion failed') {
     if (!condition) {
-      if (typeof Error !== 'undefined') {
-        throw new Error(message);
-      }
+      if (typeof Error !== 'undefined') throw new Error(message);
       throw message; // Fallback
     }
   }

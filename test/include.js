@@ -1,12 +1,17 @@
+// eslint-disable-next-line no-use-before-define
 var require = patchRequire(require);
-
 // path here is relative to where this will be injected
-var config      = require('../config');
-var server      = require('webserver').create();
-var fs          = require('fs');
+var fs       = require('fs');
+var server   = require('webserver').create();
+var config   = require('../config');
+
+if (!phantom.casperLoaded) {
+  console.warn('This script must be invoked using the casperjs executable');
+  phantom.exit(1);
+}
 
 // server
-server.listen('127.0.0.1:' + config.port, function(req, res) {
+server.listen('127.0.0.1:' + config.port, function (req, res) {
   var file_path = fs.workingDirectory + req.url,
       ext = req.url.substring(req.url.indexOf('.') + 1),
       file = '',
@@ -29,20 +34,18 @@ server.listen('127.0.0.1:' + config.port, function(req, res) {
     file = fs.read(file_path);
   } else {
     res.statusCode = 404;
+    casper.echo('Can\'t find file: ' + file_path, 'ERROR');
+    casper.exit();
   }
   res.write(file);
   res.close();
 });
 
-casper.on('resource.received', function(resource) {
+casper.on('resource.received', function (resource) {
 //   this.echo(resource.url + " is OK", "INFO");
 });
 
-casper.on('remote.message', function(msg) {
-//   this.echo(msg + " is remote.message", "INFO");
-});
-
 // test suites completion listener
-casper.test.on('tests.complete', function() {
+casper.test.on('tests.complete', function () {
   server.close();
 });

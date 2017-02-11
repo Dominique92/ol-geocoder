@@ -6,7 +6,7 @@ export class OpenStreet {
    * @constructor
    */
   constructor() {
-    
+
     this.settings = {
       url: '//nominatim.openstreetmap.org/search/',
       params: {
@@ -19,7 +19,7 @@ export class OpenStreet {
       }
     };
   }
-  
+
   getParameters(options) {
     return {
       url: this.settings.url,
@@ -29,11 +29,12 @@ export class OpenStreet {
         addressdetails: 1,
         limit: options.limit || this.settings.params.limit,
         countrycodes: options.countrycodes || this.settings.params.countrycodes,
-        'accept-language': options.lang || this.settings.params['accept-language']
+        'accept-language':
+            options.lang || this.settings.params['accept-language']
       }
     };
   }
-  
+
   handleResponse(results) {
     return results.map(result => ({
       lon: result.lon,

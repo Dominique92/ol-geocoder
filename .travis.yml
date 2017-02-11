@@ -1,24 +1,20 @@
+sudo: required
+dist: trusty
+
 language: node_js
 
 node_js:
-  - "4"
-
-env:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
+  - "6"
 
 cache:
   bundler: true
+  yarn: true
   directories:
     - travis-phantomjs
     - node_modules
 
 before_install:
+  # PhantomJS
   - "if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis-phantomjs; mkdir -p $PWD/travis-phantomjs; fi"
   - "if [ $(phantomjs --version) != '2.1.1' ]; then wget https://github.com/BIGjuevos/phantomjs-builds/archive/v2.1.1.tar.gz -O $PWD/travis-phantomjs/v2.1.1.tar.gz; fi"
   - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xf $PWD/travis-phantomjs/v2.1.1.tar.gz -C $PWD/travis-phantomjs; fi"
@@ -26,10 +22,11 @@ before_install:
   - "phantomjs --version"
 
 before_script:
-  
+
 script:
-  - xvfb-run -a make ci
+  - xvfb-run -a npm run test
 
 branches:
   only:
     - "master"
+    - /^greenkeeper-.*$/
