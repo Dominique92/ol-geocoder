@@ -125,20 +125,9 @@ export default {
   flyTo(map, coord, duration, resolution) {
     resolution = resolution || 2.388657133911758;
     duration = duration || 500;
-
     const view = map.getView();
-    const pan = ol.animation.pan({
-      duration: duration,
-      source: view.getCenter()
-    });
-    const zoom = ol.animation.zoom({
-      duration: duration,
-      resolution: view.getResolution()
-    });
-
-    map.beforeRender(pan, zoom);
-    view.setCenter(coord);
-    view.setResolution(resolution);
+    view.animate({ duration: duration, resolution: resolution },
+                 { duration: duration, center: coord });
   },
   randomId(prefix) {
     const id = this.now().toString(36);
