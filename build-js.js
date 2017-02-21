@@ -16,7 +16,10 @@ var banner = fs.readFileSync('banner.js', 'utf-8')
   .replace('${version}', pkg.version)
   .replace('${time}', new Date());
 
+const external = Object.keys(pkg.dependencies);
+
 rollup.rollup({
+  external,
   entry: pkg.build.entry,
   plugins: [
     json(),
