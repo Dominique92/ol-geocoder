@@ -1,8 +1,8 @@
 /*!
- * ol3-geocoder - v2.4.1
- * A geocoder extension for OpenLayers 3.
+ * ol3-geocoder - v2.5.0
+ * A geocoder extension for OpenLayers.
  * https://github.com/jonataswalker/ol3-geocoder
- * Built: Fri Dec 30 2016 09:33:16 GMT-0200 (BRST)
+ * Built: Tue Feb 21 2017 08:59:29 GMT-0300 (BRT)
  */
 
 (function (global, factory) {
@@ -205,20 +205,9 @@ var utils = {
   flyTo: function flyTo(map, coord, duration, resolution) {
     resolution = resolution || 2.388657133911758;
     duration = duration || 500;
-
     var view = map.getView();
-    var pan = ol.animation.pan({
-      duration: duration,
-      source: view.getCenter()
-    });
-    var zoom = ol.animation.zoom({
-      duration: duration,
-      resolution: view.getResolution()
-    });
-
-    map.beforeRender(pan, zoom);
-    view.setCenter(coord);
-    view.setResolution(resolution);
+    view.animate({ duration: duration, resolution: resolution },
+                 { duration: duration, center: coord });
   },
   randomId: function randomId(prefix) {
     var id = this.now().toString(36);
@@ -1263,6 +1252,8 @@ var Base = (function (superclass) {
     if (!(this instanceof Base)) { return new Base(); }
 
     utils.assert(typeof type === 'string', '@param `type` should be string!');
+    utils.assert(type === controlType.NOMINATIM || type === controlType.REVERSE,
+        ("@param 'type' should be '" + (controlType.NOMINATIM) + "' or \n        '" + (controlType.REVERSE) + "'!"));
     utils.assert(typeof options === 'object',
         '@param `options` should be object!');
 
