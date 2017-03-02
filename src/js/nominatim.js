@@ -85,7 +85,7 @@ export class Nominatim {
         }, 200);
       }
     };
-    this.els.input.addEventListener('keyup', query, false);
+    this.els.input.addEventListener('keypress', query, false);
     this.els.input.addEventListener('input', handleValue, false);
     this.els.reset.addEventListener('click', reset, false);
     if (this.options.targetType === C.targetType.GLASS) {
