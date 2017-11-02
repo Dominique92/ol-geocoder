@@ -2,7 +2,7 @@
  * ol3-geocoder - v2.5.0
  * A geocoder extension for OpenLayers.
  * https://github.com/jonataswalker/ol3-geocoder
- * Built: Mon Sep 25 2017 14:35:49 GMT+0100 (BST)
+ * Built: Thu Nov 02 2017 18:16:13 GMT+0000 (GMT)
  */
 
 (function (global, factory) {
@@ -1099,6 +1099,10 @@ Nominatim.prototype.chosen = function chosen (place, addressHtml, addressObj, ad
   var coord_ = [parseFloat(place.lon), parseFloat(place.lat)];
   var projection = map.getView().getProjection();
   var coord = ol.proj.transform(coord_, 'EPSG:4326', projection);
+  var bbox = place.bbox;
+  if (bbox) {
+    bbox = ol.proj.transformExtent(bbox, 'EPSG:4326', projection);
+  }
   var address = {
     formatted: addressHtml,
     details: addressObj,
@@ -1111,17 +1115,23 @@ Nominatim.prototype.chosen = function chosen (place, addressHtml, addressObj, ad
     this.Base.dispatchEvent({
       type: eventType.ADDRESSCHOSEN,
       address: address,
-      coordinate: coord
+      coordinate: coord,
+      bbox: bbox
     });
   } else {
-    utils.flyTo(map, coord);
+    if (bbox) {
+      map.getView().fit(bbox, { duration: 500 });
+    } else {
+      utils.flyTo(map, coord);
+    }
     var feature = this.createFeature(coord, address);
 
     this.Base.dispatchEvent({
       type: eventType.ADDRESSCHOSEN,
       address: address,
       feature: feature,
-      coordinate: coord
+      coordinate: coord,
+      bbox: bbox
     });
   }
 };

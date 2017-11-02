@@ -60,7 +60,8 @@
                 // building, house_number, city, town, village, state,
                 // country
                 name: feature.properties.search_full
-              }
+              },
+              bbox: feature.bbox
             };
           });
         } else {
@@ -89,7 +90,11 @@
   map.addControl(geocoder);
 
   geocoder.on('addresschosen', function(evt) {
-    map.getView().animate({zoom: 14, center: evt.coordinate});
+    if (evt.bbox) {
+      map.getView().fit(evt.bbox, {duration: 500});
+    } else {
+      map.getView().animate({zoom: 14, center: evt.coordinate});
+    }
   });
 
 })(window, document);

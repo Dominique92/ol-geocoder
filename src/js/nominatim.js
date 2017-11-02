@@ -190,6 +190,10 @@ export class Nominatim {
     const coord_ = [parseFloat(place.lon), parseFloat(place.lat)];
     const projection = map.getView().getProjection();
     const coord = ol.proj.transform(coord_, 'EPSG:4326', projection);
+    var bbox = place.bbox;
+    if (bbox) {
+      bbox = ol.proj.transformExtent(bbox, 'EPSG:4326', projection);
+    }
     const address = {
       formatted: addressHtml,
       details: addressObj,
@@ -202,17 +206,23 @@ export class Nominatim {
       this.Base.dispatchEvent({
         type: C.eventType.ADDRESSCHOSEN,
         address: address,
-        coordinate: coord
+        coordinate: coord,
+        bbox: bbox
       });
     } else {
-      U.flyTo(map, coord);
+      if (bbox) {
+        map.getView().fit(bbox, { duration: 500 });
+      } else {
+        U.flyTo(map, coord);
+      }
       const feature = this.createFeature(coord, address);
 
       this.Base.dispatchEvent({
         type: C.eventType.ADDRESSCHOSEN,
         address: address,
         feature: feature,
-        coordinate: coord
+        coordinate: coord,
+        bbox: bbox
       });
     }
   }
