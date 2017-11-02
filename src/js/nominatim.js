@@ -27,7 +27,11 @@ export class Nominatim {
     });
 
     this.options = base.options;
-    this.options.provider = this.options.provider.toLowerCase();
+    // provider is either the name of a built-in provider as a string or an
+    // object that implements the provider API
+    this.options.provider = (typeof this.options.provider === 'string')
+      ? this.options.provider.toLowerCase()
+      : this.options.provider;
 
     this.els = els;
     this.lastQuery = '';
@@ -111,7 +115,7 @@ export class Nominatim {
     ajax.url = document.location.protocol + provider.url;
     ajax.data = provider.params;
 
-    if (options.provider === C.providers.BING) {
+    if (provider.callbackName) {
       ajax.data_type = 'jsonp';
       ajax.callbackName = provider.callbackName;
     }
@@ -150,8 +154,7 @@ export class Nominatim {
               : undefined;
             break;
           default:
-            // eslint-disable-next-line no-console
-            console.log('Unknown provider!');
+            res_ = options.provider.handleResponse(res);
             break;
         }
         if (res_) {
@@ -269,6 +272,9 @@ export class Nominatim {
         break;
       case C.providers.BING:
         provider = this.Bing.getParameters(options);
+        break;
+      default:
+        provider = options.provider.getParameters(options);
         break;
     }
     return provider;

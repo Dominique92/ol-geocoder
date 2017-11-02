@@ -1,4 +1,4 @@
-# OpenLayers 3 Control Geocoder
+# OpenLayers Control Geocoder
 <p align="center">
   <a href="https://travis-ci.org/jonataswalker/ol3-geocoder">
     <img src="https://travis-ci.org/jonataswalker/ol3-geocoder.svg?branch=master" alt="build status">
@@ -20,12 +20,12 @@
   </a>
 </p>
 
-A geocoder extension for [OpenLayers 3](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
+A geocoder extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
 ![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol3-geocoder/screenshots/images/anim.gif)
 
 ## Demo
-You can see [here a demo](http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html) or on [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer.
+You can see [here a demo](http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html) or on [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer. There is also a [demo of creating a custom provider](http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/custom-provider.html)
 
 ## Providers
 The plugin supports (for now) the following providers:
@@ -36,6 +36,24 @@ The plugin supports (for now) the following providers:
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
 * [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
+
+### Custom Providers
+You can also write your own provider, passing an instance of it to the `Geocoder` constructor via the `provider` property of the options argument.
+
+For an example of defining and using a custom provider see [`examples/custom-provider.js`](examples/custom-provider.js)
+
+Custom providers must implement the following methods:
+
+#### `getParameters(options)`
+
+* `options` `{Object}`
+    * `query` Search string entered by the user;
+    * `lang` `{string}` Preferable language;
+    * `limit` `{number}` Limit of results;
+
+#### `handleResponse(results)`
+
+* `results` {Object}` Parsed JSON response from API call
 
 ## How to use it?
 ##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.geocoder)
@@ -88,7 +106,7 @@ geocoder.on('addresschosen', function(evt){
 - `type` `{String}` - Maybe later we will have other types like `'reverse'`. So for now just pass `'nominatim'`.
 
 - `options` is an object with the following possible properties:
-  * `provider`             : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`, `'bing'`; Your preferable provider;
+  * `provider`             : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`, `'bing'`, custom provider instance; Your preferable provider;
   * `key`                  : `''`; API Key if required;
   * `autoComplete`         : `false`; Search as you type;
   * `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;

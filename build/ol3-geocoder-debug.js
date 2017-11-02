@@ -2,7 +2,7 @@
  * ol3-geocoder - v2.5.0
  * A geocoder extension for OpenLayers.
  * https://github.com/jonataswalker/ol3-geocoder
- * Built: Tue Feb 21 2017 08:59:29 GMT-0300 (BRT)
+ * Built: Mon Sep 25 2017 14:35:49 GMT+0100 (BST)
  */
 
 (function (global, factory) {
@@ -930,7 +930,11 @@ var Nominatim = function Nominatim(base, els) {
   });
 
   this.options = base.options;
-  this.options.provider = this.options.provider.toLowerCase();
+  // provider is either the name of a built-in provider as a string or an
+  // object that implements the provider API
+  this.options.provider = (typeof this.options.provider === 'string')
+    ? this.options.provider.toLowerCase()
+    : this.options.provider;
 
   this.els = els;
   this.lastQuery = '';
@@ -990,7 +994,7 @@ Nominatim.prototype.setListeners = function setListeners () {
       }, 200);
     }
   };
-  this.els.input.addEventListener('keyup', query, false);
+  this.els.input.addEventListener('keypress', query, false);
   this.els.input.addEventListener('input', handleValue, false);
   this.els.reset.addEventListener('click', reset, false);
   if (this.options.targetType === targetType.GLASS) {
@@ -1018,7 +1022,7 @@ Nominatim.prototype.query = function query (q) {
   ajax.url = document.location.protocol + provider.url;
   ajax.data = provider.params;
 
-  if (options.provider === providers.BING) {
+  if (provider.callbackName) {
     ajax.data_type = 'jsonp';
     ajax.callbackName = provider.callbackName;
   }
@@ -1057,8 +1061,7 @@ Nominatim.prototype.query = function query (q) {
             : undefined;
           break;
         default:
-          // eslint-disable-next-line no-console
-          console.log('Unknown provider!');
+          res_ = options.provider.handleResponse(res);
           break;
       }
       if (res_) {
@@ -1178,6 +1181,9 @@ Nominatim.prototype.getProvider = function getProvider (options) {
       break;
     case providers.BING:
       provider = this.Bing.getParameters(options);
+      break;
+    default:
+      provider = options.provider.getParameters(options);
       break;
   }
   return provider;
