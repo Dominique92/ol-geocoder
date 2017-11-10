@@ -59,8 +59,8 @@ Custom providers must implement the following methods:
 ##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.geocoder)
 Load CSS and Javascript:
 ```HTML
-<link href="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css" rel="stylesheet">
-<script src="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js"></script>
+<link href="//cdn.jsdelivr.net/npm/ol3-geocoder@latest/build/ol3-geocoder.min.css" rel="stylesheet">
+<script src="//cdn.jsdelivr.net/npm/ol3-geocoder@latest/build/ol3-geocoder.js"></script>
 ```
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
