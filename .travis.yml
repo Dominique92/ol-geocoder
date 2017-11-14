@@ -16,6 +16,7 @@ addons:
 before_install:
   - stty cols 80
   - sudo apt-get -qq update
+  - sudo apt-get install -y libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
   - sudo apt-get install -y fluxbox
   - npm i -g npm@5
 
