@@ -1,38 +1,38 @@
 # OpenLayers Control Geocoder
 <p align="center">
-  <a href="https://travis-ci.org/jonataswalker/ol3-geocoder">
-    <img src="https://travis-ci.org/jonataswalker/ol3-geocoder.svg?branch=master" alt="build status">
+  <a href="https://travis-ci.org/jonataswalker/ol-geocoder">
+    <img src="https://travis-ci.org/jonataswalker/ol-geocoder.svg?branch=master" alt="build status">
   </a>
-  <a href="https://www.npmjs.com/package/ol3-geocoder">
-    <img src="https://img.shields.io/npm/v/ol3-geocoder.svg"
+  <a href="https://www.npmjs.com/package/ol-geocoder">
+    <img src="https://img.shields.io/npm/v/ol-geocoder.svg"
       alt="npm version">
   </a>
-  <a href="https://github.com/jonataswalker/ol3-geocoder/blob/master/LICENSE">
-    <img src="https://img.shields.io/npm/l/ol3-geocoder.svg"
+  <a href="https://github.com/jonataswalker/ol-geocoder/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/ol-geocoder.svg"
       alt="license">
   </a>
-  <a href="https://david-dm.org/jonataswalker/ol3-geocoder">
-    <img src="https://david-dm.org/jonataswalker/ol3-geocoder/status.svg"
+  <a href="https://david-dm.org/jonataswalker/ol-geocoder">
+    <img src="https://david-dm.org/jonataswalker/ol-geocoder/status.svg"
       alt="dependency status">
   </a>
-  <a href="https://david-dm.org/jonataswalker/ol3-geocoder">
-    <img src="https://david-dm.org/jonataswalker/ol3-geocoder/dev-status.svg" alt="devDependency status">
+  <a href="https://david-dm.org/jonataswalker/ol-geocoder">
+    <img src="https://david-dm.org/jonataswalker/ol-geocoder/dev-status.svg" alt="devDependency status">
   </a>
 </p>
 
 A geocoder extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
 
-![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol3-geocoder/screenshots/images/anim.gif)
+![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol-geocoder/screenshots/images/anim.gif)
 
 ## Demo
-You can see [here a demo](http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/control-nominatim.html) or on [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer. There is also a [demo of creating a custom provider](http://rawgit.com/jonataswalker/ol3-geocoder/master/examples/custom-provider.html)
+You can see [here a demo](http://rawgit.com/jonataswalker/ol-geocoder/master/examples/control-nominatim.html) or on [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer. There is also a [demo of creating a custom provider](http://rawgit.com/jonataswalker/ol-geocoder/master/examples/custom-provider.html)
 
 ## Providers
 The plugin supports (for now) the following providers:
 
 * [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) &mdash; `'osm'`.
 * [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/) &mdash; requires KEY  &mdash; `'mapquest'`.
-* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro) &mdash; requires KEY  &mdash; `'google'`. See [#16](https://github.com/jonataswalker/ol3-geocoder/issues/16).
+* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro) &mdash; requires KEY  &mdash; `'google'`. See [#16](https://github.com/jonataswalker/ol-geocoder/issues/16).
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
 * [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
@@ -56,20 +56,15 @@ Custom providers must implement the following methods:
 * `results` {Object}` Parsed JSON response from API call
 
 ## How to use it?
-##### CDN Hosted - [jsDelivr](http://www.jsdelivr.com/projects/openlayers.geocoder)
-Load CSS and Javascript:
-```HTML
-<link href="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.min.css" rel="stylesheet">
-<script src="//cdn.jsdelivr.net/openlayers.geocoder/latest/ol3-geocoder.js"></script>
-```
+
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
 ```HTML
-<link href="https://unpkg.com/ol3-geocoder/build/ol3-geocoder.min.css" rel="stylesheet">
-<script src="https://unpkg.com/ol3-geocoder/build/ol3-geocoder.js"></script>
+<link href="https://unpkg.com/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
+<script src="https://unpkg.com/ol-geocoder"></script>
 ```
 ##### Self hosted
-Download [latest release](https://github.com/jonataswalker/ol3-geocoder/releases/latest) and (obviously) load CSS and Javascript.
+Download [latest release](https://github.com/jonataswalker/ol-geocoder/releases/latest) and (obviously) load CSS and Javascript.
 
 ##### Instantiate with some options and add the Control
 ```javascript
