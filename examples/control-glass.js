@@ -23,7 +23,7 @@
   //Instantiate with some options and add the Control
   var geocoder = new Geocoder('nominatim', {
     provider: 'photon',
-    targetType: 'text-input',
+    targetType: 'glass-button',
     lang: 'en',
     placeholder: 'Search for ...',
     limit: 5,
