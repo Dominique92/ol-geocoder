@@ -5,5 +5,6 @@ module.exports = {
   },
   globals: {
     Geocoder: true,
+    ol: true,
   },
 };
