@@ -41,6 +41,7 @@ export class OpenStreet {
       address: {
         name: result.display_name,
         road: result.address.road || '',
+        houseNumber: result.address.house_number || '',
         postcode: result.address.postcode,
         city: result.address.city || result.address.town,
         state: result.address.state,
@@ -53,5 +54,3 @@ export class OpenStreet {
     }));
   }
 }
-
-// 1600 Pennsylvania Ave NW
