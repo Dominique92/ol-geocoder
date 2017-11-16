@@ -20,17 +20,16 @@ export class OpenStreet {
     };
   }
 
-  getParameters(options) {
+  getParameters(opt) {
     return {
       url: this.settings.url,
       params: {
-        q: options.query,
-        format: 'json',
-        addressdetails: 1,
-        limit: options.limit || this.settings.params.limit,
-        countrycodes: options.countrycodes || this.settings.params.countrycodes,
-        'accept-language':
-            options.lang || this.settings.params['accept-language']
+        q: opt.query,
+        format: this.settings.params.format,
+        addressdetails: this.settings.params.addressdetails,
+        limit: opt.limit || this.settings.params.limit,
+        countrycodes: opt.countrycodes || this.settings.params.countrycodes,
+        'accept-language': opt.lang || this.settings.params['accept-language']
       }
     };
   }
@@ -40,7 +39,7 @@ export class OpenStreet {
       lon: result.lon,
       lat: result.lat,
       address: {
-        name: result.address.neighbourhood || '',
+        name: result.display_name,
         road: result.address.road || '',
         postcode: result.address.postcode,
         city: result.address.city || result.address.town,
@@ -54,3 +53,5 @@ export class OpenStreet {
     }));
   }
 }
+
+// 1600 Pennsylvania Ave NW

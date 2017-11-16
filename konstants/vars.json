@@ -7,6 +7,7 @@
     "namespace": "ol-geocoder",
     "spin": "gcd-pseudo-rotate",
     "hidden": "gcd-hidden",
+    "address": "gcd-address",
     "country": "gcd-country",
     "city": "gcd-city",
     "road": "gcd-road",
