@@ -57,6 +57,9 @@ Custom providers must implement the following methods:
 
 ## How to use it?
 
+##### NPM
+`npm install ol-geocoder`
+
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
 ```HTML
