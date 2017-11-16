@@ -7,6 +7,7 @@ $font-big: em(16px);
 $font-medium: em(14px);
 $font-small: em(12px);
 $z-index: 99;
+$font-color: #333;
 
 $glass: map-get($cssClasses, glass);
 $input-text: map-get($cssClasses, inputText);
@@ -17,18 +18,26 @@ $input-text: map-get($cssClasses, inputText);
   @import "common";
 }
 
+.#{map-get($cssClasses, address)} {
+  font-size: $font-medium;
+  font-weight: 500;
+  color: $font-color;
+}
+
 .#{map-get($cssClasses, road)} {
   font-size: $font-medium;
   font-weight: 500;
-  color: #000;
+  color: $font-color;
 }
+
 .#{map-get($cssClasses, city)} {
   font-size: $font-small;
   font-weight: normal;
-  color: #000;
+  color: $font-color;
 }
+
 .#{map-get($cssClasses, country)} {
   font-size: $font-small;
   font-weight: lighter;
-  color: #444;
+  color: $font-color;
 }

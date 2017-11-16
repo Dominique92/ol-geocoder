@@ -187,9 +187,19 @@ export class Nominatim {
     const ul = this.els.result;
 
     response.forEach(row => {
-      let addressHtml = this.addressTemplate(row.address),
-          html = ['<a href="#">', addressHtml, '</a>'].join(''),
-          li = createElement('li', html);
+      let addressHtml;
+
+      switch (this.options.provider) {
+        case PROVIDERS.OSM:
+          addressHtml =
+            `<span class="${klasses.road}">${row.address.name}</span>`;
+          break;
+        default:
+          addressHtml = this.addressTemplate(row.address);
+      }
+
+      const html = `<a href="#">${addressHtml}</a>`;
+      const li = createElement('li', html);
 
       li.addEventListener('click', evt => {
         evt.preventDefault();
