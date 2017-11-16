@@ -33,7 +33,7 @@
   geocoder.on('addresschosen', function (evt) {
     window.setTimeout(function () {
       popup.show(evt.coordinate, evt.address.formatted);
-    }, 1000);
+    }, 3000);
   });
 
 })(window, document);
