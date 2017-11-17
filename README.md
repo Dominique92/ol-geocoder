@@ -36,6 +36,7 @@ The plugin supports (for now) the following providers:
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
 * [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
+* [OpenCage](https://geocoder.opencagedata.com) &mdash; requires KEY  &mdash; `'opencage'`.
 
 ### Custom Providers
 You can also write your own provider, passing an instance of it to the `Geocoder` constructor via the `provider` property of the options argument.
@@ -53,7 +54,7 @@ Custom providers must implement the following methods:
 
 #### `handleResponse(results)`
 
-* `results` {Object}` Parsed JSON response from API call
+* `results` `{Object}` Parsed JSON response from API call
 
 ## How to use it?
 
@@ -104,7 +105,7 @@ geocoder.on('addresschosen', function(evt){
 - `type` `{String}` - Maybe later we will have other types like `'reverse'`. So for now just pass `'nominatim'`.
 
 - `options` is an object with the following possible properties:
-  * `provider`             : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`, `'bing'`, custom provider instance; Your preferable provider;
+  * `provider`             : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`, `'bing'`, `'opencage'`, custom provider instance; Your preferable provider;
   * `key`                  : `''`; API Key if required;
   * `autoComplete`         : `false`; Search as you type;
   * `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;
