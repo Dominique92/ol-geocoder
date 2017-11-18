@@ -61,6 +61,13 @@ Custom providers must implement the following methods:
 ##### NPM
 `npm install ol-geocoder`
 
+##### CDN Hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/ol-geocoder)
+Load CSS and Javascript:
+```HTML
+<link href="https://cdn.jsdelivr.net/npm/ol-geocoder@latest/dist/ol-geocoder.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/ol-geocoder"></script>
+```
+
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
 ```HTML
