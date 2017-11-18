@@ -13,12 +13,8 @@
         target: doc.getElementById('map'),
         view: olview,
         layers: [baseLayer]
-      });
-
-  var popup = new ol.Overlay.Popup({
-    panMapIfOutOfView: false
-  });
-  map.addOverlay(popup);
+      }),
+      popup = new ol.Overlay.Popup();
 
   //Instantiate with some options and add the Control
   var geocoder = new Geocoder('nominatim', {
@@ -29,12 +25,15 @@
     limit: 5,
     keepOpen: false
   });
+
   map.addControl(geocoder);
+  map.addOverlay(popup);
 
   //Listen when an address is chosen
   geocoder.on('addresschosen', function (evt) {
     window.setTimeout(function () {
       popup.show(evt.coordinate, evt.address.formatted);
-    }, 1000);
+    }, 3000);
   });
+
 })(window, document);

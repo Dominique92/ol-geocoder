@@ -19,7 +19,7 @@
     "build:css": "node build/build-css",
     "rollup": "rollup -c build/config.js",
     "rollup:dev": "rollup -w -c build/config.js",
-    "lint": "eslint build test --cache",
+    "lint": "eslint build test src examples --cache",
     "test": "run-s build test:unit test:e2e",
     "test:e2e": "testcafe chrome test/e2e/*.test.js",
     "test:unit": "jest"
