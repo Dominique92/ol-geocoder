@@ -5,6 +5,7 @@ import { MapQuest } from './providers/mapquest';
 import { Pelias } from './providers/pelias';
 import { Google } from './providers/google';
 import { Bing } from './providers/bing';
+import { OpenCage } from './providers/opencage';
 import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from 'konstants';
 import { randomId, flyTo } from 'helpers/mix';
 import { json } from 'helpers/ajax';
@@ -56,6 +57,7 @@ export class Nominatim {
     this.Pelias = new Pelias();
     this.Google = new Google();
     this.Bing = new Bing();
+    this.OpenCage = new OpenCage();
   }
 
   setListeners() {
@@ -166,6 +168,10 @@ export class Nominatim {
           res_ = res.resourceSets[0].resources.length
             ? this.Bing.handleResponse(res.resourceSets[0].resources)
             : undefined;
+          break;
+        case PROVIDERS.OPENCAGE:
+          res_ = res.results.length ?
+            this.OpenCage.handleResponse(res.results) : undefined;
           break;
         default:
           res_ = this.options.provider.handleResponse(res);
@@ -308,6 +314,9 @@ export class Nominatim {
         break;
       case PROVIDERS.BING:
         provider = this.Bing.getParameters(options);
+        break;
+      case PROVIDERS.OPENCAGE:
+        provider = this.OpenCage.getParameters(options);
         break;
       default:
         provider = options.provider.getParameters(options);

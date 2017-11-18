@@ -34,6 +34,7 @@ export const PROVIDERS = {
   GOOGLE: 'google',
   PHOTON: 'photon',
   BING: 'bing',
+  OPENCAGE: 'opencage',
   PELIAS: 'pelias'
 };
 
