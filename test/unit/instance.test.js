@@ -1,9 +1,9 @@
 const ol = require('openlayers');
 const Geocoder = require('../../dist/ol-geocoder');
-const { DEFAULT_OPTIONS } = require('../../konstants');
+const { DEFAULT_OPTIONS, PROVIDERS } = require('../../konstants');
 
 const options = {
-  provider: 'photon',
+  provider: PROVIDERS.PHOTON,
   targetType: 'text-input',
   lang: 'en',
   placeholder: 'Search for ...',
@@ -26,6 +26,7 @@ describe('Instance of', () => {
 
 describe('Instance options', () => {
   test('default options', () => {
+    geocoder.options.featureStyle = null;
     expect(geocoder.options).toEqual(DEFAULT_OPTIONS);
   });
 
@@ -43,6 +44,16 @@ describe('Instance methods', () => {
   test('getSource()', () => {
     const source = geocoder.getSource();
     expect(source instanceof ol.source.Vector).toBeTruthy();
+  });
+
+  test('setProvider()', () => {
+    geocoder.setProvider(PROVIDERS.BING);
+    expect(geocoder.options.provider).toBe(PROVIDERS.BING);
+  });
+
+  test('setProviderKey()', () => {
+    geocoder.setProviderKey('foo');
+    expect(geocoder.options.key).toBe('foo');
   });
 });
 

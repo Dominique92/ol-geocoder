@@ -28,8 +28,10 @@
     "rollup": "rollup -c build/config.js",
     "rollup:dev": "rollup -w -c build/config.js",
     "lint": "eslint build test src examples --cache",
-    "test": "run-s build test:unit test:e2e",
-    "test:e2e": "testcafe chrome test/e2e/*.test.js",
+    "ci": "run-s build test:unit test:controls test:providers",
+    "test": "run-s build test:unit test:controls",
+    "test:controls": "testcafe chrome test/e2e/controls/*.test.js",
+    "test:providers": "testcafe chrome test/e2e/providers/*.test.js",
     "test:unit": "jest"
   },
   "jest": {
@@ -39,10 +41,12 @@
     }
   },
   "babel": {
-    "presets": ["env"]
+    "presets": [
+      "env"
+    ]
   },
   "dependencies": {
-    "openlayers": "^4.4.2"
+    "openlayers": "^4.5.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",
@@ -53,28 +57,29 @@
     "canvas": "^1.6.7",
     "chalk": "^2.3.0",
     "cssnano": "^3.10.0",
+    "dotenv": "^4.0.0",
     "eslint": "^4.11.0",
     "eslint-config-jwalker": "^5.0.0",
     "eslint-plugin-jest": "^21.3.2",
     "eslint-plugin-testcafe": "^0.2.1",
     "gzip-size": "^4.0.0",
     "jest": "^21.2.1",
-    "node-sass": "^4.6.1",
+    "node-sass": "^4.7.2",
     "node-sass-json-importer": "^3.0.1",
     "npm-run-all": "^4.0.1",
     "postcss": "^6.0.14",
     "postcss-import": "^11.0.0",
     "postcss-reporter": "^5.0.0",
-    "rollup": "^0.51.5",
-    "rollup-plugin-buble": "^0.17.0",
+    "rollup": "^0.51.8",
+    "rollup-plugin-buble": "^0.18.0",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-eslint": "^4.0.0",
-    "rollup-plugin-filesize": "^1.4.2",
+    "rollup-plugin-filesize": "^1.5.0",
     "rollup-plugin-includepaths": "^0.2.2",
     "rollup-plugin-json": "^2.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
-    "testcafe": "^0.18.3",
-    "uglify-es": "^3.1.9"
+    "testcafe": "^0.18.4",
+    "uglify-es": "^3.1.10"
   }
 }

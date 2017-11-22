@@ -2,7 +2,7 @@ import ol from 'openlayers';
 import { Html } from './html';
 import { Nominatim } from './nominatim';
 import { assert, mergeOptions } from 'helpers/mix';
-import { CONTROL_TYPE, DEFAULT_OPTIONS } from 'konstants';
+import { CONTROL_TYPE, DEFAULT_OPTIONS, FEATURE_SRC } from 'konstants';
 
 /**
  * @class Base
@@ -25,6 +25,12 @@ export default class Base extends ol.control.Control {
         or '${CONTROL_TYPE.REVERSE}'!`
     );
     assert(typeof options === 'object', '@param `options` should be object!');
+
+    DEFAULT_OPTIONS.featureStyle = [
+      new ol.style.Style({
+        image: new ol.style.Icon({ scale: .7, src: FEATURE_SRC })
+      })
+    ];
 
     this.options = mergeOptions(DEFAULT_OPTIONS, options);
     this.container = undefined;
@@ -55,5 +61,21 @@ export default class Base extends ol.control.Control {
    */
   getSource() {
     return this.getLayer().getSource();
+  }
+
+  /**
+   * Set a new provider
+   * @param {String} provider
+   */
+  setProvider(provider) {
+    this.options.provider = provider;
+  }
+
+  /**
+   * Set provider key
+   * @param {String} key
+   */
+  setProviderKey(key) {
+    this.options.key = key;
   }
 }
