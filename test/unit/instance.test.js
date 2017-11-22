@@ -26,6 +26,7 @@ describe('Instance of', () => {
 
 describe('Instance options', () => {
   test('default options', () => {
+    geocoder.options.featureStyle = null;
     expect(geocoder.options).toEqual(DEFAULT_OPTIONS);
   });
 

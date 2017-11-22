@@ -1,4 +1,3 @@
-import ol from 'openlayers';
 import * as _VARS_ from './vars.json';
 
 export const VARS = _VARS_;
@@ -18,15 +17,8 @@ export const TARGET_TYPE = {
 };
 
 
-export const FEATURE_STYLE = [
-  new ol.style.Style({
-    image: new ol.style.Icon({
-      anchor: [0.5, 1],
-      scale: .7,
-      src: '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png'
-    })
-  })
-];
+export const FEATURE_SRC =
+  '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png';
 
 export const PROVIDERS = {
   OSM: 'osm',
@@ -41,7 +33,7 @@ export const PROVIDERS = {
 export const DEFAULT_OPTIONS = {
   provider: PROVIDERS.OSM,
   placeholder: 'Search for an address',
-  featureStyle: FEATURE_STYLE,
+  featureStyle: null,
   targetType: TARGET_TYPE.GLASS,
   lang: 'en-US',
   limit: 5,

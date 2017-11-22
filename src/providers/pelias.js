@@ -10,8 +10,6 @@ export class Pelias {
     this.settings = {
       url: 'http://search.mapzen.com/v1/search',
       params: {
-        text: '',
-        key: '',
         size: 10
       }
     };
@@ -22,7 +20,7 @@ export class Pelias {
       url: this.settings.url,
       params: {
         text: options.query,
-        key: options.key,
+        api_key: options.key,
         size: options.limit || this.settings.params.size
       }
     };
