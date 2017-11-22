@@ -3,7 +3,6 @@ import { Photon } from './providers/photon';
 import { OpenStreet } from './providers/osm';
 import { MapQuest } from './providers/mapquest';
 import { Pelias } from './providers/pelias';
-import { Google } from './providers/google';
 import { Bing } from './providers/bing';
 import { OpenCage } from './providers/opencage';
 import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from 'konstants';
@@ -55,7 +54,6 @@ export class Nominatim {
     this.OpenStreet = new OpenStreet();
     this.MapQuest = new MapQuest();
     this.Pelias = new Pelias();
-    this.Google = new Google();
     this.Bing = new Bing();
     this.OpenCage = new OpenCage();
   }
@@ -159,10 +157,6 @@ export class Nominatim {
         case PROVIDERS.PHOTON:
           res_ = res.features.length ?
             this.Photon.handleResponse(res.features) : undefined;
-          break;
-        case PROVIDERS.GOOGLE:
-          res_ = res.results.length ?
-            this.Google.handleResponse(res.results) : undefined;
           break;
         case PROVIDERS.BING:
           res_ = res.resourceSets[0].resources.length
@@ -305,9 +299,6 @@ export class Nominatim {
         break;
       case PROVIDERS.PHOTON:
         provider = this.Photon.getParameters(options);
-        break;
-      case PROVIDERS.GOOGLE:
-        provider = this.Google.getParameters(options);
         break;
       case PROVIDERS.PELIAS:
         provider = this.Pelias.getParameters(options);
