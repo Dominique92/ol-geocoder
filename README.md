@@ -32,7 +32,6 @@ The plugin supports (for now) the following providers:
 
 * [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) &mdash; `'osm'`.
 * [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/) &mdash; requires KEY  &mdash; `'mapquest'`.
-* [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro) &mdash; requires KEY  &mdash; `'google'`. See [#16](https://github.com/jonataswalker/ol-geocoder/issues/16).
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
 * [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
@@ -112,7 +111,7 @@ geocoder.on('addresschosen', function(evt){
 - `type` `{String}` - Maybe later we will have other types like `'reverse'`. So for now just pass `'nominatim'`.
 
 - `options` is an object with the following possible properties:
-  * `provider`             : `'osm'` (default), `'mapquest'`, `'google'`, `'photon'`, `'pelias'`, `'bing'`, `'opencage'`, custom provider instance; Your preferable provider;
+  * `provider`             : `'osm'` (default), `'mapquest'`, `'photon'`, `'pelias'`, `'bing'`, `'opencage'`, custom provider instance; Your preferable provider;
   * `key`                  : `''`; API Key if required;
   * `autoComplete`         : `false`; Search as you type;
   * `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;
