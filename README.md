@@ -134,6 +134,18 @@ Returns the layer `{ol.layer.Vector}` created by Geocoder control.
 #### `getSource()`
 Returns the source `{ol.source.Vector}` created by Geocoder control.
 
+#### `setProvider(provider)`
+
+`@param {String} provider`
+
+Sets a new provider.
+
+#### `setProviderKey(key)`
+
+`@param {String} key`
+
+Sets provider key.
+
 ## Events
 
 ##### Triggered when an address is chosen
