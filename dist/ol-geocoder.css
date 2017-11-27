@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v3.0.0
+ * ol-geocoder - v3.0.01
  * A geocoder extension for OpenLayers.
  * https://github.com/jonataswalker/ol-geocoder
- * Built: Tue Nov 14 2017 19:04:02 GMT-0200 (-02)
+ * Built: Mon Nov 27 2017 17:57:32 GMT-0200 (-02)
  */
 .ol-geocoder.gcd-gl-container {
   position: absolute;
@@ -234,17 +234,22 @@
     -webkit-transform: rotate(360deg);
             transform: rotate(360deg); } }
 
+.gcd-address {
+  font-size: 0.875em;
+  font-weight: 500;
+  color: #333; }
+
 .gcd-road {
   font-size: 0.875em;
   font-weight: 500;
-  color: #000; }
+  color: #333; }
 
 .gcd-city {
   font-size: 0.75em;
   font-weight: normal;
-  color: #000; }
+  color: #333; }
 
 .gcd-country {
   font-size: 0.75em;
   font-weight: lighter;
-  color: #444; }
+  color: #333; }
