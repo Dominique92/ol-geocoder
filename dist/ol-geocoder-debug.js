@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v3.0.0
+ * ol-geocoder - v3.0.01
  * A geocoder extension for OpenLayers.
  * https://github.com/jonataswalker/ol-geocoder
- * Built: Tue Nov 14 2017 19:03:59 GMT-0200 (-02)
+ * Built: Mon Nov 27 2017 17:57:30 GMT-0200 (-02)
  */
 
 (function (global, factory) {
@@ -17,7 +17,7 @@ var containerId = "gcd-container";
 var buttonControlId = "gcd-button-control";
 var inputQueryId = "gcd-input-query";
 var inputResetId = "gcd-input-reset";
-var cssClasses = {"namespace":"ol-geocoder","spin":"gcd-pseudo-rotate","hidden":"gcd-hidden","country":"gcd-country","city":"gcd-city","road":"gcd-road","olControl":"ol-control","glass":{"container":"gcd-gl-container","control":"gcd-gl-control","button":"gcd-gl-btn","input":"gcd-gl-input","expanded":"gcd-gl-expanded","reset":"gcd-gl-reset","result":"gcd-gl-result"},"inputText":{"container":"gcd-txt-container","control":"gcd-txt-control","input":"gcd-txt-input","reset":"gcd-txt-reset","icon":"gcd-txt-glass","result":"gcd-txt-result"}};
+var cssClasses = {"namespace":"ol-geocoder","spin":"gcd-pseudo-rotate","hidden":"gcd-hidden","address":"gcd-address","country":"gcd-country","city":"gcd-city","road":"gcd-road","olControl":"ol-control","glass":{"container":"gcd-gl-container","control":"gcd-gl-control","button":"gcd-gl-btn","input":"gcd-gl-input","expanded":"gcd-gl-expanded","reset":"gcd-gl-reset","result":"gcd-gl-result"},"inputText":{"container":"gcd-txt-container","control":"gcd-txt-control","input":"gcd-txt-input","reset":"gcd-txt-reset","icon":"gcd-txt-glass","result":"gcd-txt-result"}};
 var vars = {
 	containerId: containerId,
 	buttonControlId: buttonControlId,
@@ -52,15 +52,8 @@ const TARGET_TYPE = {
 };
 
 
-const FEATURE_STYLE = [
-  new ol.style.Style({
-    image: new ol.style.Icon({
-      anchor: [0.5, 1],
-      scale: .7,
-      src: '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png'
-    })
-  })
-];
+const FEATURE_SRC =
+  '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png';
 
 const PROVIDERS = {
   OSM: 'osm',
@@ -68,13 +61,14 @@ const PROVIDERS = {
   GOOGLE: 'google',
   PHOTON: 'photon',
   BING: 'bing',
+  OPENCAGE: 'opencage',
   PELIAS: 'pelias'
 };
 
 const DEFAULT_OPTIONS = {
   provider: PROVIDERS.OSM,
   placeholder: 'Search for an address',
-  featureStyle: FEATURE_STYLE,
+  featureStyle: null,
   targetType: TARGET_TYPE.GLASS,
   lang: 'en-US',
   limit: 5,
@@ -149,28 +143,6 @@ function randomId(prefix) {
 
 function isNumeric(str) {
   return /^\d+$/.test(str);
-}
-
-function isEmpty(str) {
-  return (!str || 0 === str.length);
-}
-
-
-
-function anyMatchInArray(source, target) {
-  return source.some(function (each) { return target.indexOf(each) >= 0; });
-}
-
-
-
-function anyItemHasValue(obj, has) {
-  if ( has === void 0 ) has = false;
-
-  const keys = Object.keys(obj);
-  keys.forEach(function (key) {
-    if (!isEmpty(obj[key])) { has = true; }
-  });
-  return has;
 }
 
 /**
@@ -457,7 +429,7 @@ Html.input = [
 var Photon = function Photon() {
 
   this.settings = {
-    url: 'http://photon.komoot.de/api/',
+    url: 'https://photon.komoot.de/api/',
     params: {
       q: '',
       limit: 10,
@@ -517,17 +489,16 @@ var OpenStreet = function OpenStreet() {
   };
 };
 
-OpenStreet.prototype.getParameters = function getParameters (options) {
+OpenStreet.prototype.getParameters = function getParameters (opt) {
   return {
     url: this.settings.url,
     params: {
-      q: options.query,
-      format: 'json',
-      addressdetails: 1,
-      limit: options.limit || this.settings.params.limit,
-      countrycodes: options.countrycodes || this.settings.params.countrycodes,
-      'accept-language':
-          options.lang || this.settings.params['accept-language']
+      q: opt.query,
+      format: this.settings.params.format,
+      addressdetails: this.settings.params.addressdetails,
+      limit: opt.limit || this.settings.params.limit,
+      countrycodes: opt.countrycodes || this.settings.params.countrycodes,
+      'accept-language': opt.lang || this.settings.params['accept-language']
     }
   };
 };
@@ -537,8 +508,9 @@ OpenStreet.prototype.handleResponse = function handleResponse (results) {
     lon: result.lon,
     lat: result.lat,
     address: {
-      name: result.address.neighbourhood || '',
+      name: result.display_name,
       road: result.address.road || '',
+      houseNumber: result.address.house_number || '',
       postcode: result.address.postcode,
       city: result.address.city || result.address.town,
       state: result.address.state,
@@ -613,8 +585,6 @@ var Pelias = function Pelias() {
   this.settings = {
     url: 'http://search.mapzen.com/v1/search',
     params: {
-      text: '',
-      key: '',
       size: 10
     }
   };
@@ -625,7 +595,7 @@ Pelias.prototype.getParameters = function getParameters (options) {
     url: this.settings.url,
     params: {
       text: options.query,
-      key: options.key,
+      api_key: options.key,
       size: options.limit || this.settings.params.size
     }
   };
@@ -649,107 +619,6 @@ Pelias.prototype.handleResponse = function handleResponse (results) {
       details: result.properties
     }
   }); });
-};
-
-/**
- * @class Google
- */
-var Google = function Google() {
-
-  this.settings = {
-    url: 'https://maps.googleapis.com/maps/api/geocode/json',
-    params: {
-      address: '',
-      key: '',
-      language: 'en-US'
-    }
-  };
-};
-
-Google.prototype.getParameters = function getParameters (options) {
-  return {
-    url: this.settings.url,
-    params: {
-      address: options.query,
-      key: options.key,
-      language: options.lang || this.settings.params.language
-    }
-  };
-};
-
-Google.prototype.handleResponse = function handleResponse (results) {
-  const name = [
-    'point_of_interest',
-    'establishment',
-    'natural_feature',
-    'airport'
-  ];
-  const road = [
-    'street_address',
-    'route',
-    'sublocality_level_5',
-    'intersection'
-  ];
-  const postcode = ['postal_code'];
-  const city = ['locality'];
-  const state = ['administrative_area_level_1'];
-  const country = ['country'];
-
-  /*
-   * @param {Array} details - address_components
-   */
-  const getDetails = function (details) {
-    let parts = {
-      name: '',
-      road: '',
-      postcode: '',
-      city: '',
-      state: '',
-      country: ''
-    };
-    details.forEach(function (detail) {
-      if (anyMatchInArray(detail.types, name)) {
-        parts.name = detail.long_name;
-      } else if (anyMatchInArray(detail.types, road)) {
-        parts.road = detail.long_name;
-      } else if (anyMatchInArray(detail.types, postcode)) {
-        parts.postcode = detail.long_name;
-      } else if (anyMatchInArray(detail.types, city)) {
-        parts.city = detail.long_name;
-      } else if (anyMatchInArray(detail.types, state)) {
-        parts.state = detail.long_name;
-      } else if (anyMatchInArray(detail.types, country)) {
-        parts.country = detail.long_name;
-      }
-    });
-    return parts;
-  };
-
-  let array = [];
-
-  results.forEach(function (result) {
-    let details = getDetails(result.address_components);
-    if (anyItemHasValue(details)) {
-      array.push({
-        lon: result.geometry.location.lng,
-        lat: result.geometry.location.lat,
-        address: {
-          name: details.name,
-          postcode: details.postcode,
-          road: details.road,
-          city: details.city,
-          state: details.state,
-          country: details.country
-        },
-        original: {
-          formatted: result.formatted_address,
-          details: result.address_components
-        }
-      });
-    }
-  });
-
-  return array;
 };
 
 /**
@@ -792,6 +661,55 @@ Bing.prototype.handleResponse = function handleResponse (results) {
     original: {
       formatted: result.address.formattedAddress,
       details: result.address
+    }
+  }); });
+};
+
+/**
+ * @class OpenCage
+ */
+var OpenCage = function OpenCage() {
+
+  this.settings = {
+    url: 'https://api.opencagedata.com/geocode/v1/json?',
+    params: {
+      q: '',
+      key: '',
+      limit: 10,
+      countrycode: '',
+      pretty: 1,
+      no_annotations: 1
+    }
+  };
+};
+
+OpenCage.prototype.getParameters = function getParameters (options) {
+  return {
+    url: this.settings.url,
+    params: {
+      q: options.query,
+      key: options.key,
+      limit: options.limit || this.settings.params.limit,
+      countrycode: options.countrycodes || this.settings.params.countrycodes
+    }
+  };
+};
+
+OpenCage.prototype.handleResponse = function handleResponse (results) {
+  return results.map(function (result) { return ({
+    lon: result.geometry.lng,
+    lat: result.geometry.lat,
+    address: {
+      name: result.components.house_number || '',
+      road: result.components.road || '',
+      postcode: result.components.postcode,
+      city: result.components.city || result.components.town,
+      state: result.components.state,
+      country: result.components.country
+    },
+    original: {
+      formatted: result.formatted,
+      details: result.components
     }
   }); });
 };
@@ -898,8 +816,8 @@ var Nominatim = function Nominatim(base, els) {
   this.OpenStreet = new OpenStreet();
   this.MapQuest = new MapQuest();
   this.Pelias = new Pelias();
-  this.Google = new Google();
   this.Bing = new Bing();
+  this.OpenCage = new OpenCage();
 };
 
 Nominatim.prototype.setListeners = function setListeners () {
@@ -1006,14 +924,14 @@ Nominatim.prototype.query = function query (q) {
         res_ = res.features.length ?
           this$1.Photon.handleResponse(res.features) : undefined;
         break;
-      case PROVIDERS.GOOGLE:
-        res_ = res.results.length ?
-          this$1.Google.handleResponse(res.results) : undefined;
-        break;
       case PROVIDERS.BING:
         res_ = res.resourceSets[0].resources.length
           ? this$1.Bing.handleResponse(res.resourceSets[0].resources)
           : undefined;
+        break;
+      case PROVIDERS.OPENCAGE:
+        res_ = res.results.length ?
+          this$1.OpenCage.handleResponse(res.results) : undefined;
         break;
       default:
         res_ = this$1.options.provider.handleResponse(res);
@@ -1037,9 +955,19 @@ Nominatim.prototype.createList = function createList (response) {
   const ul = this.els.result;
 
   response.forEach(function (row) {
-    let addressHtml = this$1.addressTemplate(row.address),
-        html = ['<a href="#">', addressHtml, '</a>'].join(''),
-        li = createElement('li', html);
+    let addressHtml;
+
+    switch (this$1.options.provider) {
+      case PROVIDERS.OSM:
+        addressHtml =
+          "<span class=\"" + (klasses$1.road) + "\">" + (row.address.name) + "</span>";
+        break;
+      default:
+        addressHtml = this$1.addressTemplate(row.address);
+    }
+
+    const html = "<a href=\"#\">" + addressHtml + "</a>";
+    const li = createElement('li', html);
 
     li.addEventListener('click', function (evt) {
       evt.preventDefault();
@@ -1140,14 +1068,14 @@ Nominatim.prototype.getProvider = function getProvider (options) {
     case PROVIDERS.PHOTON:
       provider = this.Photon.getParameters(options);
       break;
-    case PROVIDERS.GOOGLE:
-      provider = this.Google.getParameters(options);
-      break;
     case PROVIDERS.PELIAS:
       provider = this.Pelias.getParameters(options);
       break;
     case PROVIDERS.BING:
       provider = this.Bing.getParameters(options);
+      break;
+    case PROVIDERS.OPENCAGE:
+      provider = this.OpenCage.getParameters(options);
       break;
     default:
       provider = options.provider.getParameters(options);
@@ -1232,6 +1160,12 @@ var Base = (function (superclass) {
     );
     assert(typeof options === 'object', '@param `options` should be object!');
 
+    DEFAULT_OPTIONS.featureStyle = [
+      new ol.style.Style({
+        image: new ol.style.Icon({ scale: .7, src: FEATURE_SRC })
+      })
+    ];
+
     this.options = mergeOptions(DEFAULT_OPTIONS, options);
     this.container = undefined;
 
@@ -1265,6 +1199,22 @@ var Base = (function (superclass) {
    */
   Base.prototype.getSource = function getSource () {
     return this.getLayer().getSource();
+  };
+
+  /**
+   * Set a new provider
+   * @param {String} provider
+   */
+  Base.prototype.setProvider = function setProvider (provider) {
+    this.options.provider = provider;
+  };
+
+  /**
+   * Set provider key
+   * @param {String} key
+   */
+  Base.prototype.setProviderKey = function setProviderKey (key) {
+    this.options.key = key;
   };
 
   return Base;
