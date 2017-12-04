@@ -36,6 +36,7 @@ The plugin supports (for now) the following providers:
 * [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
 * [OpenCage](https://geocoder.opencagedata.com) &mdash; requires KEY  &mdash; `'opencage'`.
+* [DataGouvFr](https://adresse.data.gouv.fr/api/) &mdash; `'datagouvfr'`.
 
 ### Custom Providers
 You can also write your own provider, passing an instance of it to the `Geocoder` constructor via the `provider` property of the options argument.
