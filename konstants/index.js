@@ -27,7 +27,8 @@ export const PROVIDERS = {
   PHOTON: 'photon',
   BING: 'bing',
   OPENCAGE: 'opencage',
-  PELIAS: 'pelias'
+  PELIAS: 'pelias',
+  DATAGOUVFR: 'datagouvfr'
 };
 
 export const DEFAULT_OPTIONS = {

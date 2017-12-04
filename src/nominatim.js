@@ -5,6 +5,7 @@ import { MapQuest } from './providers/mapquest';
 import { Pelias } from './providers/pelias';
 import { Bing } from './providers/bing';
 import { OpenCage } from './providers/opencage';
+import { DataGouvFr } from './providers/datagouvfr.js';
 import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from 'konstants';
 import { randomId, flyTo } from 'helpers/mix';
 import { json } from 'helpers/ajax';
@@ -56,6 +57,7 @@ export class Nominatim {
     this.Pelias = new Pelias();
     this.Bing = new Bing();
     this.OpenCage = new OpenCage();
+    this.DataGouvFr = new DataGouvFr();
   }
 
   setListeners() {
@@ -166,6 +168,10 @@ export class Nominatim {
         case PROVIDERS.OPENCAGE:
           res_ = res.results.length ?
             this.OpenCage.handleResponse(res.results) : undefined;
+          break;
+        case PROVIDERS.DATAGOUVFR:
+          res_ = res.features.length ?
+            this.DataGouvFr.handleResponse(res.features) : undefined;
           break;
         default:
           res_ = this.options.provider.handleResponse(res);
@@ -308,6 +314,9 @@ export class Nominatim {
         break;
       case PROVIDERS.OPENCAGE:
         provider = this.OpenCage.getParameters(options);
+        break;
+      case PROVIDERS.DATAGOUVFR:
+        provider = this.DataGouvFr.getParameters(options);
         break;
       default:
         provider = options.provider.getParameters(options);
