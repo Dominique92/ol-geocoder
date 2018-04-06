@@ -1,4 +1,6 @@
-import ol from 'openlayers';
+import Control from 'ol/control/control';
+import Style from 'ol/style/style';
+import Icon from 'ol/style/icon';
 import { Html } from './html';
 import { Nominatim } from './nominatim';
 import { assert, mergeOptions } from 'helpers/mix';
@@ -8,7 +10,7 @@ import { CONTROL_TYPE, DEFAULT_OPTIONS, FEATURE_SRC } from 'konstants';
  * @class Base
  * @extends {ol.control.Control}
  */
-export default class Base extends ol.control.Control {
+export default class Base extends Control {
   /**
    * @constructor
    * @param {string} type nominatim|reverse.
@@ -27,9 +29,7 @@ export default class Base extends ol.control.Control {
     assert(typeof options === 'object', '@param `options` should be object!');
 
     DEFAULT_OPTIONS.featureStyle = [
-      new ol.style.Style({
-        image: new ol.style.Icon({ scale: .7, src: FEATURE_SRC })
-      })
+      new Style({ image: new Icon({ scale: .7, src: FEATURE_SRC }) })
     ];
 
     this.options = mergeOptions(DEFAULT_OPTIONS, options);
