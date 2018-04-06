@@ -4,6 +4,7 @@ export function json(obj) {
     const config = {
       method: 'GET',
       mode: 'cors',
+      credentials: 'same-origin',
     };
 
     if (obj.jsonp) {
