@@ -2,7 +2,7 @@
  * ol-geocoder - v3.0.01
  * A geocoder extension for OpenLayers.
  * https://github.com/jonataswalker/ol-geocoder
- * Built: Mon Nov 27 2017 17:57:30 GMT-0200 (-02)
+ * Built: Tue Jan 16 2018 12:55:54 GMT+0100 (CET)
  */
 
 (function (global, factory) {
@@ -477,7 +477,7 @@ Photon.prototype.handleResponse = function handleResponse (results) {
 var OpenStreet = function OpenStreet() {
 
   this.settings = {
-    url: 'http://nominatim.openstreetmap.org/search/',
+    url: 'https://nominatim.openstreetmap.org/search/',
     params: {
       q: '',
       format: 'json',
@@ -720,6 +720,7 @@ function json(obj) {
     const config = {
       method: 'GET',
       mode: 'cors',
+      credentials: 'same-origin',
     };
 
     if (obj.jsonp) {
