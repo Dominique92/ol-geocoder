@@ -32,22 +32,27 @@
     "test": "run-s build test:unit test:controls",
     "test:controls": "testcafe chrome test/e2e/controls/*.test.js",
     "test:providers": "testcafe chrome test/e2e/providers/*.test.js",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "test:unit:watch": "jest --watch"
   },
   "jest": {
+    "setupFiles": [
+      "<rootDir>/test/env-setup.js"
+    ],
     "testRegex": "/test/unit/.*\\.test\\.js$",
-    "transform": {
-      "^.+\\.js?$": "babel-jest"
-    }
+    "transformIgnorePatterns": [
+      "node_modules/(?!(ol)/)"
+    ]
   },
   "babel": {
     "presets": [
       "env"
     ]
   },
-  "dependencies": {
-    "openlayers": "^4.5.0"
+  "peerDependencies": {
+    "ol": ">4.1.0"
   },
+  "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^8.2.0",
     "babel-jest": "^22.4.3",
@@ -67,6 +72,7 @@
     "node-sass": "^4.8.3",
     "node-sass-json-importer": "^3.1.6",
     "npm-run-all": "^4.0.1",
+    "ol": "^4.6.5",
     "postcss": "^6.0.21",
     "postcss-import": "^11.1.0",
     "postcss-reporter": "^5.0.0",

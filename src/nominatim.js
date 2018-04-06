@@ -1,4 +1,8 @@
-import ol from 'openlayers';
+import LayerVector from 'ol/layer/vector';
+import SourceVector from 'ol/source/vector';
+import Point from 'ol/geom/point';
+import Feature from 'ol/feature';
+import proj from 'ol/proj';
 import { Photon } from './providers/photon';
 import { OpenStreet } from './providers/osm';
 import { MapQuest } from './providers/mapquest';
@@ -31,9 +35,9 @@ export class Nominatim {
     this.Base = base;
 
     this.layerName = randomId('geocoder-layer-');
-    this.layer = new ol.layer.Vector({
+    this.layer = new LayerVector({
       name: this.layerName,
-      source: new ol.source.Vector()
+      source: new SourceVector()
     });
 
     this.options = base.options;
@@ -214,11 +218,11 @@ export class Nominatim {
     const map = this.Base.getMap();
     const coord_ = [parseFloat(place.lon), parseFloat(place.lat)];
     const projection = map.getView().getProjection();
-    const coord = ol.proj.transform(coord_, 'EPSG:4326', projection);
+    const coord = proj.transform(coord_, 'EPSG:4326', projection);
     let bbox = place.bbox;
 
     if (bbox) {
-      bbox = ol.proj.transformExtent(bbox, 'EPSG:4326', projection);
+      bbox = proj.transformExtent(bbox, 'EPSG:4326', projection);
     }
     const address = {
       formatted: addressHtml,
@@ -254,7 +258,7 @@ export class Nominatim {
   }
 
   createFeature(coord) {
-    const feature = new ol.Feature(new ol.geom.Point(coord));
+    const feature = new Feature(new Point(coord));
     this.addLayer();
     feature.setStyle(this.options.featureStyle);
     feature.setId(randomId('geocoder-ft-'));

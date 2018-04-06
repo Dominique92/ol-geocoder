@@ -1,6 +1,8 @@
-const ol = require('openlayers');
-const Geocoder = require('../../dist/ol-geocoder');
-const { DEFAULT_OPTIONS, PROVIDERS } = require('../../konstants');
+import Control from 'ol/control/control';
+import LayerVector from 'ol/layer/vector';
+import SourceVector from 'ol/source/vector';
+import Geocoder from '../../';
+import { DEFAULT_OPTIONS, PROVIDERS } from '../../konstants';
 
 const options = {
   provider: PROVIDERS.PHOTON,
@@ -20,7 +22,7 @@ describe('Instance of', () => {
   });
 
   test('is ol.control.Control', () => {
-    expect(geocoder instanceof ol.control.Control).toBeTruthy();
+    expect(geocoder).toBeInstanceOf(Control);
   });
 });
 
@@ -38,12 +40,12 @@ describe('Instance options', () => {
 describe('Instance methods', () => {
   test('getLayer()', () => {
     const layer = geocoder.getLayer();
-    expect(layer instanceof ol.layer.Vector).toBeTruthy();
+    expect(layer).toBeInstanceOf(LayerVector);
   });
 
   test('getSource()', () => {
     const source = geocoder.getSource();
-    expect(source instanceof ol.source.Vector).toBeTruthy();
+    expect(source).toBeInstanceOf(SourceVector);
   });
 
   test('setProvider()', () => {
