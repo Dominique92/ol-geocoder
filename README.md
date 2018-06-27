@@ -35,7 +35,7 @@ The plugin supports (for now) the following providers:
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
 * [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
-* [OpenCage](https://geocoder.opencagedata.com) &mdash; requires KEY  &mdash; `'opencage'`.
+* [OpenCage](https://opencagedata.com) &mdash; requires KEY  &mdash; `'opencage'`.
 
 ### Custom Providers
 You can also write your own provider, passing an instance of it to the `Geocoder` constructor via the `provider` property of the options argument.
