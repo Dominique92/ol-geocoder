@@ -2,7 +2,7 @@
  * ol-geocoder - v3.1.0
  * A geocoder extension for OpenLayers.
  * https://github.com/jonataswalker/ol-geocoder
- * Built: Fri Apr 06 2018 09:18:53 GMT-0300 (-03)
+ * Built: Fri Jul 27 2018 11:10:22 GMT+0100 (BST)
  */
 .ol-geocoder.gcd-gl-container {
   position: absolute;
@@ -104,6 +104,9 @@
         background-color: #d4d4d4; }
   .ol-geocoder ul.gcd-gl-result > li:nth-child(odd) {
     background-color: #e0ffe0; }
+
+.ol-geocoder ul.gcd-gl-result:empty {
+  display: none; }
 
 .ol-geocoder.gcd-txt-container {
   position: absolute;
@@ -209,6 +212,9 @@
         background-color: #d4d4d4; }
   .ol-geocoder ul.gcd-txt-result > li:nth-child(odd) {
     background-color: #e0ffe0; }
+
+.ol-geocoder ul.gcd-txt-result:empty {
+  display: none; }
 
 .ol-geocoder .gcd-hidden {
   opacity: 0;

@@ -128,3 +128,7 @@ ul.#{map-get($input-text, result)} {
     background-color: rgb(224, 255, 224);
   }
 }
+
+ul.#{map-get($input-text, result)}:empty {
+    display: none;
+}
