@@ -1,6 +1,6 @@
-import Control from 'ol/control/control';
-import LayerVector from 'ol/layer/vector';
-import SourceVector from 'ol/source/vector';
+import Control from 'ol/control/Control';
+import LayerVector from 'ol/layer/Vector';
+import SourceVector from 'ol/source/Vector';
 import Geocoder from '../../';
 import { DEFAULT_OPTIONS, PROVIDERS } from '../../konstants';
 
@@ -10,7 +10,7 @@ const options = {
   lang: 'en',
   placeholder: 'Search for ...',
   limit: 5,
-  keepOpen: false
+  keepOpen: false,
 };
 
 const geocoder = new Geocoder();
@@ -61,10 +61,14 @@ describe('Instance methods', () => {
 
 describe('Throw errors', () => {
   test('wrong control type', () => {
-    expect(() => { new Geocoder('foo') }).toThrowError();
+    expect(() => {
+      new Geocoder('foo');
+    }).toThrowError();
   });
 
   test('wrong options type', () => {
-    expect(() => { new Geocoder('nominatim', 'foo') }).toThrowError();
+    expect(() => {
+      new Geocoder('nominatim', 'foo');
+    }).toThrowError();
   });
 });
