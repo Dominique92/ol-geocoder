@@ -130,3 +130,7 @@ ul.#{map-get($glass, result)} {
     background-color: rgb(224, 255, 224);
   }
 }
+
+ul.#{map-get($glass, result)}:empty {
+    display: none;
+}
