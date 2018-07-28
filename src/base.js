@@ -1,6 +1,6 @@
-import Control from 'ol/control/control';
-import Style from 'ol/style/style';
-import Icon from 'ol/style/icon';
+import Control from 'ol/control/Control';
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon';
 import { Html } from './html';
 import { Nominatim } from './nominatim';
 import { assert, mergeOptions } from 'helpers/mix';
@@ -17,19 +17,18 @@ export default class Base extends Control {
    * @param {object} options Options.
    */
   constructor(type = CONTROL_TYPE.NOMINATIM, options = {}) {
-
     if (!(this instanceof Base)) return new Base();
 
     assert(typeof type === 'string', '@param `type` should be string!');
     assert(
       type === CONTROL_TYPE.NOMINATIM || type === CONTROL_TYPE.REVERSE,
       `@param 'type' should be '${CONTROL_TYPE.NOMINATIM}'
-        or '${CONTROL_TYPE.REVERSE}'!`
+        or '${CONTROL_TYPE.REVERSE}'!`,
     );
     assert(typeof options === 'object', '@param `options` should be object!');
 
     DEFAULT_OPTIONS.featureStyle = [
-      new Style({ image: new Icon({ scale: .7, src: FEATURE_SRC }) })
+      new Style({ image: new Icon({ scale: 0.7, src: FEATURE_SRC }) }),
     ];
 
     this.options = mergeOptions(DEFAULT_OPTIONS, options);
