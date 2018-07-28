@@ -1,7 +1,7 @@
-import LayerVector from 'ol/layer/vector';
-import SourceVector from 'ol/source/vector';
-import Point from 'ol/geom/point';
-import Feature from 'ol/feature';
+import LayerVector from 'ol/layer/Vector';
+import SourceVector from 'ol/source/Vector';
+import Point from 'ol/geom/Point';
+import Feature from 'ol/Feature';
 import proj from 'ol/proj';
 import { Photon } from './providers/photon';
 import { OpenStreet } from './providers/osm';
@@ -37,15 +37,16 @@ export class Nominatim {
     this.layerName = randomId('geocoder-layer-');
     this.layer = new LayerVector({
       name: this.layerName,
-      source: new SourceVector()
+      source: new SourceVector(),
     });
 
     this.options = base.options;
     // provider is either the name of a built-in provider as a string or an
     // object that implements the provider API
-    this.options.provider = (typeof this.options.provider === 'string')
-      ? this.options.provider.toLowerCase()
-      : this.options.provider;
+    this.options.provider =
+      typeof this.options.provider === 'string'
+        ? this.options.provider.toLowerCase()
+        : this.options.provider;
 
     this.els = els;
     this.lastQuery = '';
@@ -65,28 +66,33 @@ export class Nominatim {
   setListeners() {
     let timeout, lastQuery;
     const openSearch = () => {
-      hasClass(this.els.control, klasses.glass.expanded) ?
-        this.collapse() : this.expand();
+      hasClass(this.els.control, klasses.glass.expanded)
+        ? this.collapse()
+        : this.expand();
     };
-    const query = (evt) => {
+    const query = evt => {
       const value = evt.target.value.trim();
-      const hit = evt.key ? evt.key === 'Enter' :
-        evt.which ? evt.which === 13 :
-          evt.keyCode ? evt.keyCode === 13 : false;
+      const hit = evt.key
+        ? evt.key === 'Enter'
+        : evt.which
+          ? evt.which === 13
+          : evt.keyCode
+            ? evt.keyCode === 13
+            : false;
 
       if (hit) {
         evt.preventDefault();
         this.query(value);
       }
     };
-    const reset = (evt) => {
+    const reset = evt => {
       this.els.input.focus();
       this.els.input.value = '';
       this.lastQuery = '';
       addClass(this.els.reset, klasses.hidden);
       this.clearResults();
     };
-    const handleValue = (evt) => {
+    const handleValue = evt => {
       const value = evt.target.value.trim();
 
       value.length
@@ -118,7 +124,7 @@ export class Nominatim {
       key: this.options.key,
       lang: this.options.lang,
       countrycodes: this.options.countrycodes,
-      limit: this.options.limit
+      limit: this.options.limit,
     });
 
     if (this.lastQuery === q && this.els.result.firstChild) return;
@@ -137,54 +143,59 @@ export class Nominatim {
       ajax.callbackName = provider.callbackName;
     }
 
-    json(ajax).then(res => {
-      // eslint-disable-next-line no-console
-      this.options.debug && console.info(res);
+    json(ajax)
+      .then(res => {
+        // eslint-disable-next-line no-console
+        this.options.debug && console.info(res);
 
-      removeClass(this.els.reset, klasses.spin);
+        removeClass(this.els.reset, klasses.spin);
 
-      //will be fullfiled according to provider
-      let res_;
-      switch (this.options.provider) {
-        case PROVIDERS.OSM:
-          res_ = res.length ?
-            this.OpenStreet.handleResponse(res) : undefined;
-          break;
-        case PROVIDERS.MAPQUEST:
-          res_ = res.length ?
-            this.MapQuest.handleResponse(res) : undefined;
-          break;
-        case PROVIDERS.PELIAS:
-          res_ = res.features.length ?
-            this.Pelias.handleResponse(res.features) : undefined;
-          break;
-        case PROVIDERS.PHOTON:
-          res_ = res.features.length ?
-            this.Photon.handleResponse(res.features) : undefined;
-          break;
-        case PROVIDERS.BING:
-          res_ = res.resourceSets[0].resources.length
-            ? this.Bing.handleResponse(res.resourceSets[0].resources)
-            : undefined;
-          break;
-        case PROVIDERS.OPENCAGE:
-          res_ = res.results.length ?
-            this.OpenCage.handleResponse(res.results) : undefined;
-          break;
-        default:
-          res_ = this.options.provider.handleResponse(res);
-          break;
-      }
-      if (res_) {
-        this.createList(res_);
-        this.listenMapClick();
-      }
-    }).catch(err => {
-      removeClass(this.els.reset, klasses.spin);
-      const li = createElement(
-        'li', '<h5>Error! No internet connection?</h5>');
-      this.els.result.appendChild(li);
-    });
+        //will be fullfiled according to provider
+        let res_;
+        switch (this.options.provider) {
+          case PROVIDERS.OSM:
+            res_ = res.length ? this.OpenStreet.handleResponse(res) : undefined;
+            break;
+          case PROVIDERS.MAPQUEST:
+            res_ = res.length ? this.MapQuest.handleResponse(res) : undefined;
+            break;
+          case PROVIDERS.PELIAS:
+            res_ = res.features.length
+              ? this.Pelias.handleResponse(res.features)
+              : undefined;
+            break;
+          case PROVIDERS.PHOTON:
+            res_ = res.features.length
+              ? this.Photon.handleResponse(res.features)
+              : undefined;
+            break;
+          case PROVIDERS.BING:
+            res_ = res.resourceSets[0].resources.length
+              ? this.Bing.handleResponse(res.resourceSets[0].resources)
+              : undefined;
+            break;
+          case PROVIDERS.OPENCAGE:
+            res_ = res.results.length
+              ? this.OpenCage.handleResponse(res.results)
+              : undefined;
+            break;
+          default:
+            res_ = this.options.provider.handleResponse(res);
+            break;
+        }
+        if (res_) {
+          this.createList(res_);
+          this.listenMapClick();
+        }
+      })
+      .catch(err => {
+        removeClass(this.els.reset, klasses.spin);
+        const li = createElement(
+          'li',
+          '<h5>Error! No internet connection?</h5>',
+        );
+        this.els.result.appendChild(li);
+      });
   }
 
   createList(response) {
@@ -195,8 +206,9 @@ export class Nominatim {
 
       switch (this.options.provider) {
         case PROVIDERS.OSM:
-          addressHtml =
-            `<span class="${klasses.road}">${row.address.name}</span>`;
+          addressHtml = `<span class="${klasses.road}">${
+            row.address.name
+          }</span>`;
           break;
         default:
           addressHtml = this.addressTemplate(row.address);
@@ -205,10 +217,14 @@ export class Nominatim {
       const html = `<a href="#">${addressHtml}</a>`;
       const li = createElement('li', html);
 
-      li.addEventListener('click', evt => {
-        evt.preventDefault();
-        this.chosen(row, addressHtml, row.address, row.original);
-      }, false);
+      li.addEventListener(
+        'click',
+        evt => {
+          evt.preventDefault();
+          this.chosen(row, addressHtml, row.address, row.original);
+        },
+        false,
+      );
 
       ul.appendChild(li);
     });
@@ -227,7 +243,7 @@ export class Nominatim {
     const address = {
       formatted: addressHtml,
       details: addressObj,
-      original: addressOriginal
+      original: addressOriginal,
     };
 
     this.options.keepOpen === false && this.clearResults(true);
@@ -237,7 +253,7 @@ export class Nominatim {
         type: EVENT_TYPE.ADDRESSCHOSEN,
         address: address,
         coordinate: coord,
-        bbox: bbox
+        bbox: bbox,
       });
     } else {
       if (bbox) {
@@ -252,7 +268,7 @@ export class Nominatim {
         address: address,
         feature: feature,
         coordinate: coord,
-        bbox: bbox
+        bbox: bbox,
       });
     }
   }
@@ -272,21 +288,29 @@ export class Nominatim {
       html.push(['<span class="', klasses.road, '">{name}</span>'].join(''));
     }
     if (address.road || address.building || address.house_number) {
-      html.push([
-        '<span class="', klasses.road,
-        '">{building} {road} {house_number}</span>'
-      ].join(''));
+      html.push(
+        [
+          '<span class="',
+          klasses.road,
+          '">{building} {road} {house_number}</span>',
+        ].join(''),
+      );
     }
     if (address.city || address.town || address.village) {
-      html.push([
-        '<span class="', klasses.city,
-        '">{postcode} {city} {town} {village}</span>'
-      ].join(''));
+      html.push(
+        [
+          '<span class="',
+          klasses.city,
+          '">{postcode} {city} {town} {village}</span>',
+        ].join(''),
+      );
     }
     if (address.state || address.country) {
-      html.push([
-        '<span class="', klasses.country, '">{state} {country}</span>'
-      ].join(''));
+      html.push(
+        ['<span class="', klasses.country, '">{state} {country}</span>'].join(
+          '',
+        ),
+      );
     }
     return template(html.join('<br>'), address);
   }
@@ -344,13 +368,17 @@ export class Nominatim {
     this.registeredListeners.mapClick = true;
 
     //one-time fire click
-    mapElement.addEventListener('click', {
-      handleEvent: function (evt) {
-        this_.clearResults(true);
-        mapElement.removeEventListener(evt.type, this, false);
-        this_.registeredListeners.mapClick = false;
-      }
-    }, false);
+    mapElement.addEventListener(
+      'click',
+      {
+        handleEvent: function (evt) {
+          this_.clearResults(true);
+          mapElement.removeEventListener(evt.type, this, false);
+          this_.registeredListeners.mapClick = false;
+        },
+      },
+      false,
+    );
   }
 
   clearResults(collapse) {
