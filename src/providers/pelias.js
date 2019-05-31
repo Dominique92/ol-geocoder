@@ -27,7 +27,8 @@ export class Pelias {
   }
 
   handleResponse(results) {
-    return results.map(result => ({
+    if (!results.features.length) return;
+    return results.features.map(result => ({
       lon: result.geometry.coordinates[0],
       lat: result.geometry.coordinates[1],
       address: {

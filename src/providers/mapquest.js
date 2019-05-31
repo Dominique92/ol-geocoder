@@ -38,6 +38,7 @@ export class MapQuest {
   }
 
   handleResponse(results) {
+    if (!results.length) return;
     return results.map(result => ({
       lon: result.lon,
       lat: result.lat,
