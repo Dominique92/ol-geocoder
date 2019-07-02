@@ -34,7 +34,9 @@ export class Bing {
   }
 
   handleResponse(results) {
-    return results.map(result => ({
+    let resources = results.resourceSets[0].resources;
+    if (!resources.length) return;
+    return resources.map(result => ({
       lon: result.point.coordinates[1],
       lat: result.point.coordinates[0],
       address: {

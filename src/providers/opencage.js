@@ -32,7 +32,8 @@ export class OpenCage {
   }
 
   handleResponse(results) {
-    return results.map(result => ({
+    if (!results.results.length) return;
+    return results.results.map(result => ({
       lon: result.geometry.lng,
       lat: result.geometry.lat,
       address: {

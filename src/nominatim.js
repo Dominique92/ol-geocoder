@@ -47,20 +47,13 @@ export class Nominatim {
       typeof this.options.provider === 'string'
         ? this.options.provider.toLowerCase()
         : this.options.provider;
+    this.provider = this.newProvider();
 
     this.els = els;
     this.lastQuery = '';
     this.container = this.els.container;
     this.registeredListeners = { mapClick: false };
     this.setListeners();
-
-    // providers
-    this.Photon = new Photon();
-    this.OpenStreet = new OpenStreet();
-    this.MapQuest = new MapQuest();
-    this.Pelias = new Pelias();
-    this.Bing = new Bing();
-    this.OpenCage = new OpenCage();
   }
 
   setListeners() {
@@ -118,9 +111,8 @@ export class Nominatim {
   }
 
   query(q) {
-    const provider = this.getProvider({
+    const parameters = this.provider.getParameters({
       query: q,
-      provider: this.options.provider,
       key: this.options.key,
       lang: this.options.lang,
       countrycodes: this.options.countrycodes,
@@ -134,13 +126,13 @@ export class Nominatim {
     addClass(this.els.reset, klasses.spin);
 
     let ajax = {
-      url: provider.url,
-      data: provider.params,
+      url: parameters.url,
+      data: parameters.params,
     };
 
-    if (provider.callbackName) {
+    if (parameters.callbackName) {
       ajax.jsonp = true;
-      ajax.callbackName = provider.callbackName;
+      ajax.callbackName = parameters.callbackName;
     }
 
     json(ajax)
@@ -151,38 +143,7 @@ export class Nominatim {
         removeClass(this.els.reset, klasses.spin);
 
         //will be fullfiled according to provider
-        let res_;
-        switch (this.options.provider) {
-          case PROVIDERS.OSM:
-            res_ = res.length ? this.OpenStreet.handleResponse(res) : undefined;
-            break;
-          case PROVIDERS.MAPQUEST:
-            res_ = res.length ? this.MapQuest.handleResponse(res) : undefined;
-            break;
-          case PROVIDERS.PELIAS:
-            res_ = res.features.length
-              ? this.Pelias.handleResponse(res.features)
-              : undefined;
-            break;
-          case PROVIDERS.PHOTON:
-            res_ = res.features.length
-              ? this.Photon.handleResponse(res.features)
-              : undefined;
-            break;
-          case PROVIDERS.BING:
-            res_ = res.resourceSets[0].resources.length
-              ? this.Bing.handleResponse(res.resourceSets[0].resources)
-              : undefined;
-            break;
-          case PROVIDERS.OPENCAGE:
-            res_ = res.results.length
-              ? this.OpenCage.handleResponse(res.results)
-              : undefined;
-            break;
-          default:
-            res_ = this.options.provider.handleResponse(res);
-            break;
-        }
+        let res_ = this.provider.handleResponse(res);
         if (res_) {
           this.createList(res_);
           this.listenMapClick();
@@ -313,33 +274,24 @@ export class Nominatim {
     return template(html.join('<br>'), address);
   }
 
-  getProvider(options) {
-    let provider;
+  newProvider() {
     /*eslint default-case: 0*/
-    switch (options.provider) {
+    switch (this.options.provider) {
       case PROVIDERS.OSM:
-        provider = this.OpenStreet.getParameters(options);
-        break;
+        return new OpenStreet();
       case PROVIDERS.MAPQUEST:
-        provider = this.MapQuest.getParameters(options);
-        break;
+        return new MapQuest();
       case PROVIDERS.PHOTON:
-        provider = this.Photon.getParameters(options);
-        break;
+        return new Photon();
       case PROVIDERS.PELIAS:
-        provider = this.Pelias.getParameters(options);
-        break;
+        return new Pelias();
       case PROVIDERS.BING:
-        provider = this.Bing.getParameters(options);
-        break;
+        return new Bing();
       case PROVIDERS.OPENCAGE:
-        provider = this.OpenCage.getParameters(options);
-        break;
+        return new OpenCage();
       default:
-        provider = options.provider.getParameters(options);
-        break;
+        return this.options.provider;
     }
-    return provider;
   }
 
   expand() {
