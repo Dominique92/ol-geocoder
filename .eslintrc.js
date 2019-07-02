@@ -1,7 +1,9 @@
 module.exports = {
-  extends: ['jwalker'],
+  root: true,
+  extends: ['jwalker', 'plugin:prettier/recommended'],
   rules: {
-    'no-console': 1
+    'no-console': 0,
+    'prettier/prettier': 'error',
   },
   globals: {
     Geocoder: true,

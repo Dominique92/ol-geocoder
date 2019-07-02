@@ -13,8 +13,8 @@ export class Bing {
         query: '',
         key: '',
         includeNeighborhood: 0,
-        maxResults: 10
-      }
+        maxResults: 10,
+      },
     };
   }
 
@@ -25,10 +25,11 @@ export class Bing {
       params: {
         query: options.query,
         key: options.key,
-        includeNeighborhood: options.includeNeighborhood ||
-            this.settings.params.includeNeighborhood,
-        maxResults: options.maxResults || this.settings.params.maxResults
-      }
+        includeNeighborhood:
+          options.includeNeighborhood ||
+          this.settings.params.includeNeighborhood,
+        maxResults: options.maxResults || this.settings.params.maxResults,
+      },
     };
   }
 
@@ -37,12 +38,12 @@ export class Bing {
       lon: result.point.coordinates[1],
       lat: result.point.coordinates[0],
       address: {
-        name: result.name
+        name: result.name,
       },
       original: {
         formatted: result.address.formattedAddress,
-        details: result.address
-      }
+        details: result.address,
+      },
     }));
   }
 }

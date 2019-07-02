@@ -75,10 +75,10 @@ export class Nominatim {
       const hit = evt.key
         ? evt.key === 'Enter'
         : evt.which
-          ? evt.which === 13
-          : evt.keyCode
-            ? evt.keyCode === 13
-            : false;
+        ? evt.which === 13
+        : evt.keyCode
+        ? evt.keyCode === 13
+        : false;
 
       if (hit) {
         evt.preventDefault();
@@ -192,7 +192,7 @@ export class Nominatim {
         removeClass(this.els.reset, klasses.spin);
         const li = createElement(
           'li',
-          '<h5>Error! No internet connection?</h5>',
+          '<h5>Error! No internet connection?</h5>'
         );
         this.els.result.appendChild(li);
       });
@@ -206,9 +206,7 @@ export class Nominatim {
 
       switch (this.options.provider) {
         case PROVIDERS.OSM:
-          addressHtml = `<span class="${klasses.road}">${
-            row.address.name
-          }</span>`;
+          addressHtml = `<span class="${klasses.road}">${row.address.name}</span>`;
           break;
         default:
           addressHtml = this.addressTemplate(row.address);
@@ -223,7 +221,7 @@ export class Nominatim {
           evt.preventDefault();
           this.chosen(row, addressHtml, row.address, row.original);
         },
-        false,
+        false
       );
 
       ul.appendChild(li);
@@ -293,7 +291,7 @@ export class Nominatim {
           '<span class="',
           klasses.road,
           '">{building} {road} {house_number}</span>',
-        ].join(''),
+        ].join('')
       );
     }
     if (address.city || address.town || address.village) {
@@ -302,14 +300,14 @@ export class Nominatim {
           '<span class="',
           klasses.city,
           '">{postcode} {city} {town} {village}</span>',
-        ].join(''),
+        ].join('')
       );
     }
     if (address.state || address.country) {
       html.push(
         ['<span class="', klasses.country, '">{state} {country}</span>'].join(
-          '',
-        ),
+          ''
+        )
       );
     }
     return template(html.join('<br>'), address);
@@ -371,13 +369,13 @@ export class Nominatim {
     mapElement.addEventListener(
       'click',
       {
-        handleEvent: function (evt) {
+        handleEvent: function(evt) {
           this_.clearResults(true);
           mapElement.removeEventListener(evt.type, this, false);
           this_.registeredListeners.mapClick = false;
         },
       },
-      false,
+      false
     );
   }
 
