@@ -12,9 +12,7 @@ export function addClass(element, classname, timeout) {
     return;
   }
 
-  const array = (Array.isArray(classname))
-    ? classname
-    : classname.split(/\s+/);
+  const array = Array.isArray(classname) ? classname : classname.split(/\s+/);
   let i = array.length;
 
   while (i--) {
@@ -36,9 +34,7 @@ export function removeClass(element, classname, timeout) {
     return;
   }
 
-  const array = (Array.isArray(classname))
-    ? classname
-    : classname.split(/\s+/);
+  const array = Array.isArray(classname) ? classname : classname.split(/\s+/);
   let i = array.length;
 
   while (i--) {
@@ -47,7 +43,6 @@ export function removeClass(element, classname, timeout) {
     }
   }
 }
-
 
 /**
  * @param {Element} element DOM node.
@@ -91,9 +86,9 @@ export function toggleClass(element, classname) {
  */
 export function find(selector, context = window.document, find_all) {
   let simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/,
-      periodRe = /\./g,
-      slice = Array.prototype.slice,
-      matches = [];
+    periodRe = /\./g,
+    slice = Array.prototype.slice,
+    matches = [];
 
   // Redirect call to the more performant function
   // if it's a simple selector and return an array
@@ -104,8 +99,11 @@ export function find(selector, context = window.document, find_all) {
         matches = [$(selector.substr(1))];
         break;
       case '.':
-        matches = slice.call(context.getElementsByClassName(
-          selector.substr(1).replace(periodRe, ' ')));
+        matches = slice.call(
+          context.getElementsByClassName(
+            selector.substr(1).replace(periodRe, ' ')
+          )
+        );
         break;
       default:
         matches = slice.call(context.getElementsByTagName(selector));
@@ -116,24 +114,23 @@ export function find(selector, context = window.document, find_all) {
     matches = slice.call(context.querySelectorAll(selector));
   }
 
-  return (find_all) ? matches : matches[0];
+  return find_all ? matches : matches[0];
 }
 
 export function $(id) {
-  id = (id[0] === '#') ? id.substr(1, id.length) : id;
+  id = id[0] === '#' ? id.substr(1, id.length) : id;
   return document.getElementById(id);
 }
 
 export function isElement(obj) {
   // DOM, Level2
   if ('HTMLElement' in window) {
-    return (!!obj && obj instanceof HTMLElement);
+    return !!obj && obj instanceof HTMLElement;
   }
   // Older browsers
-  return !!obj
-    && typeof obj === 'object'
-    && obj.nodeType === 1
-    && !!obj.nodeName;
+  return (
+    !!obj && typeof obj === 'object' && obj.nodeType === 1 && !!obj.nodeName
+  );
 }
 
 export function getAllChildren(node, tag) {
@@ -150,8 +147,8 @@ export function removeAll(collection) {
 }
 
 export function getChildren(node, tag) {
-  return [].filter.call(
-    node.childNodes, el => tag
+  return [].filter.call(node.childNodes, el =>
+    tag
       ? el.nodeType === 1 && el.tagName.toLowerCase() === tag
       : el.nodeType === 1
   );
@@ -159,7 +156,7 @@ export function getChildren(node, tag) {
 
 export function template(html, row) {
   return html.replace(/\{ *([\w_-]+) *\}/g, (htm, key) => {
-    let value = (row[key] === undefined) ? '' : row[key];
+    let value = row[key] === undefined ? '' : row[key];
     return htmlEscape(value);
   });
 }
@@ -224,7 +221,7 @@ function _removeClass(el, klass, timeout) {
   if (el.classList) {
     el.classList.remove(klass);
   } else {
-    el.className = (el.className.replace(classRegex(klass), ' ')).trim();
+    el.className = el.className.replace(classRegex(klass), ' ').trim();
   }
   if (timeout && isNumeric(timeout)) {
     window.setTimeout(() => _addClass(el, klass), timeout);

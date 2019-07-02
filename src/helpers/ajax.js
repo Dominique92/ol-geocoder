@@ -15,20 +15,20 @@ export function json(obj) {
         .then(resolve)
         .catch(reject);
     }
-
   });
 }
 
-
 function toQueryString(obj) {
-  return Object.keys(obj).reduce((a, k) => {
-    a.push(
-      typeof obj[k] === 'object'
-        ? toQueryString(obj[k])
-        : `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
-    );
-    return a;
-  }, []).join('&');
+  return Object.keys(obj)
+    .reduce((a, k) => {
+      a.push(
+        typeof obj[k] === 'object'
+          ? toQueryString(obj[k])
+          : `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
+      );
+      return a;
+    }, [])
+    .join('&');
 }
 
 function encodeUrlXhr(url, data) {
@@ -41,16 +41,18 @@ function encodeUrlXhr(url, data) {
 function jsonp(url, key, callback) {
   // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
   let head = document.head,
-      script = document.createElement('script'),
-      // generate minimally unique name for callback function
-      callbackName = 'f' + Math.round(Math.random() * Date.now());
+    script = document.createElement('script'),
+    // generate minimally unique name for callback function
+    callbackName = 'f' + Math.round(Math.random() * Date.now());
 
   // set request url
-  script.setAttribute('src',
+  script.setAttribute(
+    'src',
     /*  add callback parameter to the url
           where key is the parameter key supplied
           and callbackName is the parameter value */
-    (url + (url.indexOf('?') > 0 ? '&' : '?') + key + '=' + callbackName));
+    url + (url.indexOf('?') > 0 ? '&' : '?') + key + '=' + callbackName
+  );
 
   /*  place jsonp callback on window,
       the script sent by the server should call this

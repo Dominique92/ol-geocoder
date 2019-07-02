@@ -63,12 +63,12 @@ describe('Throw errors', () => {
   test('wrong control type', () => {
     expect(() => {
       new Geocoder('foo');
-    }).toThrowError();
+    }).toThrow();
   });
 
   test('wrong options type', () => {
     expect(() => {
       new Geocoder('nominatim', 'foo');
-    }).toThrowError();
+    }).toThrow();
   });
 });

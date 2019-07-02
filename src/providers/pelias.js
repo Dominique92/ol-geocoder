@@ -6,12 +6,11 @@ export class Pelias {
    * @constructor
    */
   constructor() {
-
     this.settings = {
       url: 'http://search.mapzen.com/v1/search',
       params: {
-        size: 10
-      }
+        size: 10,
+      },
     };
   }
 
@@ -21,8 +20,8 @@ export class Pelias {
       params: {
         text: options.query,
         api_key: options.key,
-        size: options.limit || this.settings.params.size
-      }
+        size: options.limit || this.settings.params.size,
+      },
     };
   }
 
@@ -37,12 +36,12 @@ export class Pelias {
         road: result.properties.street,
         city: result.properties.city,
         state: result.properties.region,
-        country: result.properties.country
+        country: result.properties.country,
       },
       original: {
         formatted: result.properties.label,
-        details: result.properties
-      }
+        details: result.properties,
+      },
     }));
   }
 }

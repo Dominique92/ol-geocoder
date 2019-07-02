@@ -3,19 +3,18 @@ import * as _VARS_ from './vars.json';
 export const VARS = _VARS_;
 
 export const EVENT_TYPE = {
-  ADDRESSCHOSEN: 'addresschosen'
+  ADDRESSCHOSEN: 'addresschosen',
 };
 
 export const CONTROL_TYPE = {
   NOMINATIM: 'nominatim',
-  REVERSE: 'reverse'
+  REVERSE: 'reverse',
 };
 
 export const TARGET_TYPE = {
   GLASS: 'glass-button',
-  INPUT: 'text-input'
+  INPUT: 'text-input',
 };
-
 
 export const FEATURE_SRC =
   '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png';
@@ -27,7 +26,7 @@ export const PROVIDERS = {
   PHOTON: 'photon',
   BING: 'bing',
   OPENCAGE: 'opencage',
-  PELIAS: 'pelias'
+  PELIAS: 'pelias',
 };
 
 export const DEFAULT_OPTIONS = {
@@ -41,5 +40,5 @@ export const DEFAULT_OPTIONS = {
   preventDefault: false,
   autoComplete: false,
   autoCompleteMinLength: 2,
-  debug: false
+  debug: false,
 };
