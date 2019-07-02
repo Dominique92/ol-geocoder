@@ -6,7 +6,6 @@ import proj from 'ol/proj';
 import { Photon } from './providers/photon';
 import { OpenStreet } from './providers/osm';
 import { MapQuest } from './providers/mapquest';
-import { Pelias } from './providers/pelias';
 import { Bing } from './providers/bing';
 import { OpenCage } from './providers/opencage';
 import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from 'konstants';
@@ -283,8 +282,6 @@ export class Nominatim {
         return new MapQuest();
       case PROVIDERS.PHOTON:
         return new Photon();
-      case PROVIDERS.PELIAS:
-        return new Pelias();
       case PROVIDERS.BING:
         return new Bing();
       case PROVIDERS.OPENCAGE:

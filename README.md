@@ -33,7 +33,6 @@ The plugin supports (for now) the following providers:
 * [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) &mdash; `'osm'`.
 * [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/) &mdash; requires KEY  &mdash; `'mapquest'`.
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
-* [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
 * [OpenCage](https://opencagedata.com) &mdash; requires KEY  &mdash; `'opencage'`.
 
