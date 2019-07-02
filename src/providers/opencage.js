@@ -6,7 +6,6 @@ export class OpenCage {
    * @constructor
    */
   constructor() {
-
     this.settings = {
       url: 'https://api.opencagedata.com/geocode/v1/json?',
       params: {
@@ -15,8 +14,8 @@ export class OpenCage {
         limit: 10,
         countrycode: '',
         pretty: 1,
-        no_annotations: 1
-      }
+        no_annotations: 1,
+      },
     };
   }
 
@@ -27,8 +26,8 @@ export class OpenCage {
         q: options.query,
         key: options.key,
         limit: options.limit || this.settings.params.limit,
-        countrycode: options.countrycodes || this.settings.params.countrycodes
-      }
+        countrycode: options.countrycodes || this.settings.params.countrycodes,
+      },
     };
   }
 
@@ -43,12 +42,12 @@ export class OpenCage {
         postcode: result.components.postcode,
         city: result.components.city || result.components.town,
         state: result.components.state,
-        country: result.components.country
+        country: result.components.country,
       },
       original: {
         formatted: result.formatted,
-        details: result.components
-      }
+        details: result.components,
+      },
     }));
   }
 }

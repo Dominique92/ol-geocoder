@@ -23,7 +23,7 @@ export default class Base extends Control {
     assert(
       type === CONTROL_TYPE.NOMINATIM || type === CONTROL_TYPE.REVERSE,
       `@param 'type' should be '${CONTROL_TYPE.NOMINATIM}'
-        or '${CONTROL_TYPE.REVERSE}'!`,
+        or '${CONTROL_TYPE.REVERSE}'!`
     );
     assert(typeof options === 'object', '@param `options` should be object!');
 

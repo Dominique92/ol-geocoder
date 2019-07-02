@@ -6,7 +6,6 @@ export class MapQuest {
    * @constructor
    */
   constructor() {
-
     this.settings = {
       url: 'http://open.mapquestapi.com/nominatim/v1/search.php',
       params: {
@@ -16,8 +15,8 @@ export class MapQuest {
         addressdetails: 1,
         limit: 10,
         countrycodes: '',
-        'accept-language': 'en-US'
-      }
+        'accept-language': 'en-US',
+      },
     };
   }
 
@@ -32,8 +31,8 @@ export class MapQuest {
         limit: options.limit || this.settings.params.limit,
         countrycodes: options.countrycodes || this.settings.params.countrycodes,
         'accept-language':
-            options.lang || this.settings.params['accept-language']
-      }
+          options.lang || this.settings.params['accept-language'],
+      },
     };
   }
 
@@ -48,12 +47,12 @@ export class MapQuest {
         postcode: result.address.postcode,
         city: result.address.city || result.address.town,
         state: result.address.state,
-        country: result.address.country
+        country: result.address.country,
       },
       original: {
         formatted: result.display_name,
-        details: result.address
-      }
+        details: result.address,
+      },
     }));
   }
 }

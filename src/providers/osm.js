@@ -6,7 +6,6 @@ export class OpenStreet {
    * @constructor
    */
   constructor() {
-
     this.settings = {
       url: 'https://nominatim.openstreetmap.org/search/',
       params: {
@@ -15,8 +14,8 @@ export class OpenStreet {
         addressdetails: 1,
         limit: 10,
         countrycodes: '',
-        'accept-language': 'en-US'
-      }
+        'accept-language': 'en-US',
+      },
     };
   }
 
@@ -29,8 +28,8 @@ export class OpenStreet {
         addressdetails: this.settings.params.addressdetails,
         limit: opt.limit || this.settings.params.limit,
         countrycodes: opt.countrycodes || this.settings.params.countrycodes,
-        'accept-language': opt.lang || this.settings.params['accept-language']
-      }
+        'accept-language': opt.lang || this.settings.params['accept-language'],
+      },
     };
   }
 
@@ -46,12 +45,12 @@ export class OpenStreet {
         postcode: result.address.postcode,
         city: result.address.city || result.address.town,
         state: result.address.state,
-        country: result.address.country
+        country: result.address.country,
       },
       original: {
         formatted: result.display_name,
-        details: result.address
-      }
+        details: result.address,
+      },
     }));
   }
 }

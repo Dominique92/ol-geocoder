@@ -4,7 +4,10 @@ export function injectFile(file) {
     script.src = file;
     script.type = 'text/javascript';
     script.defer = true;
-    document.getElementsByTagName('head').item(0).appendChild(script);
+    document
+      .getElementsByTagName('head')
+      .item(0)
+      .appendChild(script);
     script.onload = () => resolve;
     script.onerror = () => reject;
   });
