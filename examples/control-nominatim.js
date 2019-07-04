@@ -17,7 +17,7 @@
 
   //Instantiate with some options and add the Control
   var geocoder = new Geocoder('nominatim', {
-    provider: 'photon',
+    provider: 'osm',
     targetType: 'text-input',
     lang: 'en',
     placeholder: 'Search for ...',

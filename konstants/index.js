@@ -22,11 +22,9 @@ export const FEATURE_SRC =
 export const PROVIDERS = {
   OSM: 'osm',
   MAPQUEST: 'mapquest',
-  GOOGLE: 'google',
   PHOTON: 'photon',
   BING: 'bing',
   OPENCAGE: 'opencage',
-  PELIAS: 'pelias',
 };
 
 export const DEFAULT_OPTIONS = {
