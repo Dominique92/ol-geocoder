@@ -1,4 +1,3 @@
-import '../../env';
 import { PROVIDERS } from '../../../konstants';
 import Page from './page';
 

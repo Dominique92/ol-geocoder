@@ -110,6 +110,11 @@ export class Nominatim {
   }
 
   query(q) {
+    // lazy provider
+    if (!this.provider) {
+      this.provider = this.newProvider();
+    }
+
     const parameters = this.provider.getParameters({
       query: q,
       key: this.options.key,
