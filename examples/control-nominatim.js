@@ -17,10 +17,9 @@
 
   //Instantiate with some options and add the Control
   var geocoder = new Geocoder('nominatim', {
-    provider: 'pelias',
+    provider: 'osm',
     targetType: 'text-input',
     lang: 'en',
-    key: 'c2VhcmNoLXhORE9ySkU=',
     placeholder: 'Search for ...',
     limit: 5,
     keepOpen: false,

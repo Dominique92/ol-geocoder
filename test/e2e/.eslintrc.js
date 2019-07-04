@@ -1,6 +1,6 @@
 module.exports = {
   plugins: ['testcafe'],
-  extends: ['plugin:testcafe/recommended', 'jwalker'],
+  extends: ['plugin:testcafe/recommended'],
   rules: {
     'no-console': 0,
   },
