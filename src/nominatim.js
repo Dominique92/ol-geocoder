@@ -299,8 +299,10 @@ export class Nominatim {
   expand() {
     removeClass(this.els.input, klasses.spin);
     addClass(this.els.control, klasses.glass.expanded);
-    window.setTimeout(() => this.els.input.focus(), 100);
-    this.listenMapClick();
+    window.setTimeout(() => {
+      this.listenMapClick();
+      this.els.input.focus();
+    }, 100);
   }
 
   collapse() {
