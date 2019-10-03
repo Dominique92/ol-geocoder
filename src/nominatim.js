@@ -57,7 +57,9 @@ export class Nominatim {
 
   setListeners() {
     let timeout, lastQuery;
-    const openSearch = () => {
+    const openSearch = evt => {
+      evt.stopPropagation();
+
       hasClass(this.els.control, klasses.glass.expanded)
         ? this.collapse()
         : this.expand();
@@ -76,6 +78,9 @@ export class Nominatim {
         evt.preventDefault();
         this.query(value);
       }
+    };
+    const stopBubbling = evt => {
+      evt.stopPropagation();
     };
     const reset = evt => {
       this.els.input.focus();
@@ -102,6 +107,7 @@ export class Nominatim {
       }
     };
     this.els.input.addEventListener('keypress', query, false);
+    this.els.input.addEventListener('click', stopBubbling, false);
     this.els.input.addEventListener('input', handleValue, false);
     this.els.reset.addEventListener('click', reset, false);
     if (this.options.targetType === TARGET_TYPE.GLASS) {
@@ -299,10 +305,8 @@ export class Nominatim {
   expand() {
     removeClass(this.els.input, klasses.spin);
     addClass(this.els.control, klasses.glass.expanded);
-    window.setTimeout(() => {
-      this.listenMapClick();
-      this.els.input.focus();
-    }, 100);
+    window.setTimeout(() => this.els.input.focus(), 100);
+    this.listenMapClick();
   }
 
   collapse() {
