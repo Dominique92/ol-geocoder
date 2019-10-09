@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: xenial
 
 language: node_js
 node_js:
@@ -15,18 +15,10 @@ addons:
     sources:
      - google-chrome
     packages:
-     - google-chrome-stable fluxbox
+     - google-chrome-stable
 
-before_install:
-  - stty cols 80
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
-
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3
-  - fluxbox >/dev/null 2>&1 &
+services:
+  - xvfb
 
 script: npm run ci
 
