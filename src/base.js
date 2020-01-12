@@ -33,6 +33,7 @@ export default class Base extends Control {
 
     this.options = mergeOptions(DEFAULT_OPTIONS, options);
     this.container = undefined;
+    // this.target_ = options.target;
 
     let $nominatim;
     const $html = new Html(this);
@@ -45,7 +46,7 @@ export default class Base extends Control {
       // TODO
     }
 
-    super({ element: this.container });
+    super({ element: this.container, target: options.target });
   }
 
   /**
@@ -77,4 +78,15 @@ export default class Base extends Control {
   setProviderKey(key) {
     this.options.key = key;
   }
+
+  // renderPanel(map, panel) {
+  //   // Create the event.
+  //   var render_event = new Event('render');
+  //   // Dispatch the event.
+  //   panel.dispatchEvent(render_event);
+  //   // Create the event.
+  //   var rendercomplete_event = new Event('rendercomplete');
+  //   // Dispatch the event.
+  //   panel.dispatchEvent(rendercomplete_event);
+  // }
 }
