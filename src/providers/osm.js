@@ -6,6 +6,8 @@ export class OpenStreet {
    * @constructor
    */
   constructor() {
+    console.log('osm.js');
+    console.log(this);
     this.settings = {
       url: 'https://nominatim.openstreetmap.org/search/',
       params: {
@@ -15,6 +17,8 @@ export class OpenStreet {
         limit: 10,
         countrycodes: '',
         'accept-language': 'en-US',
+        polygon: 1,
+        polygon_geojson: 1,
       },
     };
   }
@@ -29,15 +33,21 @@ export class OpenStreet {
         limit: opt.limit || this.settings.params.limit,
         countrycodes: opt.countrycodes || this.settings.params.countrycodes,
         'accept-language': opt.lang || this.settings.params['accept-language'],
+        polygon: opt.polygon || this.settings.params.polygon,
+        polygon_geojson:
+          opt.polygon_geojson || this.settings.params.polygon_geojson,
       },
     };
   }
 
   handleResponse(results) {
+    console.log('osm.js');
+    console.log(results);
     if (!results.length) return;
     return results.map(result => ({
       lon: result.lon,
       lat: result.lat,
+      polygonpoints: result.polygonpoints,
       address: {
         name: result.display_name,
         road: result.address.road || '',

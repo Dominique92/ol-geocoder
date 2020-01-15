@@ -1,7 +1,9 @@
 import LayerVector from 'ol/layer/Vector';
 import SourceVector from 'ol/source/Vector';
 import Point from 'ol/geom/Point';
+import Polygon from 'ol/geom/Polygon';
 import Feature from 'ol/Feature';
+// import Circle from 'ol/geom/Circle';
 import proj from 'ol/proj';
 import { Photon } from './providers/photon';
 import { OpenStreet } from './providers/osm';
@@ -231,24 +233,46 @@ export class Nominatim {
         flyTo(map, coord);
       }
       const feature = this.createFeature(coord, address);
-
+      // const feature = this.createFeature(coord, place.polygonpoints);
+      const featurePolygon = this.createFeaturePolygon(place.polygonpoints);
       this.Base.dispatchEvent({
         type: EVENT_TYPE.ADDRESSCHOSEN,
         address: address,
         feature: feature,
         coordinate: coord,
         bbox: bbox,
+        polygon: featurePolygon,
       });
     }
   }
 
   createFeature(coord) {
+    console.log('point coord');
+    console.log(coord);
     const feature = new Feature(new Point(coord));
     this.addLayer();
     feature.setStyle(this.options.featureStyle);
     feature.setId(randomId('geocoder-ft-'));
     this.getSource().addFeature(feature);
     return feature;
+  }
+
+  createFeaturePolygon(coord) {
+    console.log('polygon coord');
+    console.log(coord);
+    const feature = new Feature({
+      geometry: new Polygon([coord]),
+    });
+    feature.setStyle(this.options.polygonStyle);
+    feature.setId(randomId('geocoder-ft-'));
+    const vectorLayer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        features: [feature],
+      }),
+    });
+    this.addPolygon(vectorLayer);
+    // this.getSource().addFeature(feature);
+    return vectorLayer;
   }
 
   addressTemplate(address) {
@@ -286,6 +310,8 @@ export class Nominatim {
 
   newProvider() {
     /*eslint default-case: 0*/
+    console.log('nominatim.js');
+    console.log(this.options);
     switch (this.options.provider) {
       case PROVIDERS.OSM:
         return new OpenStreet();
@@ -357,5 +383,15 @@ export class Nominatim {
       if (layer === this.layer) found = true;
     });
     if (!found) map.addLayer(this.layer);
+  }
+
+  addPolygon(vl) {
+    let found = false;
+    const map = this.Base.getMap();
+
+    map.getLayers().forEach(layer => {
+      if (layer === vl) found = true;
+    });
+    if (!found) map.addLayer(vl);
   }
 }
