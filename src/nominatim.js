@@ -261,7 +261,7 @@ export class Nominatim {
     console.log('polygon coord');
     console.log(coord);
     const feature = new Feature({
-      geometry: new Polygon([coord]),
+      geometry: new Polygon([coord]).transform('EPSG:4326', 'EPSG:3857'),
     });
     feature.setStyle(this.options.polygonStyle);
     feature.setId(randomId('geocoder-ft-'));
