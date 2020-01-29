@@ -3,6 +3,7 @@ import SourceVector from 'ol/source/Vector';
 import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
 import Feature from 'ol/Feature';
+import GeoJSON from 'ol/format/GeoJSON';
 // import Circle from 'ol/geom/Circle';
 import proj from 'ol/proj';
 import { Photon } from './providers/photon';
@@ -42,6 +43,7 @@ export class Nominatim {
     });
 
     this.options = base.options;
+    // console.log(this.options);
     // provider is either the name of a built-in provider as a string or an
     // object that implements the provider API
     this.options.provider =
@@ -123,13 +125,20 @@ export class Nominatim {
       this.provider = this.newProvider();
     }
 
+    // console.log('query function');
+    // console.log(this.options);
+
     const parameters = this.provider.getParameters({
       query: q,
       key: this.options.key,
       lang: this.options.lang,
       countrycodes: this.options.countrycodes,
       limit: this.options.limit,
+      origin: this.options.origin,
     });
+
+    // console.log('nominatim.js - getParameters results');
+    // console.log(parameters);
 
     if (this.lastQuery === q && this.els.result.firstChild) return;
 
@@ -137,6 +146,8 @@ export class Nominatim {
     this.clearResults();
     addClass(this.els.reset, klasses.spin);
 
+    // url definisce la url a cui fare l'ajax request
+    // data definisce i parametri in GET da appendere alla url
     let ajax = {
       url: parameters.url,
       data: parameters.params,
@@ -147,15 +158,22 @@ export class Nominatim {
       ajax.callbackName = parameters.callbackName;
     }
 
+    // console.log('nominatim.js ajax');
+    // console.log(ajax);
     json(ajax)
       .then(res => {
         // eslint-disable-next-line no-console
+        this.options.debug && console.info('nominatim.js json(ajax)');
         this.options.debug && console.info(res);
 
         removeClass(this.els.reset, klasses.spin);
 
         //will be fullfiled according to provider
         let res_ = this.provider.handleResponse(res);
+
+        // console.log('NON FA QUESTO response nominatim.js');
+        // console.log(res_);
+
         if (res_) {
           this.createList(res_);
           this.listenMapClick();
@@ -173,6 +191,16 @@ export class Nominatim {
 
   createList(response) {
     const ul = this.els.result;
+
+    // console.log('provider');
+    // console.log(this.provider);
+
+    let name;
+    if (this.provider.hasOwnProperty('name')) {
+      name = this.provider.name;
+    } else {
+      name = undefined;
+    }
 
     response.forEach(row => {
       let addressHtml;
@@ -192,7 +220,7 @@ export class Nominatim {
         'click',
         evt => {
           evt.preventDefault();
-          this.chosen(row, addressHtml, row.address, row.original);
+          this.chosen(name, row, addressHtml, row.address, row.original);
         },
         false
       );
@@ -201,11 +229,30 @@ export class Nominatim {
     });
   }
 
-  chosen(place, addressHtml, addressObj, addressOriginal) {
+  chosen(name, place, addressHtml, addressObj, addressOriginal) {
+    // console.log('chosen');
+    // console.log(name); // use the name to manage coord
+    // console.log(place.geojson);
+    // console.log(addressHtml);
+    // console.log(addressObj);
+    // console.log(addressOriginal);
+
     const map = this.Base.getMap();
+    // Coordinates of selected element in the list
     const coord_ = [parseFloat(place.lon), parseFloat(place.lat)];
+    // console.log(coord_);
+    // Get map projection
     const projection = map.getView().getProjection();
+    // console.log('map projection' + projection);
+
+    // Convert coordinates from source to destination projection
+    // proj.transform(coordinate, source, destination)
     const coord = proj.transform(coord_, 'EPSG:4326', projection);
+    // if(name == 'geoVizPostgres'){
+    //
+    // } else {
+    //
+    // }
     let bbox = place.bbox;
 
     if (bbox) {
@@ -230,26 +277,68 @@ export class Nominatim {
       if (bbox) {
         map.getView().fit(bbox, { duration: 500 });
       } else {
+        console.log('FLYING');
         flyTo(map, coord);
       }
-      const feature = this.createFeature(coord, address);
-      // const feature = this.createFeature(coord, place.polygonpoints);
-      const featurePolygon = this.createFeaturePolygon(place.polygonpoints);
-      this.Base.dispatchEvent({
-        type: EVENT_TYPE.ADDRESSCHOSEN,
-        address: address,
-        feature: feature,
-        coordinate: coord,
-        bbox: bbox,
-        polygon: featurePolygon,
-      });
+
+      // const feature = this.createFeature(coord, address);
+
+      // create a layer with the geometry from geojson
+      console.log(place.geojson);
+      if (place.hasOwnProperty('geojson')) {
+        if (place.geojson.type === 'Point') {
+          const feature = this.createFeature(coord, address);
+          // const feature = this.createFeature(coord, place.polygonpoints);
+          // const featurePolygon = this.createFeaturePolygon(place.polygonpoints);
+          this.Base.dispatchEvent({
+            type: EVENT_TYPE.ADDRESSCHOSEN,
+            address: address,
+            feature: feature,
+            coordinate: coord,
+            bbox: bbox,
+            // polygon: featurePolygon,
+          });
+        } else {
+          // const geojsonObject = new GeoJSON().readFeatures(place.geojson, {
+          //   dataProjection: 'EPSG:4326',
+          //   featureProjection: projection,
+          // });
+          // const layer = this.createFeatureGeojson(geojsonObject);
+
+          const layer = this.createFeatureGeojson(place.geojson);
+
+          console.log(layer);
+          this.Base.dispatchEvent({
+            type: EVENT_TYPE.ADDRESSCHOSEN,
+            address: address,
+            // feature: feature,
+            coordinate: coord,
+            bbox: bbox,
+            // polygon: layer,
+          });
+        }
+      } else {
+        const feature = this.createFeature(coord, address);
+        // const feature = this.createFeature(coord, place.polygonpoints);
+        // const featurePolygon = this.createFeaturePolygon(place.polygonpoints);
+        this.Base.dispatchEvent({
+          type: EVENT_TYPE.ADDRESSCHOSEN,
+          address: address,
+          feature: feature,
+          coordinate: coord,
+          bbox: bbox,
+          // polygon: featurePolygon,
+        });
+      }
     }
   }
 
   createFeature(coord) {
-    console.log('point coord');
-    console.log(coord);
+    // console.log('point coord');
+    // console.log(coord);
     const feature = new Feature(new Point(coord));
+    console.log('createFeature - ');
+    console.log(feature);
     this.addLayer();
     feature.setStyle(this.options.featureStyle);
     feature.setId(randomId('geocoder-ft-'));
@@ -257,15 +346,41 @@ export class Nominatim {
     return feature;
   }
 
+  createFeatureGeojson(geojson) {
+    // const vectorSource = new SourceVector({
+    //   features: geojsonObject,
+    // });
+    // const vectorLayer = new LayerVector({
+    //   source: vectorSource,
+    // });
+    const projection = this.Base.getMap()
+      .getView()
+      .getProjection();
+    const feature = new GeoJSON().readFeature(geojson, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: projection,
+    });
+    console.log('createFeatureGeojson -');
+    console.log(feature);
+    this.addLayer();
+    feature.setId(randomId('geocoder-ft-'));
+    this.getSource().addFeature(feature);
+    // this.addPolygon(vectorLayer);
+
+    // this.getSource().addFeature(feature);
+    // return vectorLayer;
+    return 1;
+  }
+
   createFeaturePolygon(coord) {
-    console.log('polygon coord');
-    console.log(coord);
+    // console.log('polygon coord');
+    // console.log(coord);
     const feature = new Feature({
       geometry: new Polygon([coord]).transform('EPSG:4326', 'EPSG:3857'),
     });
     feature.setStyle(this.options.polygonStyle);
     feature.setId(randomId('geocoder-ft-'));
-    const vectorLayer = new ol.layer.Vector({
+    const vectorLayer = new LayerVector({
       source: new ol.source.Vector({
         features: [feature],
       }),
@@ -310,8 +425,8 @@ export class Nominatim {
 
   newProvider() {
     /*eslint default-case: 0*/
-    console.log('nominatim.js');
-    console.log(this.options);
+    // console.log('nominatim.js');
+    // console.log(this.options);
     switch (this.options.provider) {
       case PROVIDERS.OSM:
         return new OpenStreet();
