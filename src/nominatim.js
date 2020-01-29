@@ -305,13 +305,13 @@ export class Nominatim {
           // });
           // const layer = this.createFeatureGeojson(geojsonObject);
 
-          const layer = this.createFeatureGeojson(place.geojson);
+          const feature = this.createFeatureGeojson(place.geojson);
 
-          console.log(layer);
+          console.log(feature);
           this.Base.dispatchEvent({
             type: EVENT_TYPE.ADDRESSCHOSEN,
             address: address,
-            // feature: feature,
+            feature: feature,
             coordinate: coord,
             bbox: bbox,
             // polygon: layer,
@@ -347,12 +347,6 @@ export class Nominatim {
   }
 
   createFeatureGeojson(geojson) {
-    // const vectorSource = new SourceVector({
-    //   features: geojsonObject,
-    // });
-    // const vectorLayer = new LayerVector({
-    //   source: vectorSource,
-    // });
     const projection = this.Base.getMap()
       .getView()
       .getProjection();
@@ -365,11 +359,7 @@ export class Nominatim {
     this.addLayer();
     feature.setId(randomId('geocoder-ft-'));
     this.getSource().addFeature(feature);
-    // this.addPolygon(vectorLayer);
-
-    // this.getSource().addFeature(feature);
-    // return vectorLayer;
-    return 1;
+    return feature;
   }
 
   createFeaturePolygon(coord) {
