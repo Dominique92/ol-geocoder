@@ -237,6 +237,8 @@ export class Nominatim {
     // console.log(addressObj);
     // console.log(addressOriginal);
 
+    this.getSource().clear();
+
     const map = this.Base.getMap();
     // Coordinates of selected element in the list
     const coord_ = [parseFloat(place.lon), parseFloat(place.lat)];
@@ -307,7 +309,7 @@ export class Nominatim {
 
           const feature = this.createFeatureGeojson(place.geojson);
 
-          console.log(feature);
+          // console.log(feature);
           this.Base.dispatchEvent({
             type: EVENT_TYPE.ADDRESSCHOSEN,
             address: address,
@@ -337,8 +339,8 @@ export class Nominatim {
     // console.log('point coord');
     // console.log(coord);
     const feature = new Feature(new Point(coord));
-    console.log('createFeature - ');
-    console.log(feature);
+    // console.log('createFeature - ');
+    // console.log(feature);
     this.addLayer();
     feature.setStyle(this.options.featureStyle);
     feature.setId(randomId('geocoder-ft-'));
@@ -354,8 +356,8 @@ export class Nominatim {
       dataProjection: 'EPSG:4326',
       featureProjection: projection,
     });
-    console.log('createFeatureGeojson -');
-    console.log(feature);
+    // console.log('createFeatureGeojson -');
+    // console.log(feature);
     this.addLayer();
     feature.setId(randomId('geocoder-ft-'));
     this.getSource().addFeature(feature);
