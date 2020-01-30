@@ -2,7 +2,9 @@ import Control from 'ol/control/Control';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import { Html } from './html';
+import { HtmlExtended } from './htmlextended';
 import { Nominatim } from './nominatim';
+import { NominatimExtended } from './nominatim_geovizextended';
 import { assert, mergeOptions } from 'helpers/mix';
 import { CONTROL_TYPE, DEFAULT_OPTIONS, FEATURE_SRC } from 'konstants';
 
@@ -21,7 +23,9 @@ export default class Base extends Control {
 
     assert(typeof type === 'string', '@param `type` should be string!');
     assert(
-      type === CONTROL_TYPE.NOMINATIM || type === CONTROL_TYPE.REVERSE,
+      type === CONTROL_TYPE.NOMINATIM ||
+        type === CONTROL_TYPE.REVERSE ||
+        type === CONTROL_TYPE.NOMINATIM_EXT,
       `@param 'type' should be '${CONTROL_TYPE.NOMINATIM}'
         or '${CONTROL_TYPE.REVERSE}'!`
     );
@@ -35,14 +39,22 @@ export default class Base extends Control {
     this.container = undefined;
 
     let $nominatim;
-    const $html = new Html(this);
+    // const $html = new Html(this);
 
+    console.log('TYPE');
+    console.log(type);
     if (type === CONTROL_TYPE.NOMINATIM) {
+      const $html = new Html(this);
       this.container = $html.els.container;
       $nominatim = new Nominatim(this, $html.els);
       this.layer = $nominatim.layer;
     } else if (type === CONTROL_TYPE.REVERSE) {
       // TODO
+    } else if (type === CONTROL_TYPE.NOMINATIM_EXT) {
+      const $html = new HtmlExtended(this);
+      this.container = $html.els.container;
+      $nominatim = new NominatimExtended(this, $html.els);
+      this.layer = $nominatim.layer;
     }
 
     super({ element: this.container, target: options.target });

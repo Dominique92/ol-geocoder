@@ -8,6 +8,7 @@ export const EVENT_TYPE = {
 
 export const CONTROL_TYPE = {
   NOMINATIM: 'nominatim',
+  NOMINATIM_EXT: 'extended',
   REVERSE: 'reverse',
 };
 

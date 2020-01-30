@@ -2,6 +2,7 @@
   "containerId": "gcd-container",
   "buttonControlId": "gcd-button-control",
   "inputQueryId": "gcd-input-query",
+  "inputQueryIdExt": "gcd-input-query-extended",
   "inputResetId": "gcd-input-reset",
   "cssClasses": {
     "namespace": "ol-geocoder",
