@@ -41,6 +41,12 @@ export class MapQuest {
     return results.map(result => ({
       lon: result.lon,
       lat: result.lat,
+      bbox: [
+        result.boundingbox[2],
+        result.boundingbox[0],
+        result.boundingbox[3],
+        result.boundingbox[1],
+      ],
       address: {
         name: result.address.neighbourhood || '',
         road: result.address.road || '',

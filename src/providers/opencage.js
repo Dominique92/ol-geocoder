@@ -36,6 +36,12 @@ export class OpenCage {
     return results.results.map(result => ({
       lon: result.geometry.lng,
       lat: result.geometry.lat,
+      bbox: [
+        result.bounds.northeast.lng,
+        result.bounds.northeast.lat,
+        result.bounds.southwest.lng,
+        result.bounds.northeast.lat,
+      ],
       address: {
         name: result.components.house_number || '',
         road: result.components.road || '',

@@ -39,6 +39,7 @@ export class Bing {
     return resources.map(result => ({
       lon: result.point.coordinates[1],
       lat: result.point.coordinates[0],
+      bbox: [result.bbox[1], result.bbox[0], result.bbox[3], result.bbox[2]],
       address: {
         name: result.name,
       },

@@ -38,6 +38,7 @@ export class Photon {
     return results.features.map(result => ({
       lon: result.geometry.coordinates[0],
       lat: result.geometry.coordinates[1],
+      bbox: result.properties.extent,
       address: {
         name: result.properties.name,
         postcode: result.properties.postcode,
