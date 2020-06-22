@@ -94,6 +94,7 @@ map.addControl(geocoder);
 geocoder.on('addresschosen', function(evt){
   var feature = evt.feature,
       coord = evt.coordinate,
+      bbox = evt.bbox,
       address = evt.address;
   // some popup solution
   content.innerHTML = '<p>'+ address.formatted +'</p>';
