@@ -103,7 +103,7 @@ export class Nominatim {
           if (value.length >= this.options.autoCompleteMinLength) {
             this.query(value);
           }
-        }, 200);
+        }, this.options.autoCompleteTimeout);
       }
     };
     this.els.input.addEventListener('keypress', query, false);

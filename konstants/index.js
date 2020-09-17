@@ -38,5 +38,6 @@ export const DEFAULT_OPTIONS = {
   preventDefault: false,
   autoComplete: false,
   autoCompleteMinLength: 2,
+  autoCompleteTimeout: 200,
   debug: false,
 };
