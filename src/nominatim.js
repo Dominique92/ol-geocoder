@@ -3,6 +3,9 @@ import SourceVector from 'ol/source/Vector';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
 import proj from 'ol/proj';
+
+import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from '../konstants';
+
 import {
   hasClass,
   addClass,
@@ -10,10 +13,7 @@ import {
   createElement,
   template,
   removeAllChildren,
-} from 'helpers/dom';
-
-import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from '../konstants';
-
+} from './helpers/dom';
 import { Photon } from './providers/photon';
 import { OpenStreet } from './providers/osm';
 import { MapQuest } from './providers/mapquest';
@@ -81,9 +81,8 @@ export class Nominatim {
         this.query(value);
       }
     };
-    const stopBubbling = (evt) => {
-      evt.stopPropagation();
-    };
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const stopBubbling = (evt) => evt.stopPropagation();
     const reset = (evt) => {
       this.els.input.focus();
       this.els.input.value = '';
@@ -94,7 +93,7 @@ export class Nominatim {
     const handleValue = (evt) => {
       const value = evt.target.value.trim();
 
-      value.length
+      value.length !== 0
         ? removeClass(this.els.reset, klasses.hidden)
         : addClass(this.els.reset, klasses.hidden);
 
@@ -289,7 +288,6 @@ export class Nominatim {
   }
 
   newProvider() {
-    /* eslint default-case: 0 */
     switch (this.options.provider) {
       case PROVIDERS.OSM:
         return new OpenStreet();
@@ -326,7 +324,7 @@ export class Nominatim {
     // already registered
     if (this.registeredListeners.mapClick) return;
 
-    const this_ = this;
+    const that = this;
     const mapElement = this.Base.getMap().getTargetElement();
 
     this.registeredListeners.mapClick = true;
@@ -336,9 +334,9 @@ export class Nominatim {
       'click',
       {
         handleEvent(evt) {
-          this_.clearResults(true);
+          that.clearResults(true);
           mapElement.removeEventListener(evt.type, this, false);
-          this_.registeredListeners.mapClick = false;
+          that.registeredListeners.mapClick = false;
         },
       },
       false

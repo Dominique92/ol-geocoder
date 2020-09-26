@@ -27,8 +27,12 @@ rules:
   no-underscore-dangle: 0
   no-nested-ternary: 0
   no-negated-condition: 0
+  no-new: 0
   max-lines: 0
   no-plusplus: 0
+  no-cond-assign: 0
+  prefer-destructuring: 0
+  no-param-reassign: 0
   no-process-exit: 0
   class-methods-use-this: 0
   no-this-before-super: 0
@@ -83,6 +87,7 @@ rules:
         - r
         - v
         - x
+        - $
   no-shadow:
     - error
     - builtinGlobals: true
@@ -96,9 +101,6 @@ rules:
   consistent-return:
     - error
     - treatUndefinedAsUnspecified: true
-  no-param-reassign:
-    - error
-    - props: false
   max-params:
     - error
     - 4
@@ -110,6 +112,7 @@ rules:
   import/exports-last: 0
   import/max-dependencies: 0
   import/no-unused-modules: 0
+  import/no-unassigned-import: 0
   import/prefer-default-export: 0
   import/no-namespace: 0
   import/no-extraneous-dependencies:
@@ -129,8 +132,11 @@ rules:
   promise/avoid-new: 0
   promise/always-return: 0
   unicorn/catch-error-name: 0
+  unicorn/prefer-query-selector: 0
+  unicorn/prefer-node-remove: 0
   unicorn/no-null: 0
   unicorn/prevent-abbreviations: 0
+  sonarjs/no-small-switch: 0
   sonarjs/cognitive-complexity:
     - error
     - 40
@@ -138,5 +144,13 @@ rules:
 overrides:
   - files:
       - 'test/unit/*.test.js'
+    plugins:
+      - jest
     extends:
       - plugin:jest/recommended
+  - files:
+      - 'test/e2e/**/*.test.js'
+    plugins:
+      - testcafe
+    extends:
+      - plugin:testcafe/recommended

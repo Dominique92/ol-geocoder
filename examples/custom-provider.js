@@ -77,7 +77,7 @@
        */
       handleResponse(results) {
         // The API returns a GeoJSON FeatureCollection
-        if (results && results.features && results.features.length) {
+        if (results && results.features && results.features.length !== 0) {
           return results.features.map((feature) => {
             return {
               lon: feature.geometry.coordinates[0],
@@ -94,6 +94,8 @@
             };
           });
         }
+
+        return [];
       },
     };
   }

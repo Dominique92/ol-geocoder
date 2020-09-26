@@ -4,6 +4,7 @@ import Page from './page';
 
 const page = new Page();
 
+// eslint-disable-next-line no-unused-expressions
 fixture`OSM`.page`../pages/providers.html`;
 
 test('Searching', async (t) => {

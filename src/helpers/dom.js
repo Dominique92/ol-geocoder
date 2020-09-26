@@ -1,3 +1,5 @@
+/* eslint-disable optimize-regex/optimize-regex */
+/* eslint-disable prefer-named-capture-group */
 import { isNumeric } from './mix';
 
 /**
@@ -13,7 +15,7 @@ export function addClass(element, classname, timeout) {
     return;
   }
 
-  const array = Array.isArray(classname) ? classname : classname.split(/\s+/);
+  const array = Array.isArray(classname) ? classname : classname.split(/\s+/u);
 
   let i = array.length;
 
@@ -37,7 +39,7 @@ export function removeClass(element, classname, timeout) {
     return;
   }
 
-  const array = Array.isArray(classname) ? classname : classname.split(/\s+/);
+  const array = Array.isArray(classname) ? classname : classname.split(/\s+/u);
 
   let i = array.length;
 
@@ -82,46 +84,9 @@ export function toggleClass(element, classname) {
  * performance and greater usability
  * @param {String} selector
  * @param {Element} context (optional)
- * @param {Boolean} find_all (optional)
- * @return (find_all) {Element} : {Array}
+ * @param {Boolean} findAll (optional)
+ * @return (findAll) {Element} : {Array}
  */
-export function find(selector, context = window.document, find_all) {
-  const simpleRe = /^(#?[\w-]+|\.[\w-.]+)$/;
-
-  const periodRe = /\./g;
-
-  const { slice } = Array.prototype;
-
-  let matches = [];
-
-  // Redirect call to the more performant function
-  // if it's a simple selector and return an array
-  // for easier usage
-  if (simpleRe.test(selector)) {
-    switch (selector[0]) {
-      case '#':
-        matches = [$(selector.slice(1))];
-
-        break;
-      case '.':
-        matches = slice.call(
-          context.getElementsByClassName(selector.slice(1).replace(periodRe, ' '))
-        );
-
-        break;
-
-      default:
-        matches = slice.call(context.getElementsByTagName(selector));
-    }
-  } else {
-    // If not a simple selector, query the DOM as usual
-    // and return an array for easier usage
-    matches = slice.call(context.querySelectorAll(selector));
-  }
-
-  return find_all ? matches : matches[0];
-}
-
 export function $(id) {
   id = id[0] === '#' ? id.slice(1, 1 + id.length) : id;
 
@@ -159,7 +124,7 @@ export function getChildren(node, tag) {
 }
 
 export function template(html, row) {
-  return html.replace(/{ *([\w-]+) *}/g, (htm, key) => {
+  return html.replace(/\{\s*([\w-]+)\s*\}/gu, (htm, key) => {
     const value = row[key] === undefined ? '' : row[key];
 
     return htmlEscape(value);
@@ -214,7 +179,8 @@ export function createElement(node, html) {
 }
 
 function classRegex(classname) {
-  return new RegExp(`(^|\\s+) ${classname} (\\s+|$)`);
+  // eslint-disable-next-line security/detect-non-literal-regexp
+  return new RegExp(`(^|\\s+) ${classname} (\\s+|$)`, 'u');
 }
 
 function _addClass(el, klass, timeout) {

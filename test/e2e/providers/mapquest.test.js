@@ -6,6 +6,7 @@ import Page from './page';
 const page = new Page();
 const key = Buffer.from(process.env.KEY_MAPQUEST, 'base64').toString('ascii');
 
+// eslint-disable-next-line no-unused-expressions
 fixture`Mapquest`.page`../pages/providers.html`;
 
 test('Searching', async (t) => {

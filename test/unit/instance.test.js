@@ -2,6 +2,7 @@ import Control from 'ol/control/Control';
 import LayerVector from 'ol/layer/Vector';
 import SourceVector from 'ol/source/Vector';
 
+// eslint-disable-next-line no-shadow
 import Geocoder from '../..';
 import { DEFAULT_OPTIONS, PROVIDERS } from '../../konstants';
 

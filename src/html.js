@@ -1,6 +1,6 @@
 import { VARS, TARGET_TYPE } from '../konstants';
 
-import { find, createElement } from './helpers/dom';
+import { createElement } from './helpers/dom';
 
 const klasses = VARS.cssClasses;
 
@@ -30,10 +30,10 @@ export class Html {
       );
       elements = {
         container,
-        control: find(`.${klasses.inputText.control}`, container),
-        input: find(`.${klasses.inputText.input}`, container),
-        reset: find(`.${klasses.inputText.reset}`, container),
-        result: find(`.${klasses.inputText.result}`, container),
+        control: container.querySelector(`.${klasses.inputText.control}`),
+        input: container.querySelector(`.${klasses.inputText.input}`),
+        reset: container.querySelector(`.${klasses.inputText.reset}`),
+        result: container.querySelector(`.${klasses.inputText.result}`),
       };
     } else {
       containerClass = `${klasses.namespace} ${klasses.glass.container}`;
@@ -43,11 +43,11 @@ export class Html {
       );
       elements = {
         container,
-        control: find(`.${klasses.glass.control}`, container),
-        button: find(`.${klasses.glass.button}`, container),
-        input: find(`.${klasses.glass.input}`, container),
-        reset: find(`.${klasses.glass.reset}`, container),
-        result: find(`.${klasses.glass.result}`, container),
+        control: container.querySelector(`.${klasses.glass.control}`),
+        button: container.querySelector(`.${klasses.glass.button}`),
+        input: container.querySelector(`.${klasses.glass.input}`),
+        reset: container.querySelector(`.${klasses.glass.reset}`),
+        result: container.querySelector(`.${klasses.glass.result}`),
       };
     }
 
@@ -58,70 +58,20 @@ export class Html {
   }
 }
 
-Html.glass = [
-  '<div class="',
-  klasses.glass.control,
-  ' ',
-  klasses.olControl,
-  '">',
-  '<button type="button"',
-  ' id="',
-  VARS.buttonControlId,
-  '"',
-  ' class="',
-  klasses.glass.button,
-  '"></button>',
-  '<input type="text"',
-  ' id="',
-  VARS.inputQueryId,
-  '"',
-  ' class="',
-  klasses.glass.input,
-  '"',
-  ' autocomplete="off" placeholder="Search ...">',
-  '<a',
-  ' id="',
-  VARS.inputResetId,
-  '"',
-  ' class="',
-  klasses.glass.reset,
-  ' ',
-  klasses.hidden,
-  '"',
-  '></a>',
-  '</div>',
-  '<ul class="',
-  klasses.glass.result,
-  '"></ul>',
-].join('');
+Html.glass = `
+  <div class="${klasses.glass.control} ${klasses.olControl}">
+    <button type="button" id="${VARS.buttonControlId}" class="${klasses.glass.button}"></button>
+    <input type="text" id="${VARS.inputQueryId}" class="${klasses.glass.input}" autocomplete="off" placeholder="Search ...">
+    <a id="${VARS.inputResetId}" class="${klasses.glass.reset} ${klasses.hidden}"></a>
+  </div>
+  <ul class="${klasses.glass.result}"></ul>
+`;
 
-Html.input = [
-  '<div class="',
-  klasses.inputText.control,
-  '">',
-  '<input type="text"',
-  ' id="',
-  VARS.inputQueryId,
-  '"',
-  ' class="',
-  klasses.inputText.input,
-  '"',
-  ' autocomplete="off" placeholder="Search ...">',
-  '<span class="',
-  klasses.inputText.icon,
-  '"></span>',
-  '<button type="button"',
-  ' id="',
-  VARS.inputResetId,
-  '"',
-  ' class="',
-  klasses.inputText.reset,
-  ' ',
-  klasses.hidden,
-  '"',
-  '></button>',
-  '</div>',
-  '<ul class="',
-  klasses.inputText.result,
-  '"></ul>',
-].join('');
+Html.input = `
+  <div class="${klasses.inputText.control}">
+    <input type="text" id="${VARS.inputQueryId}" class="${klasses.inputText.input}" autocomplete="off" placeholder="Search ...">
+    <span class="${klasses.inputText.icon}"></span>
+    <button type="button" id="${VARS.inputResetId}" class="${klasses.inputText.reset} ${klasses.hidden}"></button>
+  </div>
+  <ul class="${klasses.inputText.result}"></ul>
+`;

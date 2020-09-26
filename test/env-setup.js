@@ -41,6 +41,7 @@
 })();
 
 (() => {
+  // eslint-disable-next-line global-require
   const canvasBindings = require('canvas/lib/bindings');
 
   window.CanvasGradient = canvasBindings.CanvasGradient;

@@ -20,21 +20,21 @@ export function json(obj) {
 
 function toQueryString(obj) {
   return Object.keys(obj)
-    .reduce((a, k) => {
-      a.push(
+    .reduce((acc, k) => {
+      acc.push(
         typeof obj[k] === 'object'
           ? toQueryString(obj[k])
           : `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
       );
 
-      return a;
+      return acc;
     }, [])
     .join('&');
 }
 
 function encodeUrlXhr(url, data) {
   if (data && typeof data === 'object') {
-    url += (/\?/.test(url) ? '&' : '?') + toQueryString(data);
+    url += (/\?/u.test(url) ? '&' : '?') + toQueryString(data);
   }
 
   return url;

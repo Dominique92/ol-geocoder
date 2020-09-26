@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import buble from '@rollup/plugin-buble';
 import { terser } from 'rollup-plugin-terser';
@@ -45,7 +45,10 @@ export default [
     },
     plugins: [
       nodeResolve(),
-      commonjs(),
+      commonjs({
+        exclude: 'src/**',
+        include: 'node_modules/**',
+      }),
       json({ exclude: 'node_modules/**' }),
       buble({ target: { ie: 11 } }),
       terser({ output: { comments: /^!/ } }),
@@ -63,7 +66,10 @@ export default [
     },
     plugins: [
       nodeResolve(),
-      commonjs(),
+      commonjs({
+        exclude: 'src/**',
+        include: 'node_modules/**',
+      }),
       json({ exclude: 'node_modules/**' }),
       buble({ target: { ie: 11 } }),
     ],
