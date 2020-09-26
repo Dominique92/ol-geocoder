@@ -8,6 +8,7 @@ export class OpenStreet {
   constructor() {
     this.settings = {
       url: 'https://nominatim.openstreetmap.org/search/',
+
       params: {
         q: '',
         format: 'json',
@@ -22,6 +23,7 @@ export class OpenStreet {
   getParameters(opt) {
     return {
       url: this.settings.url,
+
       params: {
         q: opt.query,
         format: this.settings.params.format,
@@ -34,10 +36,12 @@ export class OpenStreet {
   }
 
   handleResponse(results) {
-    if (!results.length) return;
-    return results.map(result => ({
+    if (results.length === 0) return [];
+
+    return results.map((result) => ({
       lon: result.lon,
       lat: result.lat,
+
       address: {
         name: result.display_name,
         road: result.address.road || '',
@@ -47,6 +51,7 @@ export class OpenStreet {
         state: result.address.state,
         country: result.address.country,
       },
+
       original: {
         formatted: result.display_name,
         details: result.address,

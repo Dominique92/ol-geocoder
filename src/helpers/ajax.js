@@ -11,7 +11,7 @@ export function json(obj) {
       jsonp(url, obj.callbackName, resolve);
     } else {
       fetch(url, config)
-        .then(r => r.json())
+        .then((r) => r.json())
         .then(resolve)
         .catch(reject);
     }
@@ -20,44 +20,46 @@ export function json(obj) {
 
 function toQueryString(obj) {
   return Object.keys(obj)
-    .reduce((a, k) => {
-      a.push(
+    .reduce((acc, k) => {
+      acc.push(
         typeof obj[k] === 'object'
           ? toQueryString(obj[k])
           : `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
       );
-      return a;
+
+      return acc;
     }, [])
     .join('&');
 }
 
 function encodeUrlXhr(url, data) {
   if (data && typeof data === 'object') {
-    url += (/\?/.test(url) ? '&' : '?') + toQueryString(data);
+    url += (/\?/u.test(url) ? '&' : '?') + toQueryString(data);
   }
+
   return url;
 }
 
 function jsonp(url, key, callback) {
   // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
-  let head = document.head,
-    script = document.createElement('script'),
-    // generate minimally unique name for callback function
-    callbackName = 'f' + Math.round(Math.random() * Date.now());
+  const { head } = document;
+  const script = document.createElement('script');
+  // generate minimally unique name for callback function
+  const callbackName = `f${Math.round(Math.random() * Date.now())}`;
 
   // set request url
   script.setAttribute(
     'src',
-    /*  add callback parameter to the url
-          where key is the parameter key supplied
-          and callbackName is the parameter value */
-    url + (url.indexOf('?') > 0 ? '&' : '?') + key + '=' + callbackName
+    // add callback parameter to the url
+    //    where key is the parameter key supplied
+    //    and callbackName is the parameter value
+    `${url + (url.indexOf('?') > 0 ? '&' : '?') + key}=${callbackName}`
   );
 
-  /*  place jsonp callback on window,
-      the script sent by the server should call this
-      function as it was passed as a url parameter */
-  window[callbackName] = data => {
+  // place jsonp callback on window,
+  //  the script sent by the server should call this
+  //  function as it was passed as a url parameter
+  window[callbackName] = (data) => {
     window[callbackName] = undefined;
 
     // clean up script tag created for request
@@ -68,5 +70,5 @@ function jsonp(url, key, callback) {
   };
 
   // actually make the request
-  head.appendChild(script);
+  head.append(script);
 }

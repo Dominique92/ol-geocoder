@@ -16,8 +16,7 @@ export const TARGET_TYPE = {
   INPUT: 'text-input',
 };
 
-export const FEATURE_SRC =
-  '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png';
+export const FEATURE_SRC = '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png';
 
 export const PROVIDERS = {
   OSM: 'osm',
