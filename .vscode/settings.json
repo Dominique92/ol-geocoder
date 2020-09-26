@@ -1,0 +1,8 @@
+{
+  "[javascript]": {},
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+}

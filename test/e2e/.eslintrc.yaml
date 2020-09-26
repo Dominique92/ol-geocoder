@@ -1,0 +1,4 @@
+plugins:
+  - testcafe
+extends:
+  - plugin:testcafe/recommended

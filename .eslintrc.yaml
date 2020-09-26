@@ -1,0 +1,131 @@
+---
+root: true
+env:
+  browser: true
+parser: babel-eslint
+parserOptions:
+  ecmaVersion: 2020
+  ecmaFeatures:
+    impliedStrict: true
+globals:
+  ol: readonly
+  Geocoder: readonly
+extends:
+  - eslint:recommended
+  - airbnb-base
+  - hardcore
+  - plugin:prettier/recommended
+plugins:
+  - filenames
+rules:
+  prettier/prettier: 2
+  default-case: 0
+  complexity: 0
+  no-process-env: 0
+  no-return-assign: 0
+  no-sync: 0
+  func-names: 0
+  no-magic-numbers: 0
+  no-inline-comments: 0
+  line-comment-position: 0
+  no-underscore-dangle: 0
+  no-use-before-define: 0
+  no-negated-condition: 0
+  max-statements: 0
+  no-nested-ternary: 0
+  no-plusplus: 0
+  no-prototype-builtins: 0
+  no-console:
+    - error
+    - allow:
+        - error
+        - trace
+  array-callback-return:
+    - error
+    - checkForEach: false
+  no-shadow:
+    - error
+    - builtinGlobals: true
+      allow:
+        - length
+        - name
+        - external
+        - status
+        - event
+        - top
+        - right
+        - find
+  no-unused-vars:
+    - error
+    - args: none
+      ignoreRestSiblings: true
+      vars: local
+      caughtErrors: none
+  no-unused-expressions:
+    - error
+    - allowTernary: true
+      allowShortCircuit: true
+  no-cond-assign:
+    - error
+    - except-parens
+  id-match:
+    - error
+    - (^[A-Za-z]+(?:[A-Z][a-z]*)*\d*$)|(^[A-Z]+(_[A-Z]+)*(_\d$)*$)|(^(_|\$)$)
+    - ignoreDestructuring: true
+  id-length:
+    - error
+    - properties: never
+      exceptions:
+        - $
+        - _
+        - h
+        - t
+        - i
+        - x
+        - y
+  consistent-return:
+    - error
+    - treatUndefinedAsUnspecified: true
+  prefer-destructuring:
+    - error
+    - array: false
+  no-param-reassign:
+    - error
+    - props: false
+  func-style:
+    - error
+    - declaration
+    - allowArrowFunctions: true
+  filenames/match-regex:
+    - error
+    - ^([a-zA-Z]{1}[a-z]+)(([A-Z]{1}[a-z]+)*)((-([a-z]+))?)((\.([a-z]+))?)$
+  import/group-exports: 0
+  import/extensions: 0
+  import/no-extraneous-dependencies: 0
+  import/exports-last: 0
+  import/no-namespace: 0
+  import/max-dependencies: 0
+  import/no-unused-modules: 0
+  import/prefer-default-export: 0
+  import/no-anonymous-default-export: 0
+  node/no-unpublished-import: 0
+  promise/avoid-new: 0
+  promise/always-return: 0
+  security/detect-non-literal-fs-filename: 0
+  no-constructor-bind/no-constructor-state: 0
+  unicorn/catch-error-name: 0
+  unicorn/no-null: 0
+  unicorn/prefer-query-selector: 0
+  unicorn/prevent-abbreviations:
+    - error
+    - whitelist:
+        pkg: true
+        evt: true
+        props: true
+        args: true
+        res: true
+        params: true
+        el: true
+  sonarjs/cognitive-complexity:
+    - error
+    - 40

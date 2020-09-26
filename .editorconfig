@@ -1,0 +1,11 @@
+root = true
+
+[*]
+end_of_line = lf
+# space indentation
+indent_style = space
+indent_size = 2
+
+# tabs 2 spaces for makefiles
+[Makefile]
+indent_style = tab
