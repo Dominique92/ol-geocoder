@@ -1,5 +1,6 @@
-import { VARS, TARGET_TYPE } from 'konstants';
-import { find, createElement } from 'helpers/dom';
+import { VARS, TARGET_TYPE } from '../konstants';
+
+import { find, createElement } from './helpers/dom';
 
 const klasses = VARS.cssClasses;
 
@@ -17,20 +18,22 @@ export class Html {
   }
 
   createControl() {
-    let container, containerClass, elements;
+    let container;
+    let containerClass;
+    let elements;
 
     if (this.options.targetType === TARGET_TYPE.INPUT) {
-      containerClass = klasses.namespace + ' ' + klasses.inputText.container;
+      containerClass = `${klasses.namespace} ${klasses.inputText.container}`;
       container = createElement(
         ['div', { id: VARS.containerId, classname: containerClass }],
         Html.input
       );
       elements = {
-        container: container,
-        control: find('.' + klasses.inputText.control, container),
-        input: find('.' + klasses.inputText.input, container),
-        reset: find('.' + klasses.inputText.reset, container),
-        result: find('.' + klasses.inputText.result, container),
+        container,
+        control: find(`.${klasses.inputText.control}`, container),
+        input: find(`.${klasses.inputText.input}`, container),
+        reset: find(`.${klasses.inputText.reset}`, container),
+        result: find(`.${klasses.inputText.result}`, container),
       };
     } else {
       containerClass = `${klasses.namespace} ${klasses.glass.container}`;
@@ -39,21 +42,22 @@ export class Html {
         Html.glass
       );
       elements = {
-        container: container,
-        control: find('.' + klasses.glass.control, container),
-        button: find('.' + klasses.glass.button, container),
-        input: find('.' + klasses.glass.input, container),
-        reset: find('.' + klasses.glass.reset, container),
-        result: find('.' + klasses.glass.result, container),
+        container,
+        control: find(`.${klasses.glass.control}`, container),
+        button: find(`.${klasses.glass.button}`, container),
+        input: find(`.${klasses.glass.input}`, container),
+        reset: find(`.${klasses.glass.reset}`, container),
+        result: find(`.${klasses.glass.result}`, container),
       };
     }
-    //set placeholder from options
+
+    // set placeholder from options
     elements.input.placeholder = this.options.placeholder;
+
     return elements;
   }
 }
 
-/* eslint-disable indent */
 Html.glass = [
   '<div class="',
   klasses.glass.control,
@@ -121,4 +125,3 @@ Html.input = [
   klasses.inputText.result,
   '"></ul>',
 ].join('');
-/* eslint-enable indent */

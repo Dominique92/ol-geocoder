@@ -8,7 +8,7 @@ const olview = new ol.View({
 });
 
 const map = new ol.Map({
-  target: document.getElementById('map'),
+  target: document.querySelector('#map'),
   view: olview,
   layers: [baseLayer],
 });

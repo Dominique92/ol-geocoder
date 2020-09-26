@@ -1,5 +1,5 @@
-const provider = document.getElementById('provider');
-const key = document.getElementById('key');
+const provider = document.querySelector('#provider');
+const key = document.querySelector('#key');
 
 const baseLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
 
@@ -11,7 +11,7 @@ const olview = new ol.View({
 });
 
 const map = new ol.Map({
-  target: document.getElementById('map'),
+  target: document.querySelector('#map'),
   view: olview,
   layers: [baseLayer],
 });

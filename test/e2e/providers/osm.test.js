@@ -1,11 +1,12 @@
 import { PROVIDERS } from '../../../konstants';
+
 import Page from './page';
 
 const page = new Page();
 
 fixture`OSM`.page`../pages/providers.html`;
 
-test('Searching', async t => {
+test('Searching', async (t) => {
   await t
     .typeText(page.provider, PROVIDERS.OSM)
     .expect(page.provider.value)

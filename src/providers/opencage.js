@@ -8,6 +8,7 @@ export class OpenCage {
   constructor() {
     this.settings = {
       url: 'https://api.opencagedata.com/geocode/v1/json?',
+
       params: {
         q: '',
         key: '',
@@ -22,6 +23,7 @@ export class OpenCage {
   getParameters(options) {
     return {
       url: this.settings.url,
+
       params: {
         q: options.query,
         key: options.key,
@@ -32,10 +34,12 @@ export class OpenCage {
   }
 
   handleResponse(results) {
-    if (!results.results.length) return;
-    return results.results.map(result => ({
+    if (results.results.length === 0) return [];
+
+    return results.results.map((result) => ({
       lon: result.geometry.lng,
       lat: result.geometry.lat,
+
       address: {
         name: result.components.house_number || '',
         road: result.components.road || '',
@@ -44,6 +48,7 @@ export class OpenCage {
         state: result.components.state,
         country: result.components.country,
       },
+
       original: {
         formatted: result.formatted,
         details: result.components,

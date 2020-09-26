@@ -1,5 +1,6 @@
 import '../../env';
 import { PROVIDERS } from '../../../konstants';
+
 import Page from './page';
 
 const page = new Page();
@@ -7,7 +8,7 @@ const key = Buffer.from(process.env.KEY_BING, 'base64').toString('ascii');
 
 fixture`Bing`.page`../pages/providers.html`;
 
-test('Searching', async t => {
+test('Searching', async (t) => {
   await t
     .typeText(page.provider, PROVIDERS.BING)
     .expect(page.provider.value)
