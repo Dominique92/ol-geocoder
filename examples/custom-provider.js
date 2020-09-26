@@ -25,6 +25,7 @@
     provider: provider,
     autoComplete: true,
     autoCompleteMinLength: 3,
+    autoCompleteTimeout: 200,
     targetType: 'text-input',
     lang: 'en',
     keepOpen: false,
