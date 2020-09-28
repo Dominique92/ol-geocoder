@@ -9,8 +9,17 @@ $font-small: em(12px);
 $z-index: 99;
 $font-color: #333;
 
+$olControl: map-get($cssClasses, olControl);
 $glass: map-get($cssClasses, glass);
 $input-text: map-get($cssClasses, inputText);
+
+.ol-touch .#{$olControl}.#{map-get($glass, control)} button {
+  font-size: 1.14em;
+}
+
+.ol-touch .#{map-get($cssClasses, namespace)}.#{map-get($glass, container)} {
+  font-size: 1.1em;
+}
 
 .#{map-get($cssClasses, namespace)} {
   @import "glass";
