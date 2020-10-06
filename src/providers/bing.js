@@ -9,12 +9,13 @@ export class Bing {
     this.settings = {
       url: 'https://dev.virtualearth.net/REST/v1/Locations',
       callbackName: 'jsonp',
+
       params: {
         query: '',
         key: '',
         includeNeighborhood: 0,
-        maxResults: 10
-      }
+        maxResults: 10,
+      },
     };
   }
 
@@ -22,27 +23,36 @@ export class Bing {
     return {
       url: this.settings.url,
       callbackName: this.settings.callbackName,
+
       params: {
         query: options.query,
         key: options.key,
-        includeNeighborhood: options.includeNeighborhood ||
-            this.settings.params.includeNeighborhood,
-        maxResults: options.maxResults || this.settings.params.maxResults
-      }
+
+        includeNeighborhood:
+          options.includeNeighborhood || this.settings.params.includeNeighborhood,
+
+        maxResults: options.maxResults || this.settings.params.maxResults,
+      },
     };
   }
 
   handleResponse(results) {
-    return results.map(result => ({
+    const { resources } = results.resourceSets[0];
+
+    if (resources.length === 0) return [];
+
+    return resources.map((result) => ({
       lon: result.point.coordinates[1],
       lat: result.point.coordinates[0],
+
       address: {
-        name: result.name
+        name: result.name,
       },
+
       original: {
         formatted: result.address.formattedAddress,
-        details: result.address
-      }
+        details: result.address,
+      },
     }));
   }
 }

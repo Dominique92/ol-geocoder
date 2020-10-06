@@ -33,7 +33,6 @@ The plugin supports (for now) the following providers:
 * [OSM](http://www.openstreetmap.org/)/[Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) &mdash; `'osm'`.
 * [MapQuest Geocoding API](http://open.mapquestapi.com/nominatim/) &mdash; requires KEY  &mdash; `'mapquest'`.
 * [Photon](http://photon.komoot.de/)  &mdash; `'photon'`.
-* [Mapzen Search/Pelias](https://mapzen.com/projects/search) &mdash; requires KEY  &mdash; `'pelias'`.
 * [Bing](https://msdn.microsoft.com/pt-br/library/ff701713.aspx) &mdash; requires KEY  &mdash; `'bing'`.
 * [OpenCage](https://opencagedata.com) &mdash; requires KEY  &mdash; `'opencage'`.
 
@@ -115,6 +114,7 @@ geocoder.on('addresschosen', function(evt){
   * `key`                  : `''`; API Key if required;
   * `autoComplete`         : `false`; Search as you type;
   * `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;
+  * `autoCompleteTimeout`  : `200`; The mimimum number of ms to wait before triggering search if autoComplete is on and minimum number of characters is satisfied;
   * `placeholder`          : `'Search for an address'`; Placeholder for text input;
   * `targetType`           : `'glass-button'`; Can also be `'text-input'`;
   * `featureStyle`         : `ol.style.Style`; Feature style;

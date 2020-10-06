@@ -1,13 +1,9 @@
 import { readFileSync } from 'fs';
-import { minify } from 'uglify-es';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import json from 'rollup-plugin-json';
-import buble from 'rollup-plugin-buble';
-import commonjs from 'rollup-plugin-commonjs';
-import { eslint } from 'rollup-plugin-eslint';
-import includePaths from 'rollup-plugin-includepaths';
-import bundleSize from 'rollup-plugin-filesize';
-import { uglify } from 'rollup-plugin-uglify';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import buble from '@rollup/plugin-buble';
+import { terser } from 'rollup-plugin-terser';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 const external = Object.keys(pkg.dependencies);
@@ -24,21 +20,10 @@ const ol = [
   ['ol/Feature', 'ol.Feature'],
 ];
 
-ol.forEach(each => {
+ol.forEach((each) => {
   external.push(each[0]);
   globals[each[0]] = each[1];
 });
-
-const lintOpts = {
-  // extensions: ['js'],
-  exclude: ['**/*.json'],
-  cache: true,
-  throwOnError: true,
-};
-
-const includePathOptions = {
-  paths: ['', './src'],
-};
 
 const banner = readFileSync('./build/banner.js', 'utf-8')
   .replace('${name}', pkg.name)
@@ -60,14 +45,14 @@ export default [
       name: 'Geocoder',
     },
     plugins: [
-      includePaths(includePathOptions),
-      eslint(lintOpts),
-      bundleSize(),
       nodeResolve(),
-      commonjs(),
+      commonjs({
+        exclude: 'src/**',
+        include: 'node_modules/**',
+      }),
       json({ exclude: 'node_modules/**' }),
       buble({ target: { ie: 11 } }),
-      uglify({ output: { comments: /^!/ } }, minify),
+      terser({ output: { comments: /^!/ } }),
     ],
   },
   {
@@ -82,11 +67,11 @@ export default [
       name: 'Geocoder',
     },
     plugins: [
-      includePaths(includePathOptions),
-      eslint(lintOpts),
-      bundleSize(),
       nodeResolve(),
-      commonjs(),
+      commonjs({
+        exclude: 'src/**',
+        include: 'node_modules/**',
+      }),
       json({ exclude: 'node_modules/**' }),
       buble({ target: { ie: 11 } }),
     ],

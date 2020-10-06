@@ -1,0 +1,156 @@
+---
+root: true
+env:
+  browser: true
+  node: true
+parser: babel-eslint
+parserOptions:
+  ecmaVersion: 2020
+  ecmaFeatures:
+    impliedStrict: true
+globals:
+  Geocoder: true
+  ol: true
+extends:
+  - airbnb-base
+  - hardcore
+  - plugin:prettier/recommended
+rules:
+  no-sync: 0
+  no-magic-numbers: 0
+  no-inline-comments: 0
+  line-comment-position: 0
+  max-statements: 0
+  no-process-env: 0
+  array-callback-return: 0
+  no-return-assign: 0
+  no-underscore-dangle: 0
+  no-nested-ternary: 0
+  no-negated-condition: 0
+  no-new: 0
+  max-lines: 0
+  no-plusplus: 0
+  no-cond-assign: 0
+  prefer-destructuring: 0
+  no-param-reassign: 0
+  no-process-exit: 0
+  class-methods-use-this: 0
+  no-this-before-super: 0
+  no-constructor-return: 0
+  no-console:
+    - warn
+    - allow:
+        - warn
+        - error
+        - trace
+  complexity:
+    - error
+    - max: 20
+  prettier/prettier:
+    - error
+    - singleQuote: true
+      printWidth: 100
+      tabWidth: 2
+      useTabs: false
+      semi: true
+      quoteProps: as-needed
+      trailingComma: es5
+      bracketSpacing: true
+      arrowParens: always
+      proseWrap: preserve
+      htmlWhitespaceSensitivity: css
+      endOfLine: lf
+  no-unused-vars:
+    - error
+    - args: none
+      ignoreRestSiblings: true
+      vars: local
+      caughtErrors: none
+  no-use-before-define:
+    - error
+    - functions: false
+  no-unused-expressions:
+    - error
+    - allowTernary: true
+      allowShortCircuit: true
+  id-length:
+    - error
+    - properties: never
+      exceptions:
+        - R
+        - h
+        - t
+        - i
+        - k
+        - q
+        - c
+        - r
+        - v
+        - x
+        - $
+  no-shadow:
+    - error
+    - builtinGlobals: true
+      allow:
+        - find
+        - name
+        - external
+        - status
+        - event
+        - open
+  consistent-return:
+    - error
+    - treatUndefinedAsUnspecified: true
+  max-params:
+    - error
+    - 4
+  func-style:
+    - error
+    - declaration
+    - allowArrowFunctions: true
+  import/group-exports: 0
+  import/exports-last: 0
+  import/max-dependencies: 0
+  import/no-unused-modules: 0
+  import/no-unassigned-import: 0
+  import/prefer-default-export: 0
+  import/no-namespace: 0
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies: true
+  import/extensions: 0
+  import/unambiguous: 0
+  import/no-anonymous-default-export:
+    - error
+    - allowArray: true
+      allowArrowFunction: true
+      allowObject: true
+  node/no-unpublished-import: 0
+  node/no-process-exit: 0
+  node/no-process-env: 0
+  node/no-sync: 0
+  promise/avoid-new: 0
+  promise/always-return: 0
+  unicorn/catch-error-name: 0
+  unicorn/prefer-query-selector: 0
+  unicorn/prefer-node-remove: 0
+  unicorn/no-null: 0
+  unicorn/prevent-abbreviations: 0
+  sonarjs/no-small-switch: 0
+  sonarjs/cognitive-complexity:
+    - error
+    - 40
+
+overrides:
+  - files:
+      - 'test/unit/*.test.js'
+    plugins:
+      - jest
+    extends:
+      - plugin:jest/recommended
+  - files:
+      - 'test/e2e/**/*.test.js'
+    plugins:
+      - testcafe
+    extends:
+      - plugin:testcafe/recommended
