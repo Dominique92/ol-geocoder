@@ -41,6 +41,7 @@ export class OpenStreet {
     return results.map((result) => ({
       lon: result.lon,
       lat: result.lat,
+      bbox: result.boundingbox,
 
       address: {
         name: result.display_name,
