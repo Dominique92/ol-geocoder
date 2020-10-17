@@ -213,7 +213,11 @@ export class Nominatim {
     let { bbox } = place;
 
     if (bbox) {
-      bbox = proj.transformExtent(bbox, 'EPSG:4326', projection);
+      bbox = proj.transformExtent(
+        [bbox[2], bbox[1], bbox[3], bbox[0]], // NSWE -> WSEN
+        'EPSG:4326',
+        projection
+      );
     }
 
     const address = {
@@ -230,6 +234,7 @@ export class Nominatim {
         address,
         coordinate: coord,
         bbox,
+        place,
       });
     } else {
       if (bbox) {
@@ -246,6 +251,7 @@ export class Nominatim {
         feature,
         coordinate: coord,
         bbox,
+        place,
       });
     }
   }
