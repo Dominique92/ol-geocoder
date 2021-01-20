@@ -20,6 +20,8 @@ addons:
 services:
   - xvfb
 
+before_script: npm i -g npm@7
+
 script: npm run ci
 
 branches:
