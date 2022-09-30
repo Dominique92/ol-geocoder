@@ -3,15 +3,15 @@
   "version": "5.0.1",
   "description": "A geocoder extension for OpenLayers.",
   "author": "Jonatas Walker",
-  "homepage": "https://github.com/jonataswalker/ol-geocoder",
+  "homepage": "https://github.com/kirtan-desai/ol-geocoder",
   "license": "MIT",
   "main": "dist/ol-geocoder.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jonataswalker/ol-geocoder.git"
+    "url": "git://github.com/kirtan-desai/ol-geocoder.git"
   },
   "bugs": {
-    "url": "https://github.com/jonataswalker/ol-geocoder/issues"
+    "url": "https://github.com/kirtan-desai/ol-geocoder/issues"
   },
   "files": [
     "dist/"
@@ -44,7 +44,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.19.1",
+    "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.19.1",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
