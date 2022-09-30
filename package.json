@@ -1,5 +1,5 @@
 {
-  "name": "ol-geocoder",
+  "name": "@kirtandesai/ol-geocoder",
   "version": "5.0.0",
   "description": "A geocoder extension for OpenLayers.",
   "author": "Jonatas Walker",
