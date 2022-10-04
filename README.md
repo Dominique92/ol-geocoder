@@ -3,24 +3,17 @@
   <a href="https://travis-ci.org/jonataswalker/ol-geocoder">
     <img src="https://travis-ci.org/jonataswalker/ol-geocoder.svg?branch=master" alt="build status">
   </a>
-  <a href="https://www.npmjs.com/package/ol-geocoder">
-    <img src="https://img.shields.io/npm/v/ol-geocoder.svg"
+  <a href="https://www.npmjs.com/package/@kirtandesai/ol-geocoder">
+    <img src="https://img.shields.io/npm/v/@kirtandesai/ol-geocoder.svg"
       alt="npm version">
   </a>
-  <a href="https://github.com/jonataswalker/ol-geocoder/blob/master/LICENSE">
-    <img src="https://img.shields.io/npm/l/ol-geocoder.svg"
+  <a href="https://github.com/kirtan-desai/ol-geocoder/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/@kirtandesai/ol-geocoder.svg"
       alt="license">
-  </a>
-  <a href="https://david-dm.org/jonataswalker/ol-geocoder">
-    <img src="https://david-dm.org/jonataswalker/ol-geocoder/status.svg"
-      alt="dependency status">
-  </a>
-  <a href="https://david-dm.org/jonataswalker/ol-geocoder">
-    <img src="https://david-dm.org/jonataswalker/ol-geocoder/dev-status.svg" alt="devDependency status">
   </a>
 </p>
 
-A geocoder extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
+A forked version of ol-geocoder compatible with OpenLayers v7. **Requires** OpenLayers **v3.11.0** or higher.
 
 ![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol-geocoder/screenshots/images/anim.gif)
 

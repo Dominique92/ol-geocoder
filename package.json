@@ -1,7 +1,7 @@
 {
   "name": "@kirtandesai/ol-geocoder",
-  "version": "5.0.2",
-  "description": "A geocoder extension for OpenLayers.",
+  "version": "5.0.3",
+  "description": "A geocoder extension compatible with OpenLayers v7.",
   "author": "Jonatas Walker",
   "homepage": "https://github.com/kirtan-desai/ol-geocoder",
   "license": "MIT",
@@ -56,7 +56,7 @@
     "canvas": "^2.10.1",
     "chalk": "^4.1.2",
     "cssnano": "^4.1.10",
-    "dotenv": "^8.6.0",
+    "dotenv": "^16.0.3",
     "eslint": "^7.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-hardcore": "^12.9.1",
