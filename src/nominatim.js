@@ -81,7 +81,6 @@ export class Nominatim {
         this.query(value);
       }
     };
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     const stopBubbling = (evt) => evt.stopPropagation();
     const reset = (evt) => {
       this.els.input.focus();

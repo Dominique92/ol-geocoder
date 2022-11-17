@@ -1,4 +1,3 @@
-/* eslint-disable optimize-regex/optimize-regex */
 /* eslint-disable prefer-named-capture-group */
 import { isNumeric } from './mix';
 
@@ -179,7 +178,6 @@ export function createElement(node, html) {
 }
 
 function classRegex(classname) {
-  // eslint-disable-next-line security/detect-non-literal-regexp
   return new RegExp(`(^|\\s+) ${classname} (\\s+|$)`, 'u');
 }
 
