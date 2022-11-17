@@ -7,9 +7,9 @@ $result-left: em(10px);
 $result-top: $control-height + .2;
 
 &.#{map-get($input-text, container)} {
-  position: absolute;
-  width: $container-width;
-  height: $control-height;
+  // position: absolute;
+  // width: $container-width;
+  // height: $control-height;
   top: .5em;
   left: calc(50% - #{$container-width / 2});
   box-sizing: border-box;
@@ -85,10 +85,10 @@ $result-top: $control-height + .2;
   background-position: center center;
 }
 ul.#{map-get($input-text, result)} {
-  position: absolute;
+  // position: absolute;
   top: $result-top;
   left: 0;
-  width: $result-width;
+  // width: $result-width;
   max-height: $result-max-height;
   white-space: normal;
   list-style: none;
