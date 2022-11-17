@@ -4,15 +4,27 @@
  * @returns obj3 a new object based on obj1 and obj2
  */
 export function mergeOptions(obj1, obj2) {
-  let obj3 = {};
-  for (let attr1 in obj1) obj3[attr1] = obj1[attr1];
-  for (let attr2 in obj2) obj3[attr2] = obj2[attr2];
+  const obj3 = {};
+
+  for (const key in obj1) {
+    if (Object.prototype.hasOwnProperty.call(obj1, key)) {
+      obj3[key] = obj1[key];
+    }
+  }
+
+  for (const key in obj2) {
+    if (Object.prototype.hasOwnProperty.call(obj2, key)) {
+      obj3[key] = obj2[key];
+    }
+  }
+
   return obj3;
 }
 
 export function assert(condition, message = 'Assertion failed') {
   if (!condition) {
     if (typeof Error !== 'undefined') throw new Error(message);
+
     throw message; // Fallback
   }
 }
@@ -25,13 +37,6 @@ export function now() {
   if ('performance' in window === false) {
     window.performance = {};
   }
-
-  Date.now =
-    Date.now ||
-    function() {
-      // thanks IE8
-      return new Date().getTime();
-    };
 
   if ('now' in window.performance === false) {
     let nowOffset = Date.now();
@@ -46,23 +51,22 @@ export function now() {
   return window.performance.now();
 }
 
-export function flyTo(map, coord, duration, resolution) {
-  resolution = resolution || 2.388657133911758;
-  duration = duration || 500;
+export function flyTo(map, coord, duration = 500, resolution = 2.388657133911758) {
   map.getView().animate({ duration, resolution }, { duration, center: coord });
 }
 
 export function randomId(prefix) {
   const id = now().toString(36);
+
   return prefix ? prefix + id : id;
 }
 
 export function isNumeric(str) {
-  return /^\d+$/.test(str);
+  return /^\d+$/u.test(str);
 }
 
 export function isEmpty(str) {
-  return !str || 0 === str.length;
+  return !str || str.length === 0;
 }
 
 export function emptyArray(array) {
@@ -70,17 +74,19 @@ export function emptyArray(array) {
 }
 
 export function anyMatchInArray(source, target) {
-  return source.some(each => target.indexOf(each) >= 0);
+  return source.some((each) => target.includes(each));
 }
 
 export function everyMatchInArray(arr1, arr2) {
-  return arr2.every(each => arr1.indexOf(each) >= 0);
+  return arr2.every((each) => arr1.includes(each));
 }
 
 export function anyItemHasValue(obj, has = false) {
   const keys = Object.keys(obj);
-  keys.forEach(key => {
+
+  keys.forEach((key) => {
     if (!isEmpty(obj[key])) has = true;
   });
+
   return has;
 }

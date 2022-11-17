@@ -1,9 +1,11 @@
 import { Selector } from 'testcafe';
+
 import { VARS, TARGET_TYPE } from '../../../konstants';
 
 export default class Page {
   constructor(control) {
     const container = Selector(`#${VARS.containerId}`);
+
     this.klasses = null;
 
     if (control === TARGET_TYPE.GLASS) {

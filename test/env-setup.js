@@ -5,38 +5,45 @@
 // fixes from Paul Irish and Tino Zijdel
 
 // MIT license
-(function() {
-  var lastTime = 0;
-  var vendors = ['ms', 'moz', 'webkit', 'o'];
-  var x = 0;
+(() => {
+  let lastTime = 0;
+
+  const vendors = ['ms', 'moz', 'webkit', 'o'];
+
+  let x = 0;
+
   for (; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+    window.requestAnimationFrame = window[`${vendors[x]}RequestAnimationFrame`];
     window.cancelAnimationFrame =
-      window[vendors[x] + 'CancelAnimationFrame'] ||
-      window[vendors[x] + 'CancelRequestAnimationFrame'];
+      window[`${vendors[x]}CancelAnimationFrame`] ||
+      window[`${vendors[x]}CancelRequestAnimationFrame`];
   }
 
   if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame = function(callback, element) {
-      var currTime = new Date().getTime();
-      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = window.setTimeout(function() {
+    window.requestAnimationFrame = (callback, element) => {
+      const currTime = new Date().getTime();
+      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      const id = window.setTimeout(() => {
         callback(currTime + timeToCall);
       }, timeToCall);
+
       lastTime = currTime + timeToCall;
+
       return id;
     };
   }
 
   if (!window.cancelAnimationFrame) {
-    window.cancelAnimationFrame = function(id) {
+    window.cancelAnimationFrame = (id) => {
       clearTimeout(id);
     };
   }
 })();
 
-(function() {
-  var canvasBindings = require('canvas/lib/bindings');
+(() => {
+  // eslint-disable-next-line global-require
+  const canvasBindings = require('canvas/lib/bindings');
+
   window.CanvasGradient = canvasBindings.CanvasGradient;
   window.CanvasPattern = canvasBindings.CanvasPattern;
 })();

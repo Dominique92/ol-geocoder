@@ -1,7 +1,9 @@
 import Control from 'ol/control/Control';
 import LayerVector from 'ol/layer/Vector';
 import SourceVector from 'ol/source/Vector';
-import Geocoder from '../../';
+
+// eslint-disable-next-line no-shadow
+import Geocoder from '../../dist/ol-geocoder';
 import { DEFAULT_OPTIONS, PROVIDERS } from '../../konstants';
 
 const options = {
@@ -40,11 +42,13 @@ describe('Instance options', () => {
 describe('Instance methods', () => {
   test('getLayer()', () => {
     const layer = geocoder.getLayer();
+
     expect(layer).toBeInstanceOf(LayerVector);
   });
 
   test('getSource()', () => {
     const source = geocoder.getSource();
+
     expect(source).toBeInstanceOf(SourceVector);
   });
 

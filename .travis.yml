@@ -3,7 +3,7 @@ dist: xenial
 
 language: node_js
 node_js:
-  - '12'
+  - '14'
 
 cache:
   bundler: true
@@ -13,14 +13,18 @@ cache:
 addons:
   apt:
     sources:
-     - google-chrome
+      - google-chrome
     packages:
-     - google-chrome-stable
+      - google-chrome-stable
 
 services:
   - xvfb
 
-script: npm run ci
+before_install:
+  - npm i -g npm@7
+
+script:
+  - npm run ci
 
 branches:
   only:

@@ -30,14 +30,14 @@ sass.render(
       autoprefixer(),
       postcssReport({ clearMessages: true }),
     ]);
-    prefixer.process(result.css, { from: undefined }).then(res => {
-      res.warnings().forEach(warn => {
+    prefixer.process(result.css, { from: undefined }).then((res) => {
+      res.warnings().forEach((warn) => {
         console.warn(warn.toString());
       });
 
       writeFileSync('./dist/ol-geocoder.css', banner + res.css);
 
-      cssnano.process(res.css).then(min => {
+      cssnano.process(res.css).then((min) => {
         writeFileSync('./dist/ol-geocoder.min.css', banner + min.css);
 
         const cssSize = bytes(Buffer.byteLength(res.css));

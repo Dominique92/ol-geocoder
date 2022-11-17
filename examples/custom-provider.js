@@ -1,38 +1,41 @@
-(function(win, doc) {
-  var olview = new ol.View({
-      center: [-264000, 7480000],
-      zoom: 5,
-      minZoom: 2,
-      maxZoom: 20,
-    }),
-    baseLayer = new ol.layer.Tile({
-      source: new ol.source.OSM(),
-    }),
-    map = new ol.Map({
-      target: doc.getElementById('map'),
-      view: olview,
-      layers: [baseLayer],
-    });
+((win, doc) => {
+  const olview = new ol.View({
+    center: [-264000, 7480000],
+    zoom: 5,
+    minZoom: 2,
+    maxZoom: 20,
+  });
+
+  const baseLayer = new ol.layer.Tile({
+    source: new ol.source.OSM(),
+  });
+  const map = new ol.Map({
+    target: doc.querySelector('#map'),
+    view: olview,
+    layers: [baseLayer],
+  });
 
   // Create an instance of the custom provider, passing any options that are
   // required
-  var provider = OsOpenNamesSearch({
+  const provider = OsOpenNamesSearch({
     url: '//t0.ads.astuntechnology.com/open/search/osopennames/',
   });
 
-  var geocoder = new Geocoder('nominatim', {
+  const geocoder = new Geocoder('nominatim', {
     // Specify the custom provider instance as the "provider" value
-    provider: provider,
+    provider,
     autoComplete: true,
     autoCompleteMinLength: 3,
+    autoCompleteTimeout: 200,
     targetType: 'text-input',
     lang: 'en',
     keepOpen: false,
     preventDefault: true,
   });
+
   map.addControl(geocoder);
 
-  geocoder.on('addresschosen', function(evt) {
+  geocoder.on('addresschosen', (evt) => {
     if (evt.bbox) {
       map.getView().fit(evt.bbox, { duration: 500 });
     } else {
@@ -46,7 +49,8 @@
    * and handleResponse called by the Geocoder
    */
   function OsOpenNamesSearch(options) {
-    var url = options.url;
+    const { url } = options;
+
     return {
       /**
        * Get the url, query string parameters and optional JSONP callback
@@ -55,39 +59,43 @@
        * countrycodes and limit properties.
        * @return {object} Parameters for search request
        */
-      getParameters: function(opt) {
+      getParameters(opt) {
         return {
-          url: url,
+          url,
           callbackName: 'callback',
+
           params: {
             q: opt.query,
           },
         };
       },
+
       /**
        * Given the results of performing a search return an array of results
        * @param {object} data returned following a search request
        * @return {Array} Array of search results
        */
-      handleResponse: function(results) {
+      handleResponse(results) {
         // The API returns a GeoJSON FeatureCollection
-        if (results && results.features && results.features.length) {
-          return results.features.map(function(feature) {
+        if (results && results.features && results.features.length !== 0) {
+          return results.features.map((feature) => {
             return {
               lon: feature.geometry.coordinates[0],
               lat: feature.geometry.coordinates[1],
+
               address: {
                 // Simply return a name in this case, could also return road,
                 // building, house_number, city, town, village, state,
                 // country
                 name: feature.properties.search_full,
               },
+
               bbox: feature.bbox,
             };
           });
-        } else {
-          return;
         }
+
+        return [];
       },
     };
   }
