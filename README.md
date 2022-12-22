@@ -82,9 +82,9 @@ map.addControl(geocoder);
 
 ##### Listen and do something when an address is chosen
 ```javascript
-geocoder.on('addresschosen', function(evt){
-  const feature = evt.feature,
-  const coord = evt.coordinate,
+geocoder.on('addresschosen', (evt) => {
+  const feature = evt.feature;
+  const coord = evt.coordinate;
   const address = evt.address;
   // some popup solution
   content.innerHTML = '<p>'+ address.formatted +'</p>';
