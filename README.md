@@ -52,25 +52,23 @@ Custom providers must implement the following methods:
 ##### NPM
 `npm install ol-geocoder`
 
-##### CDN Hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/ol-geocoder)
+##### CDN Hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/@kirtandesai/ol-geocoder)
 Load CSS and Javascript:
 ```HTML
-<link href="https://cdn.jsdelivr.net/npm/ol-geocoder@latest/dist/ol-geocoder.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/ol-geocoder"></script>
+<link href="https://cdn.jsdelivr.net/npm/@kirtandesai/ol-geocoder@latest/dist/ol-geocoder.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@kirtandesai/ol-geocoder"></script>
 ```
 
 ##### CDN Hosted - UNPKG
 Load CSS and Javascript:
 ```HTML
-<link href="https://unpkg.com/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
-<script src="https://unpkg.com/ol-geocoder"></script>
+<link href="https://unpkg.com/@kirtandesai/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
+<script src="https://unpkg.com/@kirtandesai/ol-geocoder"></script>
 ```
-##### Self hosted
-Download [latest release](https://github.com/jonataswalker/ol-geocoder/releases/latest) and (obviously) load CSS and Javascript.
 
 ##### Instantiate with some options and add the Control
 ```javascript
-var geocoder = new Geocoder('nominatim', {
+const geocoder = new Geocoder('nominatim', {
   provider: 'mapquest',
   key: '__some_key__',
   lang: 'pt-BR', //en-US, fr-FR
@@ -85,9 +83,9 @@ map.addControl(geocoder);
 ##### Listen and do something when an address is chosen
 ```javascript
 geocoder.on('addresschosen', function(evt){
-  var feature = evt.feature,
-      coord = evt.coordinate,
-      address = evt.address;
+  const feature = evt.feature,
+  const coord = evt.coordinate,
+  const address = evt.address;
   // some popup solution
   content.innerHTML = '<p>'+ address.formatted +'</p>';
   overlay.setPosition(coord);
