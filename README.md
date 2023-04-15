@@ -1,3 +1,6 @@
+# MAINTAINER WANTED
+As I am no longer using ol-geocoder in my day-to-day life, it has been mostly ignored as you can likely see from the issues/PRs. If you are interested in taking over and becoming the maintainer of ol-geocoder, please open an issue and we can start talking about transitioning it.
+
 # OpenLayers Control Geocoder
 <p align="center">
   <a href="https://travis-ci.org/jonataswalker/ol-geocoder">
