@@ -50,7 +50,7 @@ Custom providers must implement the following methods:
 ## How to use it?
 
 ##### NPM
-`npm install ol-geocoder`
+`npm install @kirtandesai/ol-geocoder`
 
 ##### CDN Hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/@kirtandesai/ol-geocoder)
 Load CSS and Javascript:
