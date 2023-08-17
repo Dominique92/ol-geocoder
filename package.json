@@ -1,6 +1,6 @@
 {
   "name": "ol-geocoder",
-  "version": "4.1.2",
+  "version": "4.2.0",
   "description": "A geocoder extension for OpenLayers.",
   "author": "Jonatas Walker",
   "homepage": "https://github.com/jonataswalker/ol-geocoder",
@@ -42,7 +42,6 @@
   "peerDependencies": {
     "ol": ">4.1.0"
   },
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
@@ -70,7 +69,7 @@
     "gzip-size": "^6.0.0",
     "husky": "^4.3.0",
     "jest": "^26.5.3",
-    "node-sass": "^5.0.0",
+    "node-sass": "^6.0.1",
     "node-sass-json-importer": "^4.3.0",
     "npm-run-all": "^4.1.5",
     "ol": "^6.4.3",
