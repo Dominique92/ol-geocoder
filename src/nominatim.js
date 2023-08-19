@@ -2,7 +2,7 @@ import LayerVector from 'ol/layer/Vector';
 import SourceVector from 'ol/source/Vector';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
-import proj from 'ol/proj';
+import * as proj from 'ol/proj';
 
 import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from '../konstants';
 
@@ -214,7 +214,7 @@ export class Nominatim {
 
     if (bbox) {
       bbox = proj.transformExtent(
-        [bbox[2], bbox[1], bbox[3], bbox[0]], // NSWE -> WSEN
+        [parseFloat(bbox[2]), parseFloat(bbox[0]), parseFloat(bbox[3]), parseFloat(bbox[1])], // SNWE -> WSEN
         'EPSG:4326',
         projection
       );
