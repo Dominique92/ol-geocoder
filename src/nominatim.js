@@ -214,7 +214,7 @@ export class Nominatim {
 
     if (bbox) {
       bbox = proj.transformExtent(
-        [bbox[2], bbox[0], bbox[3], bbox[1]], // SNWE -> WSEN
+        [parseFloat(bbox[2]), parseFloat(bbox[0]), parseFloat(bbox[3]), parseFloat(bbox[1])], // SNWE -> WSEN
         'EPSG:4326',
         projection
       );
