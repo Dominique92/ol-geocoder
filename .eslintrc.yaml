@@ -3,7 +3,7 @@ root: true
 env:
   browser: true
   node: true
-parser: babel-eslint
+parser: "@babel/eslint-parser"
 parserOptions:
   ecmaVersion: 2020
   ecmaFeatures:
@@ -13,7 +13,6 @@ globals:
   ol: true
 extends:
   - airbnb-base
-  - hardcore
   - plugin:prettier/recommended
 rules:
   no-sync: 0
@@ -136,10 +135,6 @@ rules:
   unicorn/prefer-node-remove: 0
   unicorn/no-null: 0
   unicorn/prevent-abbreviations: 0
-  sonarjs/no-small-switch: 0
-  sonarjs/cognitive-complexity:
-    - error
-    - 40
 
 overrides:
   - files:

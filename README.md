@@ -1,5 +1,6 @@
-# MAINTAINER WANTED
-As I am no longer using ol-geocoder in my day-to-day life, it has been mostly ignored as you can likely see from the issues/PRs. If you are interested in taking over and becoming the maintainer of ol-geocoder, please open an issue and we can start talking about transitioning it.
+# MAINTENANCE TAKEOVER
+While Jonathan & Kirtan ask for a new maintainer, Dominique takeover ol-geocoder.
+I would like to thank them and the entire development team for the fantastic work done so far.
 
 # OpenLayers Control Geocoder
 <p align="center">
@@ -10,20 +11,13 @@ As I am no longer using ol-geocoder in my day-to-day life, it has been mostly ig
     <img src="https://img.shields.io/npm/v/ol-geocoder.svg"
       alt="npm version">
   </a>
-  <a href="https://github.com/jonataswalker/ol-geocoder/blob/master/LICENSE">
+  <a href="https://github.com/Dominique92/ol-geocoder/blob/master/LICENSE">
     <img src="https://img.shields.io/npm/l/ol-geocoder.svg"
       alt="license">
   </a>
-  <a href="https://david-dm.org/jonataswalker/ol-geocoder">
-    <img src="https://david-dm.org/jonataswalker/ol-geocoder/status.svg"
-      alt="dependency status">
-  </a>
-  <a href="https://david-dm.org/jonataswalker/ol-geocoder">
-    <img src="https://david-dm.org/jonataswalker/ol-geocoder/dev-status.svg" alt="devDependency status">
-  </a>
 </p>
 
-A geocoder extension for [OpenLayers](http://openlayers.org/). **Requires** OpenLayers **v3.11.0** or higher.
+A geocoder extension compatible with OpenLayers v7. **Requires** OpenLayers **v6.15.0** or higher.
 
 ![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol-geocoder/screenshots/images/anim.gif)
 
@@ -76,11 +70,11 @@ Load CSS and Javascript:
 <script src="https://unpkg.com/ol-geocoder"></script>
 ```
 ##### Self hosted
-Download [latest release](https://github.com/jonataswalker/ol-geocoder/releases/latest) and (obviously) load CSS and Javascript.
+Download [latest release](https://github.com/Dominique92/ol-geocoder/releases/latest) and (obviously) load CSS and Javascript.
 
 ##### Instantiate with some options and add the Control
 ```javascript
-var geocoder = new Geocoder('nominatim', {
+const geocoder = new Geocoder('nominatim', {
   provider: 'mapquest',
   key: '__some_key__',
   lang: 'pt-BR', //en-US, fr-FR
@@ -94,12 +88,12 @@ map.addControl(geocoder);
 
 ##### Listen and do something when an address is chosen
 ```javascript
-geocoder.on('addresschosen', function(evt){
-  var feature = evt.feature,
-      coord = evt.coordinate,
-      address = evt.address;
+geocoder.on('addresschosen', (evt) => {
+  const feature = evt.feature,
+    coord = evt.coordinate,
+    address = evt.address;
   // some popup solution
-  content.innerHTML = '<p>'+ address.formatted +'</p>';
+  content.innerHTML = '<p>' + address.formatted + '</p>';
   overlay.setPosition(coord);
 });
 ```

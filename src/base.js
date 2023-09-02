@@ -19,8 +19,6 @@ export default class Base extends Control {
    * @param {object} options Options.
    */
   constructor(type = CONTROL_TYPE.NOMINATIM, options = {}) {
-    if (!(this instanceof Base)) return new Base();
-
     assert(typeof type === 'string', '@param `type` should be string!');
     assert(
       type === CONTROL_TYPE.NOMINATIM || type === CONTROL_TYPE.REVERSE,
@@ -33,20 +31,27 @@ export default class Base extends Control {
       new Style({ image: new Icon({ scale: 0.7, src: FEATURE_SRC }) }),
     ];
 
-    this.options = mergeOptions(DEFAULT_OPTIONS, options);
-    this.container = undefined;
+    let container;
 
     let $nominatim;
 
-    const $html = new Html(this);
+    const $html = new Html(options);
 
     if (type === CONTROL_TYPE.NOMINATIM) {
-      this.container = $html.els.container;
+      container = $html.els.container;
+    }
+
+    super({ element: container });
+
+    if (!(this instanceof Base)) return new Base();
+
+    this.options = mergeOptions(DEFAULT_OPTIONS, options);
+    this.container = container;
+
+    if (type === CONTROL_TYPE.NOMINATIM) {
       $nominatim = new Nominatim(this, $html.els);
       this.layer = $nominatim.layer;
     }
-
-    super({ element: this.container });
   }
 
   /**

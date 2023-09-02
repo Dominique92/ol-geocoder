@@ -1,3 +1,8 @@
+/**
+ * @jest-environment jsdom
+ * @jest-environment-options {"url": "https://localhost/"}
+ */
+
 import Control from 'ol/control/Control';
 import LayerVector from 'ol/layer/Vector';
 import SourceVector from 'ol/source/Vector';

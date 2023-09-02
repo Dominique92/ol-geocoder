@@ -1,6 +1,6 @@
 /*!
- * ${name} - v${version}
- * ${description}
- * ${homepage}
- * Built: ${time}
+ * {name} - v{version}
+ * {description}
+ * {homepage}
+ * Built: {time}
  */

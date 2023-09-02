@@ -6,17 +6,17 @@
 export function mergeOptions(obj1, obj2) {
   const obj3 = {};
 
-  for (const key in obj1) {
+  Object.keys(obj1).forEach((key) => {
     if (Object.prototype.hasOwnProperty.call(obj1, key)) {
       obj3[key] = obj1[key];
     }
-  }
+  });
 
-  for (const key in obj2) {
+  Object.keys(obj2).forEach((key) => {
     if (Object.prototype.hasOwnProperty.call(obj2, key)) {
       obj3[key] = obj2[key];
     }
-  }
+  });
 
   return obj3;
 }

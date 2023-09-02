@@ -10,10 +10,10 @@ const klasses = VARS.cssClasses;
 export class Html {
   /**
    * @constructor
-   * @param {Function} base Base class.
+   * @param {object} options Options.
    */
-  constructor(base) {
-    this.options = base.options;
+  constructor(options) {
+    this.options = options;
     this.els = this.createControl();
   }
 
