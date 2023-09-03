@@ -19,7 +19,7 @@ import { OpenStreet } from './providers/osm';
 import { MapQuest } from './providers/mapquest';
 import { Bing } from './providers/bing';
 import { OpenCage } from './providers/opencage';
-import { randomId, flyTo } from './helpers/mix';
+import { randomId } from './helpers/mix';
 import { json } from './helpers/ajax';
 
 const klasses = VARS.cssClasses;
@@ -39,6 +39,7 @@ export class Nominatim {
     this.layer = new LayerVector({
       name: this.layerName,
       source: new SourceVector(),
+      displayInLayerSwitcher: false, // Remove search layer from legend https://github.com/Dominique92/ol-geocoder/issues/256
     });
 
     this.options = base.options;
@@ -82,7 +83,7 @@ export class Nominatim {
       }
     };
     const stopBubbling = (evt) => evt.stopPropagation();
-    const reset = (evt) => {
+    const reset = () => {
       this.els.input.focus();
       this.els.input.value = '';
       this.lastQuery = '';
@@ -128,6 +129,7 @@ export class Nominatim {
       key: this.options.key,
       lang: this.options.lang,
       countrycodes: this.options.countrycodes,
+      viewbox: this.options.viewbox,
       limit: this.options.limit,
     });
 
@@ -162,7 +164,7 @@ export class Nominatim {
           this.listenMapClick();
         }
       })
-      .catch((err) => {
+      .catch(() => {
         removeClass(this.els.reset, klasses.spin);
 
         const li = createElement('li', '<h5>Error! No internet connection?</h5>');
@@ -213,7 +215,9 @@ export class Nominatim {
 
     if (bbox) {
       bbox = proj.transformExtent(
-        [bbox[2], bbox[1], bbox[3], bbox[0]], // NSWE -> WSEN
+        // https://nominatim.org/release-docs/latest/api/Output/#boundingbox
+        // Requires parseFloat on negative bbox entries
+        [parseFloat(bbox[2]), parseFloat(bbox[0]), parseFloat(bbox[3]), parseFloat(bbox[1])], // SNWE -> WSEN
         'EPSG:4326',
         projection
       );
@@ -227,7 +231,8 @@ export class Nominatim {
 
     this.options.keepOpen === false && this.clearResults(true);
 
-    if (this.options.preventDefault === true) {
+    if (this.options.preventDefault === true || this.options.preventMarker === true) {
+      // No display change
       this.Base.dispatchEvent({
         type: EVENT_TYPE.ADDRESSCHOSEN,
         address,
@@ -236,12 +241,7 @@ export class Nominatim {
         place,
       });
     } else {
-      if (bbox) {
-        map.getView().fit(bbox, { duration: 500 });
-      } else {
-        flyTo(map, coord);
-      }
-
+      // Display a marker
       const feature = this.createFeature(coord, address);
 
       this.Base.dispatchEvent({
@@ -252,6 +252,22 @@ export class Nominatim {
         bbox,
         place,
       });
+    }
+
+    if (this.options.preventDefault !== true && this.options.preventPanning !== true) {
+      // Move & zoom to the position
+      if (bbox) {
+        map.getView().fit(bbox, {
+          duration: 500,
+        });
+      } else {
+        map.getView().animate({
+          center: coord,
+          // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
+          resolution: this.options.defaultFlyResolution || 1, // Meters per pixel
+          duration: 500,
+        });
+      }
     }
   }
 
@@ -295,7 +311,7 @@ export class Nominatim {
   newProvider() {
     switch (this.options.provider) {
       case PROVIDERS.OSM:
-        return new OpenStreet();
+        return new OpenStreet(this.options);
       case PROVIDERS.MAPQUEST:
         return new MapQuest();
       case PROVIDERS.PHOTON:

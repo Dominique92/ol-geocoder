@@ -2,7 +2,7 @@
  * ol-geocoder - v4.3.0
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Sat Sep 02 2023 20:15:28 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Sun Sep 03 2023 17:44:26 GMT+0200 (heure d’été d’Europe centrale)
  */
 
 (function (global, factory) {
@@ -163,10 +163,6 @@
     }
 
     return window.performance.now();
-  }
-
-  function flyTo(map, coord, duration = 500, resolution = 2.388657133911758) {
-    map.getView().animate({ duration, resolution }, { duration, center: coord });
   }
 
   function randomId(prefix) {
@@ -467,9 +463,10 @@
     /**
      * @constructor
      */
-    constructor() {
+    constructor(options) {
       this.settings = {
         url: 'https://nominatim.openstreetmap.org/search',
+        ...options, // Allow custom URL for osm provider https://github.com/Dominique92/ol-geocoder/issues/266
 
         params: {
           q: '',
@@ -477,6 +474,7 @@
           addressdetails: 1,
           limit: 10,
           countrycodes: '',
+          viewbox: '',
           'accept-language': 'en-US',
         },
       };
@@ -492,6 +490,7 @@
           addressdetails: this.settings.params.addressdetails,
           limit: opt.limit || this.settings.params.limit,
           countrycodes: opt.countrycodes || this.settings.params.countrycodes,
+          viewbox: opt.viewbox || this.settings.params.viewbox,
           'accept-language': opt.lang || this.settings.params['accept-language'],
         },
       };
@@ -797,6 +796,7 @@
       this.layer = new LayerVector__default["default"]({
         name: this.layerName,
         source: new SourceVector__default["default"](),
+        displayInLayerSwitcher: false, // Remove search layer from legend https://github.com/Dominique92/ol-geocoder/issues/256
       });
 
       this.options = base.options;
@@ -840,7 +840,7 @@
         }
       };
       const stopBubbling = (evt) => evt.stopPropagation();
-      const reset = (evt) => {
+      const reset = () => {
         this.els.input.focus();
         this.els.input.value = '';
         this.lastQuery = '';
@@ -886,6 +886,7 @@
         key: this.options.key,
         lang: this.options.lang,
         countrycodes: this.options.countrycodes,
+        viewbox: this.options.viewbox,
         limit: this.options.limit,
       });
 
@@ -920,7 +921,7 @@
             this.listenMapClick();
           }
         })
-        .catch((err) => {
+        .catch(() => {
           removeClass(this.els.reset, klasses.spin);
 
           const li = createElement('li', '<h5>Error! No internet connection?</h5>');
@@ -971,7 +972,9 @@
 
       if (bbox) {
         bbox = proj__default["default"].transformExtent(
-          [bbox[2], bbox[1], bbox[3], bbox[0]], // NSWE -> WSEN
+          // https://nominatim.org/release-docs/latest/api/Output/#boundingbox
+          // Requires parseFloat on negative bbox entries
+          [parseFloat(bbox[2]), parseFloat(bbox[0]), parseFloat(bbox[3]), parseFloat(bbox[1])], // SNWE -> WSEN
           'EPSG:4326',
           projection
         );
@@ -985,7 +988,8 @@
 
       this.options.keepOpen === false && this.clearResults(true);
 
-      if (this.options.preventDefault === true) {
+      if (this.options.preventDefault === true || this.options.preventMarker === true) {
+        // No display change
         this.Base.dispatchEvent({
           type: EVENT_TYPE.ADDRESSCHOSEN,
           address,
@@ -994,12 +998,7 @@
           place,
         });
       } else {
-        if (bbox) {
-          map.getView().fit(bbox, { duration: 500 });
-        } else {
-          flyTo(map, coord);
-        }
-
+        // Display a marker
         const feature = this.createFeature(coord, address);
 
         this.Base.dispatchEvent({
@@ -1010,6 +1009,22 @@
           bbox,
           place,
         });
+      }
+
+      if (this.options.preventDefault !== true && this.options.preventPanning !== true) {
+        // Move & zoom to the position
+        if (bbox) {
+          map.getView().fit(bbox, {
+            duration: 500,
+          });
+        } else {
+          map.getView().animate({
+            center: coord,
+            // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
+            resolution: this.options.defaultFlyResolution || 1, // Meters per pixel
+            duration: 500,
+          });
+        }
       }
     }
 
@@ -1053,7 +1068,7 @@
     newProvider() {
       switch (this.options.provider) {
         case PROVIDERS.OSM:
-          return new OpenStreet();
+          return new OpenStreet(this.options);
         case PROVIDERS.MAPQUEST:
           return new MapQuest();
         case PROVIDERS.PHOTON:
@@ -1162,7 +1177,10 @@
         container = $html.els.container;
       }
 
-      super({ element: container });
+      super({
+          element: container,
+          ...options, // Allows to add ol.control.Control options
+      });
 
       if (!(this instanceof Base)) return new Base();
 

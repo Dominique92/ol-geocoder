@@ -41,7 +41,10 @@ export default class Base extends Control {
       container = $html.els.container;
     }
 
-    super({ element: container });
+    super({
+        element: container,
+        ...options, // Allows to add ol.control.Control options (as target:)
+    });
 
     if (!(this instanceof Base)) return new Base();
 

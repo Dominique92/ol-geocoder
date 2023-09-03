@@ -1,0 +1,13 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+#map {
+  width: 100%;
+  height: 60%;
+}
+body > #gcd-container,
+body > #gcd-container .gcd-txt-result {
+  position: static;
+}

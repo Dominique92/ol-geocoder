@@ -52,7 +52,11 @@ export function now() {
 }
 
 export function flyTo(map, coord, duration = 500, resolution = 2.388657133911758) {
-  map.getView().animate({ duration, resolution }, { duration, center: coord });
+  map.getView().animate({
+    center: coord,
+    resolution: resolution,
+    duration: duration,
+  });
 }
 
 export function randomId(prefix) {

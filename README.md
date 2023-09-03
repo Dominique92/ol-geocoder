@@ -108,6 +108,7 @@ geocoder.on('addresschosen', (evt) => {
 
 - `options` is an object with the following possible properties:
   * `provider`             : `'osm'` (default), `'mapquest'`, `'photon'`, `'pelias'`, `'bing'`, `'opencage'`, custom provider instance; Your preferable provider;
+  * `url`                  : `'https://nominatim.openstreetmap.org/search''`; API provider url;
   * `key`                  : `''`; API Key if required;
   * `autoComplete`         : `false`; Search as you type;
   * `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;
@@ -117,9 +118,14 @@ geocoder.on('addresschosen', (evt) => {
   * `featureStyle`         : `ol.style.Style`; Feature style;
   * `lang`                 : `'en-US'`; Preferable language;
   * `limit`                : `5`; Limit of results;
-  * `countrycodes`         : `''`; Only valid for `osm` and `mapquest`; Limit search results to a specific country (or a list of countries). This is an [ISO 3166-1alpha2 code] (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), e.g. `gb` for the United Kingdom, `br` for Brazil, etc;
+  * `countrycodes`         : `''`; Only valid for `osm` and `mapquest`; Limit search results to a specific country (or a list of country codes separated with commas `FR,US`). This is an [ISO 3166-1alpha2 code] (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), e.g. `gb` for the United Kingdom, `br` for Brazil, etc;
+  * `viewbox`              : `''`; The preferred area to find search results. Any two corner points of the box are accepted as long as they span a real box. (string) '<x1>,<y1>,<x2>,<y2>' x is longitude, y is latitude (EPSG:4326);
   * `keepOpen`             : `false`; Whether the results keep openned;
   * `preventDefault`       : `false`; Whether panning (and creating marker) when an address is chosen;
+  * `preventPanning`       : `false`; When true, prevent panning, but create marker, when an address is chosen;
+  * `preventMarker`        : `false`; When true, prevent creating marker, but provide panning, when an address is chosen;
+  * `defaultFlyResolution` : `1`; (meters per pixel) resolution to fly to when only coords & not bbox is returned by the provider;
+  * `target`               : `null`; html element to attach the selector to (outside the map);
   * `debug`                : `false`; If true logs provider's response;
 
 ## Instance Methods
