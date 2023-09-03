@@ -28,8 +28,7 @@ export class Bing {
         query: options.query,
         key: options.key,
 
-        includeNeighborhood:
-          options.includeNeighborhood || this.settings.params.includeNeighborhood,
+        includeNeighborhood: options.includeNeighborhood || this.settings.params.includeNeighborhood,
 
         maxResults: options.maxResults || this.settings.params.maxResults,
       },
@@ -37,7 +36,9 @@ export class Bing {
   }
 
   handleResponse(results) {
-    const { resources } = results.resourceSets[0];
+    const {
+      resources
+    } = results.resourceSets[0];
 
     if (resources.length === 0) return [];
 

@@ -25,6 +25,7 @@
     "nominatim"
   ],
   "scripts": {
+    "beautify": "js-beautify -s=2 build/* examples/* konstants/* src/*.*s src/helpers/* src/providers/* package.json",
     "dev": "run-s lint build:css rollup:dev",
     "build": "run-s rollup build:css",
     "build:css": "node build/build-css",
@@ -51,6 +52,7 @@
     "@rollup/plugin-node-resolve": "^11.2.1",
     "autoprefixer": "^10.4.13",
     "babel-jest": "^29.0.3",
+    "js-beautify": "latest",
     "boxen": "^5.1.2",
     "bytes": "^3.1.2",
     "canvas": "^2.10.2",

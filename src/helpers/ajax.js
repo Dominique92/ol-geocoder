@@ -22,9 +22,9 @@ function toQueryString(obj) {
   return Object.keys(obj)
     .reduce((acc, k) => {
       acc.push(
-        typeof obj[k] === 'object'
-          ? toQueryString(obj[k])
-          : `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
+        typeof obj[k] === 'object' ?
+        toQueryString(obj[k]) :
+        `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
       );
 
       return acc;
@@ -42,7 +42,9 @@ function encodeUrlXhr(url, data) {
 
 function jsonp(url, key, callback) {
   // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
-  const { head } = document;
+  const {
+    head
+  } = document;
   const script = document.createElement('script');
   // generate minimally unique name for callback function
   const callbackName = `f${Math.round(Math.random() * Date.now())}`;

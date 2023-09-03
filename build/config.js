@@ -1,8 +1,12 @@
-import { readFileSync } from 'fs';
+import {
+  readFileSync
+} from 'fs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
-import { terser } from 'rollup-plugin-terser';
+import {
+  terser
+} from 'rollup-plugin-terser';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 const external = Object.keys(pkg.dependencies);
@@ -31,8 +35,7 @@ const banner = readFileSync('./build/banner.js', 'utf-8')
   .replace('{version}', pkg.version)
   .replace('{time}', new Date());
 
-export default [
-  {
+export default [{
     external,
     input: './src/base.js',
     output: {
@@ -48,8 +51,14 @@ export default [
       commonjs({
         include: 'node_modules/**',
       }),
-      json({ exclude: 'node_modules/**' }),
-      terser({ output: { comments: /^!/ } }),
+      json({
+        exclude: 'node_modules/**'
+      }),
+      terser({
+        output: {
+          comments: /^!/
+        }
+      }),
     ],
   },
   {
@@ -68,7 +77,9 @@ export default [
       commonjs({
         include: 'node_modules/**',
       }),
-      json({ exclude: 'node_modules/**' }),
+      json({
+        exclude: 'node_modules/**'
+      }),
     ],
   },
 ];

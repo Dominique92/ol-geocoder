@@ -2,9 +2,8 @@
  * ol-geocoder - v4.3.0
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Sun Sep 03 2023 17:44:28 GMT+0200 (heure d’été d’Europe centrale)
- */
-.ol-touch .ol-control.gcd-gl-control button {
+ * Built: Sun Sep 03 2023 18:09:56 GMT+0200 (heure d’été d’Europe centrale)
+ */.ol-touch .ol-control.gcd-gl-control button {
   font-size: 1.14em; }
 
 .ol-touch .ol-geocoder.gcd-gl-container {

@@ -37,9 +37,14 @@
 
   geocoder.on('addresschosen', (evt) => {
     if (evt.bbox) {
-      map.getView().fit(evt.bbox, { duration: 500 });
+      map.getView().fit(evt.bbox, {
+        duration: 500
+      });
     } else {
-      map.getView().animate({ zoom: 14, center: evt.coordinate });
+      map.getView().animate({
+        zoom: 14,
+        center: evt.coordinate
+      });
     }
   });
 
@@ -49,7 +54,9 @@
    * and handleResponse called by the Geocoder
    */
   function OsOpenNamesSearch(options) {
-    const { url } = options;
+    const {
+      url
+    } = options;
 
     return {
       /**

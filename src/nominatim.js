@@ -4,7 +4,12 @@ import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
 import proj from 'ol/proj';
 
-import { VARS, TARGET_TYPE, PROVIDERS, EVENT_TYPE } from '../konstants';
+import {
+  VARS,
+  TARGET_TYPE,
+  PROVIDERS,
+  EVENT_TYPE
+} from '../konstants';
 
 import {
   hasClass,
@@ -14,13 +19,27 @@ import {
   template,
   removeAllChildren,
 } from './helpers/dom';
-import { Photon } from './providers/photon';
-import { OpenStreet } from './providers/osm';
-import { MapQuest } from './providers/mapquest';
-import { Bing } from './providers/bing';
-import { OpenCage } from './providers/opencage';
-import { randomId } from './helpers/mix';
-import { json } from './helpers/ajax';
+import {
+  Photon
+} from './providers/photon';
+import {
+  OpenStreet
+} from './providers/osm';
+import {
+  MapQuest
+} from './providers/mapquest';
+import {
+  Bing
+} from './providers/bing';
+import {
+  OpenCage
+} from './providers/opencage';
+import {
+  randomId
+} from './helpers/mix';
+import {
+  json
+} from './helpers/ajax';
 
 const klasses = VARS.cssClasses;
 
@@ -46,15 +65,17 @@ export class Nominatim {
     // provider is either the name of a built-in provider as a string or an
     // object that implements the provider API
     this.options.provider =
-      typeof this.options.provider === 'string'
-        ? this.options.provider.toLowerCase()
-        : this.options.provider;
+      typeof this.options.provider === 'string' ?
+      this.options.provider.toLowerCase() :
+      this.options.provider;
     this.provider = this.newProvider();
 
     this.els = els;
     this.lastQuery = '';
     this.container = this.els.container;
-    this.registeredListeners = { mapClick: false };
+    this.registeredListeners = {
+      mapClick: false
+    };
     this.setListeners();
   }
 
@@ -69,13 +90,13 @@ export class Nominatim {
     };
     const query = (evt) => {
       const value = evt.target.value.trim();
-      const hit = evt.key
-        ? evt.key === 'Enter'
-        : evt.which
-        ? evt.which === 13
-        : evt.keyCode
-        ? evt.keyCode === 13
-        : false;
+      const hit = evt.key ?
+        evt.key === 'Enter' :
+        evt.which ?
+        evt.which === 13 :
+        evt.keyCode ?
+        evt.keyCode === 13 :
+        false;
 
       if (hit) {
         evt.preventDefault();
@@ -93,9 +114,9 @@ export class Nominatim {
     const handleValue = (evt) => {
       const value = evt.target.value.trim();
 
-      value.length !== 0
-        ? removeClass(this.els.reset, klasses.hidden)
-        : addClass(this.els.reset, klasses.hidden);
+      value.length !== 0 ?
+        removeClass(this.els.reset, klasses.hidden) :
+        addClass(this.els.reset, klasses.hidden);
 
       if (this.options.autoComplete && value !== lastQuery) {
         lastQuery = value;
@@ -211,7 +232,9 @@ export class Nominatim {
     const projection = map.getView().getProjection();
     const coord = proj.transform(coord_, 'EPSG:4326', projection);
 
-    let { bbox } = place;
+    let {
+      bbox
+    } = place;
 
     if (bbox) {
       bbox = proj.transformExtent(
@@ -352,8 +375,7 @@ export class Nominatim {
 
     // one-time fire click
     mapElement.addEventListener(
-      'click',
-      {
+      'click', {
         handleEvent(evt) {
           that.clearResults(true);
           mapElement.removeEventListener(evt.type, this, false);
@@ -365,9 +387,9 @@ export class Nominatim {
   }
 
   clearResults(collapse) {
-    collapse && this.options.targetType === TARGET_TYPE.GLASS
-      ? this.collapse()
-      : removeAllChildren(this.els.result);
+    collapse && this.options.targetType === TARGET_TYPE.GLASS ?
+      this.collapse() :
+      removeAllChildren(this.els.result);
   }
 
   getSource() {

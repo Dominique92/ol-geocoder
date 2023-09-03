@@ -2,9 +2,8 @@
  * ol-geocoder - v4.3.0
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Sun Sep 03 2023 17:44:26 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Sun Sep 03 2023 18:09:54 GMT+0200 (heure d’été d’Europe centrale)
  */
-
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('ol/control/Control'), require('ol/style/Style'), require('ol/style/Icon'), require('ol/layer/Vector'), require('ol/source/Vector'), require('ol/geom/Point'), require('ol/Feature'), require('ol/proj')) :
   typeof define === 'function' && define.amd ? define(['ol/control/Control', 'ol/style/Style', 'ol/style/Icon', 'ol/layer/Vector', 'ol/source/Vector', 'ol/geom/Point', 'ol/Feature', 'ol/proj'], factory) :
@@ -267,7 +266,9 @@
       if (node[1].classname) elem.className = node[1].classname;
 
       if (node[1].attr) {
-        const { attr } = node[1];
+        const {
+          attr
+        } = node[1];
 
         if (Array.isArray(attr)) {
           let i = -1;
@@ -346,7 +347,10 @@
       if (this.options.targetType === TARGET_TYPE.INPUT) {
         containerClass = `${klasses$1.namespace} ${klasses$1.inputText.container}`;
         container = createElement(
-          ['div', { id: VARS.containerId, classname: containerClass }],
+          ['div', {
+            id: VARS.containerId,
+            classname: containerClass
+          }],
           Html.input
         );
         elements = {
@@ -359,7 +363,10 @@
       } else {
         containerClass = `${klasses$1.namespace} ${klasses$1.glass.container}`;
         container = createElement(
-          ['div', { id: VARS.containerId, classname: containerClass }],
+          ['div', {
+            id: VARS.containerId,
+            classname: containerClass
+          }],
           Html.glass
         );
         elements = {
@@ -616,8 +623,7 @@
           query: options.query,
           key: options.key,
 
-          includeNeighborhood:
-            options.includeNeighborhood || this.settings.params.includeNeighborhood,
+          includeNeighborhood: options.includeNeighborhood || this.settings.params.includeNeighborhood,
 
           maxResults: options.maxResults || this.settings.params.maxResults,
         },
@@ -625,7 +631,9 @@
     }
 
     handleResponse(results) {
-      const { resources } = results.resourceSets[0];
+      const {
+        resources
+      } = results.resourceSets[0];
 
       if (resources.length === 0) return [];
 
@@ -728,9 +736,9 @@
     return Object.keys(obj)
       .reduce((acc, k) => {
         acc.push(
-          typeof obj[k] === 'object'
-            ? toQueryString(obj[k])
-            : `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
+          typeof obj[k] === 'object' ?
+          toQueryString(obj[k]) :
+          `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
         );
 
         return acc;
@@ -748,7 +756,9 @@
 
   function jsonp(url, key, callback) {
     // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
-    const { head } = document;
+    const {
+      head
+    } = document;
     const script = document.createElement('script');
     // generate minimally unique name for callback function
     const callbackName = `f${Math.round(Math.random() * Date.now())}`;
@@ -803,15 +813,17 @@
       // provider is either the name of a built-in provider as a string or an
       // object that implements the provider API
       this.options.provider =
-        typeof this.options.provider === 'string'
-          ? this.options.provider.toLowerCase()
-          : this.options.provider;
+        typeof this.options.provider === 'string' ?
+        this.options.provider.toLowerCase() :
+        this.options.provider;
       this.provider = this.newProvider();
 
       this.els = els;
       this.lastQuery = '';
       this.container = this.els.container;
-      this.registeredListeners = { mapClick: false };
+      this.registeredListeners = {
+        mapClick: false
+      };
       this.setListeners();
     }
 
@@ -826,13 +838,13 @@
       };
       const query = (evt) => {
         const value = evt.target.value.trim();
-        const hit = evt.key
-          ? evt.key === 'Enter'
-          : evt.which
-          ? evt.which === 13
-          : evt.keyCode
-          ? evt.keyCode === 13
-          : false;
+        const hit = evt.key ?
+          evt.key === 'Enter' :
+          evt.which ?
+          evt.which === 13 :
+          evt.keyCode ?
+          evt.keyCode === 13 :
+          false;
 
         if (hit) {
           evt.preventDefault();
@@ -850,9 +862,9 @@
       const handleValue = (evt) => {
         const value = evt.target.value.trim();
 
-        value.length !== 0
-          ? removeClass(this.els.reset, klasses.hidden)
-          : addClass(this.els.reset, klasses.hidden);
+        value.length !== 0 ?
+          removeClass(this.els.reset, klasses.hidden) :
+          addClass(this.els.reset, klasses.hidden);
 
         if (this.options.autoComplete && value !== lastQuery) {
           lastQuery = value;
@@ -968,7 +980,9 @@
       const projection = map.getView().getProjection();
       const coord = proj__default["default"].transform(coord_, 'EPSG:4326', projection);
 
-      let { bbox } = place;
+      let {
+        bbox
+      } = place;
 
       if (bbox) {
         bbox = proj__default["default"].transformExtent(
@@ -1109,8 +1123,7 @@
 
       // one-time fire click
       mapElement.addEventListener(
-        'click',
-        {
+        'click', {
           handleEvent(evt) {
             that.clearResults(true);
             mapElement.removeEventListener(evt.type, this, false);
@@ -1122,9 +1135,9 @@
     }
 
     clearResults(collapse) {
-      collapse && this.options.targetType === TARGET_TYPE.GLASS
-        ? this.collapse()
-        : removeAllChildren(this.els.result);
+      collapse && this.options.targetType === TARGET_TYPE.GLASS ?
+        this.collapse() :
+        removeAllChildren(this.els.result);
     }
 
     getSource() {
@@ -1164,7 +1177,12 @@
       assert(typeof options === 'object', '@param `options` should be object!');
 
       DEFAULT_OPTIONS.featureStyle = [
-        new Style__default["default"]({ image: new Icon__default["default"]({ scale: 0.7, src: FEATURE_SRC }) }),
+        new Style__default["default"]({
+          image: new Icon__default["default"]({
+            scale: 0.7,
+            src: FEATURE_SRC
+          })
+        }),
       ];
 
       let container;
@@ -1178,8 +1196,8 @@
       }
 
       super({
-          element: container,
-          ...options, // Allows to add ol.control.Control options
+        element: container,
+        ...options, // Allows to add ol.control.Control options (as target:)
       });
 
       if (!(this instanceof Base)) return new Base();

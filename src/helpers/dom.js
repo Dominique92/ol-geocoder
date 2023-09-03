@@ -1,5 +1,7 @@
 /* eslint-disable prefer-named-capture-group */
-import { isNumeric } from './mix';
+import {
+  isNumeric
+} from './mix';
 
 /**
  * @param {Element|Array<Element>} element DOM node or array of nodes.
@@ -150,7 +152,9 @@ export function createElement(node, html) {
     if (node[1].classname) elem.className = node[1].classname;
 
     if (node[1].attr) {
-      const { attr } = node[1];
+      const {
+        attr
+      } = node[1];
 
       if (Array.isArray(attr)) {
         let i = -1;

@@ -1,6 +1,7 @@
 # MAINTENANCE TAKEOVER
-While Jonathan & Kirtan ask for a new maintainer, Dominique takeover ol-geocoder.
+While Jonathan & Kirtan ask for a new maintainer, I will assume the ol-geocoder support.
 I would like to thank them and the entire development team for the fantastic work done so far.
+Dominique.
 
 # OpenLayers Control Geocoder
 <p align="center">
