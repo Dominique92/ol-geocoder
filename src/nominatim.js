@@ -104,35 +104,23 @@ export class Nominatim {
       }
     };
     const stopBubbling = (evt) => evt.stopPropagation();
-    const reset = () => {
+    const search = () => {
       this.els.input.focus();
-      this.els.input.value = '';
-      this.lastQuery = '';
-      addClass(this.els.reset, klasses.hidden);
-      this.clearResults();
+      addClass(this.els.search, klasses.hidden);
+      this.query(this.els.input.value);
     };
     const handleValue = (evt) => {
       const value = evt.target.value.trim();
 
       value.length !== 0 ?
-        removeClass(this.els.reset, klasses.hidden) :
-        addClass(this.els.reset, klasses.hidden);
-
-      if (this.options.autoComplete && value !== lastQuery) {
-        lastQuery = value;
-        timeout && clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          if (value.length >= this.options.autoCompleteMinLength) {
-            this.query(value);
-          }
-        }, this.options.autoCompleteTimeout);
-      }
+        removeClass(this.els.search, klasses.hidden) :
+        addClass(this.els.search, klasses.hidden);
     };
 
     this.els.input.addEventListener('keypress', query, false);
     this.els.input.addEventListener('click', stopBubbling, false);
     this.els.input.addEventListener('input', handleValue, false);
-    this.els.reset.addEventListener('click', reset, false);
+    this.els.search.addEventListener('click', search, false);
 
     if (this.options.targetType === TARGET_TYPE.GLASS) {
       this.els.button.addEventListener('click', openSearch, false);
@@ -158,7 +146,7 @@ export class Nominatim {
 
     this.lastQuery = q;
     this.clearResults();
-    addClass(this.els.reset, klasses.spin);
+    addClass(this.els.search, klasses.spin);
 
     const ajax = {
       url: parameters.url,
@@ -175,7 +163,7 @@ export class Nominatim {
         // eslint-disable-next-line no-console
         this.options.debug && console.info(res);
 
-        removeClass(this.els.reset, klasses.spin);
+        removeClass(this.els.search, klasses.spin);
 
         // will be fullfiled according to provider
         const res_ = this.provider.handleResponse(res);
@@ -186,7 +174,7 @@ export class Nominatim {
         }
       })
       .catch(() => {
-        removeClass(this.els.reset, klasses.spin);
+        removeClass(this.els.search, klasses.spin);
 
         const li = createElement('li', '<h5>Error! No internet connection?</h5>');
 
@@ -359,7 +347,7 @@ export class Nominatim {
   collapse() {
     this.els.input.value = '';
     this.els.input.blur();
-    addClass(this.els.reset, klasses.hidden);
+    addClass(this.els.search, klasses.hidden);
     removeClass(this.els.control, klasses.glass.expanded);
     this.clearResults();
   }

@@ -54,7 +54,7 @@ $result-top: $control-height;
     box-shadow: inset 0 0 0 1px #4d90fe, inset 0 0 5px #4d90fe;
   }
 }
-.#{map-get($glass, reset)} {
+.#{map-get($glass, search)} {
   position: absolute;
   z-index: $z-index + 1;
   top: 0;
@@ -69,7 +69,7 @@ $result-top: $control-height;
   cursor: pointer;
 
   &::after {
-    content: "\d7";
+    content: "\2386";
     display: inline-block;
     color: #333;
     font-size: $font-big * 1.5;

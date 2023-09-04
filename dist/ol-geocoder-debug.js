@@ -2,7 +2,7 @@
  * ol-geocoder - v4.2.1
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Mon Sep 04 2023 10:40:32 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Mon Sep 04 2023 16:09:28 GMT+0200 (heure d’été d’Europe centrale)
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('ol/control/Control'), require('ol/style/Style'), require('ol/style/Icon'), require('ol/layer/Vector'), require('ol/source/Vector'), require('ol/geom/Point'), require('ol/Feature'), require('ol/proj')) :
@@ -42,7 +42,7 @@
   var containerId = "gcd-container";
   var buttonControlId = "gcd-button-control";
   var inputQueryId = "gcd-input-query";
-  var inputResetId = "gcd-input-reset";
+  var inputSearchId = "gcd-input-search";
   var cssClasses = {
   	namespace: "ol-geocoder",
   	spin: "gcd-pseudo-rotate",
@@ -58,14 +58,14 @@
   		button: "gcd-gl-btn",
   		input: "gcd-gl-input",
   		expanded: "gcd-gl-expanded",
-  		reset: "gcd-gl-reset",
+  		search: "gcd-gl-search",
   		result: "gcd-gl-result"
   	},
   	inputText: {
   		container: "gcd-txt-container",
   		control: "gcd-txt-control",
   		input: "gcd-txt-input",
-  		reset: "gcd-txt-reset",
+  		search: "gcd-txt-search",
   		icon: "gcd-txt-glass",
   		result: "gcd-txt-result"
   	}
@@ -74,7 +74,7 @@
   	containerId: containerId,
   	buttonControlId: buttonControlId,
   	inputQueryId: inputQueryId,
-  	inputResetId: inputResetId,
+  	inputSearchId: inputSearchId,
   	cssClasses: cssClasses
   };
 
@@ -83,7 +83,7 @@
     containerId: containerId,
     buttonControlId: buttonControlId,
     inputQueryId: inputQueryId,
-    inputResetId: inputResetId,
+    inputSearchId: inputSearchId,
     cssClasses: cssClasses,
     'default': vars
   });
@@ -123,9 +123,6 @@
     limit: 5,
     keepOpen: false,
     preventDefault: false,
-    autoComplete: false,
-    autoCompleteMinLength: 2,
-    autoCompleteTimeout: 200,
     debug: false,
   };
 
@@ -375,7 +372,7 @@
           container,
           control: container.querySelector(`.${klasses$1.inputText.control}`),
           input: container.querySelector(`.${klasses$1.inputText.input}`),
-          reset: container.querySelector(`.${klasses$1.inputText.reset}`),
+          search: container.querySelector(`.${klasses$1.inputText.search}`),
           result: container.querySelector(`.${klasses$1.inputText.result}`),
         };
       } else {
@@ -392,7 +389,7 @@
           control: container.querySelector(`.${klasses$1.glass.control}`),
           button: container.querySelector(`.${klasses$1.glass.button}`),
           input: container.querySelector(`.${klasses$1.glass.input}`),
-          reset: container.querySelector(`.${klasses$1.glass.reset}`),
+          search: container.querySelector(`.${klasses$1.glass.search}`),
           result: container.querySelector(`.${klasses$1.glass.result}`),
         };
       }
@@ -408,7 +405,7 @@
   <div class="${klasses$1.glass.control} ${klasses$1.olControl}">
     <button type="button" id="${VARS.buttonControlId}" class="${klasses$1.glass.button}"></button>
     <input type="text" id="${VARS.inputQueryId}" class="${klasses$1.glass.input}" autocomplete="off" placeholder="Search ...">
-    <a id="${VARS.inputResetId}" class="${klasses$1.glass.reset} ${klasses$1.hidden}"></a>
+    <a id="${VARS.inputSearchId}" class="${klasses$1.glass.search} ${klasses$1.hidden}"></a>
   </div>
   <ul class="${klasses$1.glass.result}"></ul>
 `;
@@ -417,7 +414,7 @@
   <div class="${klasses$1.inputText.control}">
     <input type="text" id="${VARS.inputQueryId}" class="${klasses$1.inputText.input}" autocomplete="off" placeholder="Search ...">
     <span class="${klasses$1.inputText.icon}"></span>
-    <button type="button" id="${VARS.inputResetId}" class="${klasses$1.inputText.reset} ${klasses$1.hidden}"></button>
+    <button type="button" id="${VARS.inputSearchId}" class="${klasses$1.inputText.search} ${klasses$1.hidden}"></button>
   </div>
   <ul class="${klasses$1.inputText.result}"></ul>
 `;
@@ -846,8 +843,6 @@
     }
 
     setListeners() {
-      let timeout;
-      let lastQuery;
 
       const openSearch = (evt) => {
         evt.stopPropagation();
@@ -870,35 +865,23 @@
         }
       };
       const stopBubbling = (evt) => evt.stopPropagation();
-      const reset = () => {
+      const search = () => {
         this.els.input.focus();
-        this.els.input.value = '';
-        this.lastQuery = '';
-        addClass(this.els.reset, klasses.hidden);
-        this.clearResults();
+        addClass(this.els.search, klasses.hidden);
+        this.query(this.els.input.value);
       };
       const handleValue = (evt) => {
         const value = evt.target.value.trim();
 
         value.length !== 0 ?
-          removeClass(this.els.reset, klasses.hidden) :
-          addClass(this.els.reset, klasses.hidden);
-
-        if (this.options.autoComplete && value !== lastQuery) {
-          lastQuery = value;
-          timeout && clearTimeout(timeout);
-          timeout = setTimeout(() => {
-            if (value.length >= this.options.autoCompleteMinLength) {
-              this.query(value);
-            }
-          }, this.options.autoCompleteTimeout);
-        }
+          removeClass(this.els.search, klasses.hidden) :
+          addClass(this.els.search, klasses.hidden);
       };
 
       this.els.input.addEventListener('keypress', query, false);
       this.els.input.addEventListener('click', stopBubbling, false);
       this.els.input.addEventListener('input', handleValue, false);
-      this.els.reset.addEventListener('click', reset, false);
+      this.els.search.addEventListener('click', search, false);
 
       if (this.options.targetType === TARGET_TYPE.GLASS) {
         this.els.button.addEventListener('click', openSearch, false);
@@ -924,7 +907,7 @@
 
       this.lastQuery = q;
       this.clearResults();
-      addClass(this.els.reset, klasses.spin);
+      addClass(this.els.search, klasses.spin);
 
       const ajax = {
         url: parameters.url,
@@ -941,7 +924,7 @@
           // eslint-disable-next-line no-console
           this.options.debug && console.info(res);
 
-          removeClass(this.els.reset, klasses.spin);
+          removeClass(this.els.search, klasses.spin);
 
           // will be fullfiled according to provider
           const res_ = this.provider.handleResponse(res);
@@ -952,7 +935,7 @@
           }
         })
         .catch(() => {
-          removeClass(this.els.reset, klasses.spin);
+          removeClass(this.els.search, klasses.spin);
 
           const li = createElement('li', '<h5>Error! No internet connection?</h5>');
 
@@ -1125,7 +1108,7 @@
     collapse() {
       this.els.input.value = '';
       this.els.input.blur();
-      addClass(this.els.reset, klasses.hidden);
+      addClass(this.els.search, klasses.hidden);
       removeClass(this.els.control, klasses.glass.expanded);
       this.clearResults();
     }

@@ -24,9 +24,6 @@
   const geocoder = new Geocoder('nominatim', {
     // Specify the custom provider instance as the "provider" value
     provider,
-    autoComplete: true,
-    autoCompleteMinLength: 3,
-    autoCompleteTimeout: 200,
     targetType: 'text-input',
     lang: 'en',
     keepOpen: false,

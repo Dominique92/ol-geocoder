@@ -1,7 +1,8 @@
 # Maintenance takeover
-While Jonathan & Kirtan ask for a new maintainer, I will assume the ol-geocoder support.
+While [@jonataswalker](https://github.com/jonataswalker) & [@kirtan-desai](https://github.com/kirtan-desai)
+ask for a new maintainer, I will assume the ol-geocoder support.
 I would like to thank them and the entire development team for the fantastic work done so far.
-Dominique.
+[@dominque](https://github.com/Dominique92).
 
 # OpenLayers Control Geocoder
 <p align="center">
@@ -108,9 +109,6 @@ geocoder.on('addresschosen', (evt) => {
   * `provider`             : `'osm'` (default), `'mapquest'`, `'photon'`, `'pelias'`, `'bing'`, `'opencage'`, custom provider instance; Your preferable provider;
   * `url`                  : `'https://nominatim.openstreetmap.org/search''`; API provider url;
   * `key`                  : `''`; API Key if required;
-  * `autoComplete`         : `false`; Search as you type;
-  * `autoCompleteMinLength`: `2`; The minimum number of characters to trigger search;
-  * `autoCompleteTimeout`  : `200`; The mimimum number of ms to wait before triggering search if autoComplete is on and minimum number of characters is satisfied;
   * `placeholder`          : `'Search for an address'`; Placeholder for text input;
   * `targetType`           : `'glass-button'`; Can also be `'text-input'`;
   * `featureStyle`         : `ol.style.Style`; Feature style;

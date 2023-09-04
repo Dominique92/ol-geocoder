@@ -40,7 +40,7 @@ export class Html {
         container,
         control: container.querySelector(`.${klasses.inputText.control}`),
         input: container.querySelector(`.${klasses.inputText.input}`),
-        reset: container.querySelector(`.${klasses.inputText.reset}`),
+        search: container.querySelector(`.${klasses.inputText.search}`),
         result: container.querySelector(`.${klasses.inputText.result}`),
       };
     } else {
@@ -57,7 +57,7 @@ export class Html {
         control: container.querySelector(`.${klasses.glass.control}`),
         button: container.querySelector(`.${klasses.glass.button}`),
         input: container.querySelector(`.${klasses.glass.input}`),
-        reset: container.querySelector(`.${klasses.glass.reset}`),
+        search: container.querySelector(`.${klasses.glass.search}`),
         result: container.querySelector(`.${klasses.glass.result}`),
       };
     }
@@ -73,7 +73,7 @@ Html.glass = `
   <div class="${klasses.glass.control} ${klasses.olControl}">
     <button type="button" id="${VARS.buttonControlId}" class="${klasses.glass.button}"></button>
     <input type="text" id="${VARS.inputQueryId}" class="${klasses.glass.input}" autocomplete="off" placeholder="Search ...">
-    <a id="${VARS.inputResetId}" class="${klasses.glass.reset} ${klasses.hidden}"></a>
+    <a id="${VARS.inputSearchId}" class="${klasses.glass.search} ${klasses.hidden}"></a>
   </div>
   <ul class="${klasses.glass.result}"></ul>
 `;
@@ -82,7 +82,7 @@ Html.input = `
   <div class="${klasses.inputText.control}">
     <input type="text" id="${VARS.inputQueryId}" class="${klasses.inputText.input}" autocomplete="off" placeholder="Search ...">
     <span class="${klasses.inputText.icon}"></span>
-    <button type="button" id="${VARS.inputResetId}" class="${klasses.inputText.reset} ${klasses.hidden}"></button>
+    <button type="button" id="${VARS.inputSearchId}" class="${klasses.inputText.search} ${klasses.hidden}"></button>
   </div>
   <ul class="${klasses.inputText.result}"></ul>
 `;

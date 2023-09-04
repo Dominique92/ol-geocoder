@@ -47,7 +47,7 @@ $result-top: $control-height + .2;
     box-shadow: inset 0 0 0 1px #4d90fe, inset 0 0 6px #4d90fe;
   }
 }
-.#{map-get($input-text, reset)} {
+.#{map-get($input-text, search)} {
   position: absolute;
   z-index: $z-index + 1;
   top: 0;
@@ -63,7 +63,7 @@ $result-top: $control-height + .2;
   cursor: pointer;
 
   &::after {
-    content: "\d7";
+    content: "\2386";
     display: inline-block;
     color: #333;
     font-size: $font-big * 2;
