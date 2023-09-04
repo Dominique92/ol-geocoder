@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v4.3.0
+ * ol-geocoder - v4.2.1
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Sun Sep 03 2023 18:09:54 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Mon Sep 04 2023 10:40:32 GMT+0200 (heure d’été d’Europe centrale)
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('ol/control/Control'), require('ol/style/Style'), require('ol/style/Icon'), require('ol/layer/Vector'), require('ol/source/Vector'), require('ol/geom/Point'), require('ol/Feature'), require('ol/proj')) :
@@ -12,6 +12,24 @@
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
+  function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+      Object.keys(e).forEach(function (k) {
+        if (k !== 'default') {
+          var d = Object.getOwnPropertyDescriptor(e, k);
+          Object.defineProperty(n, k, d.get ? d : {
+            enumerable: true,
+            get: function () { return e[k]; }
+          });
+        }
+      });
+    }
+    n["default"] = e;
+    return Object.freeze(n);
+  }
+
   var Control__default = /*#__PURE__*/_interopDefaultLegacy(Control);
   var Style__default = /*#__PURE__*/_interopDefaultLegacy(Style);
   var Icon__default = /*#__PURE__*/_interopDefaultLegacy(Icon);
@@ -19,7 +37,7 @@
   var SourceVector__default = /*#__PURE__*/_interopDefaultLegacy(SourceVector);
   var Point__default = /*#__PURE__*/_interopDefaultLegacy(Point);
   var Feature__default = /*#__PURE__*/_interopDefaultLegacy(Feature);
-  var proj__default = /*#__PURE__*/_interopDefaultLegacy(proj);
+  var proj__namespace = /*#__PURE__*/_interopNamespace(proj);
 
   var containerId = "gcd-container";
   var buttonControlId = "gcd-button-control";
@@ -978,14 +996,14 @@
       const map = this.Base.getMap();
       const coord_ = [Number.parseFloat(place.lon), Number.parseFloat(place.lat)];
       const projection = map.getView().getProjection();
-      const coord = proj__default["default"].transform(coord_, 'EPSG:4326', projection);
+      const coord = proj__namespace.transform(coord_, 'EPSG:4326', projection);
 
       let {
         bbox
       } = place;
 
       if (bbox) {
-        bbox = proj__default["default"].transformExtent(
+        bbox = proj__namespace.transformExtent(
           // https://nominatim.org/release-docs/latest/api/Output/#boundingbox
           // Requires parseFloat on negative bbox entries
           [parseFloat(bbox[2]), parseFloat(bbox[0]), parseFloat(bbox[3]), parseFloat(bbox[1])], // SNWE -> WSEN
@@ -1035,7 +1053,7 @@
           map.getView().animate({
             center: coord,
             // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
-            resolution: this.options.defaultFlyResolution || 1, // Meters per pixel
+            resolution: this.options.defaultFlyResolution || 10, // Meters per pixel
             duration: 500,
           });
         }

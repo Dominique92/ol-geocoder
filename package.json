@@ -1,6 +1,6 @@
 {
   "name": "ol-geocoder",
-  "version": "4.3.0",
+  "version": "4.2.1",
   "description": "A geocoder extension compatible with OpenLayers v7+ & v8+",
   "author": "Jonatas Walker",
   "homepage": "https://github.com/Dominique92/ol-geocoder",

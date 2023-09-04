@@ -2,7 +2,7 @@ import LayerVector from 'ol/layer/Vector';
 import SourceVector from 'ol/source/Vector';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
-import proj from 'ol/proj';
+import * as proj from 'ol/proj';
 
 import {
   VARS,
@@ -287,7 +287,7 @@ export class Nominatim {
         map.getView().animate({
           center: coord,
           // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
-          resolution: this.options.defaultFlyResolution || 1, // Meters per pixel
+          resolution: this.options.defaultFlyResolution || 10, // Meters per pixel
           duration: 500,
         });
       }

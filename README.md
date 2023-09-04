@@ -1,13 +1,10 @@
-# MAINTENANCE TAKEOVER
+# Maintenance takeover
 While Jonathan & Kirtan ask for a new maintainer, I will assume the ol-geocoder support.
 I would like to thank them and the entire development team for the fantastic work done so far.
 Dominique.
 
 # OpenLayers Control Geocoder
 <p align="center">
-  <a href="https://travis-ci.org/jonataswalker/ol-geocoder">
-    <img src="https://travis-ci.org/jonataswalker/ol-geocoder.svg?branch=master" alt="build status">
-  </a>
   <a href="https://www.npmjs.com/package/ol-geocoder">
     <img src="https://img.shields.io/npm/v/ol-geocoder.svg"
       alt="npm version">
@@ -20,8 +17,7 @@ Dominique.
 
 A geocoder extension compatible with OpenLayers v7. **Requires** OpenLayers **v6.15.0** or higher.
 
-![geocoder anim](https://raw.githubusercontent.com/jonataswalker/ol-geocoder/screenshots/images/anim.gif)
-
+![geocoder anim](https://raw.githubusercontent.com/Dominique92/ol-geocoder/screenshots/images/anim.gif)
 ## Demo
 You can see [here a demo](http://rawgit.com/jonataswalker/ol-geocoder/master/examples/control-nominatim.html) or on [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer. There is also a [demo of creating a custom provider](http://rawgit.com/jonataswalker/ol-geocoder/master/examples/custom-provider.html)
 
@@ -29,7 +25,7 @@ You can see [here a demo](http://rawgit.com/jonataswalker/ol-geocoder/master/exa
 The plugin supports (for now) the following providers:
 
 * [OSM](https://www.openstreetmap.org/)/[Nominatim](https://nominatim.org/) &mdash; `'osm'`.
-* [MapQuest Geocoding API](https://developer.mapquest.com/documentation/open/nominatim-search/) &mdash; requires KEY  &mdash; `'mapquest'`.
+* [MapQuest Geocoding API](https://developer.mapquest.com/documentation/geocoding-api/) &mdash; requires KEY  &mdash; `'mapquest'`.
 * [Photon](https://photon.komoot.io/)  &mdash; `'photon'`.
 * [Bing](https://docs.microsoft.com/en-us/bingmaps/rest-services/) &mdash; requires KEY  &mdash; `'bing'`.
 * [OpenCage](https://opencagedata.com/) &mdash; requires KEY  &mdash; `'opencage'`.
@@ -70,6 +66,7 @@ Load CSS and Javascript:
 <link href="https://unpkg.com/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
 <script src="https://unpkg.com/ol-geocoder"></script>
 ```
+
 ##### Self hosted
 Download [latest release](https://github.com/Dominique92/ol-geocoder/releases/latest) and (obviously) load CSS and Javascript.
 
@@ -125,7 +122,7 @@ geocoder.on('addresschosen', (evt) => {
   * `preventDefault`       : `false`; Whether panning (and creating marker) when an address is chosen;
   * `preventPanning`       : `false`; When true, prevent panning, but create marker, when an address is chosen;
   * `preventMarker`        : `false`; When true, prevent creating marker, but provide panning, when an address is chosen;
-  * `defaultFlyResolution` : `1`; (meters per pixel) resolution to fly to when only coords & not bbox is returned by the provider;
+  * `defaultFlyResolution` : `10`; (meters per pixel) resolution to fly to when only coords & not bbox is returned by the provider;
   * `target`               : `null`; html element to attach the selector to (outside the map);
   * `debug`                : `false`; If true logs provider's response;
 
