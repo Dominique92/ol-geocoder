@@ -7,20 +7,21 @@ I would like to thank them and the entire development team for the fantastic wor
 # OpenLayers Control Geocoder
 <p align="center">
   <a href="https://www.npmjs.com/package/ol-geocoder">
-    <img src="https://img.shields.io/npm/v/ol-geocoder.svg"
-      alt="npm version">
+    <img src="https://img.shields.io/npm/v/ol-geocoder.svg" alt="npm version">
   </a>
   <a href="https://github.com/Dominique92/ol-geocoder/blob/master/LICENSE">
-    <img src="https://img.shields.io/npm/l/ol-geocoder.svg"
-      alt="license">
+    <img src="https://img.shields.io/npm/l/ol-geocoder.svg" alt="license">
   </a>
 </p>
 
-A geocoder extension compatible with OpenLayers v7. **Requires** OpenLayers **v6.15.0** or higher.
+A geocoder extension compatible with OpenLayers v7 & v8 (Tested with all versions from v6.15.1 to v8.0.0).
 
 ![geocoder anim](https://raw.githubusercontent.com/Dominique92/ol-geocoder/screenshots/images/anim.gif)
+
 ## Demo
-You can see [here a demo](http://rawgit.com/jonataswalker/ol-geocoder/master/examples/control-nominatim.html) or on [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer. There is also a [demo of creating a custom provider](http://rawgit.com/jonataswalker/ol-geocoder/master/examples/custom-provider.html)
+You can see [here a demo](http://dominique92.github.io/ol-geocoder/examples/control-nominatim.html)
+or on [jsFiddle](http://jsfiddle.net/Dominique92/c4qv9afb/) if you prefer.
+There is also a [demo of creating a custom provider](http://dominique92.github.io/ol-geocoder/examples/custom-provider.html)
 
 ## Providers
 The plugin supports (for now) the following providers:
@@ -39,33 +40,51 @@ For an example of defining and using a custom provider see [`examples/custom-pro
 Custom providers must implement the following methods:
 
 #### `getParameters(options)`
-
 * `options` `{Object}`
     * `query` Search string entered by the user;
     * `lang` `{string}` Preferable language;
     * `limit` `{number}` Limit of results;
 
 #### `handleResponse(results)`
-
 * `results` `{Object}` Parsed JSON response from API call
 
-## How to use it?
-
+## What's new in 4.3.0 ?
+* search form outside map [#87](https://github.com/Dominique92/ol-geocoder/issues/87)
+* Geocoder does not zoom to the location correctly [#228](https://github.com/Dominique92/ol-geocoder/issues/228)
+* ol-geocoder results are too much zoomed -in [#235](https://github.com/Dominique92/ol-geocoder/issues/235)
+* Toggle Marker in Options [#239](https://github.com/Dominique92/ol-geocoder/issues/239)
+* Using Search Function Outside Div [#247](https://github.com/Dominique92/ol-geocoder/issues/247)
+* Search Button - search does not work from smartphone if there is another text field [#255](https://github.com/Dominique92/ol-geocoder/issues/255)
+* Remove search layer from legend [#256](https://github.com/Dominique92/ol-geocoder/issues/256)
+* Limit search result to extent [#260](https://github.com/Dominique92/ol-geocoder/issues/260)
+* Allow custom URL for osm provider [#266](https://github.com/Dominique92/ol-geocoder/issues/266)
+* Init error on 4.2.0 [#270](https://github.com/Dominique92/ol-geocoder/issues/270)
+* src/nominating.js better import on 4.2.0 [#271](https://github.com/Dominique92/ol-geocoder/issues/271)
+* Error on bbox returned by nominatim.js 4.2.0 on Openlayers 7.4.0+ [#272](https://github.com/Dominique92/ol-geocoder/issues/272)
+* fix(examples): map height and width were 0px for custom provider [#276](https://github.com/Dominique92/ol-geocoder/issues/276)
+ 
 ##### NPM
 `npm install ol-geocoder`
 
-##### CDN Hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/ol-geocoder)
+##### CDN hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/ol-geocoder)
 Load CSS and Javascript:
 ```HTML
 <link href="https://cdn.jsdelivr.net/npm/ol-geocoder@latest/dist/ol-geocoder.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/ol-geocoder"></script>
 ```
 
-##### CDN Hosted - UNPKG
+##### CDN hosted - unpkg
 Load CSS and Javascript:
 ```HTML
 <link href="https://unpkg.com/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
 <script src="https://unpkg.com/ol-geocoder"></script>
+```
+
+##### Github pages hosted
+Load CSS and Javascript:
+```HTML
+<link rel="stylesheet" href="http://dominique92.github.io/ol-geocoder/dist/ol-geocoder.css">
+<script src="http://dominique92.github.io/ol-geocoder/dist/ol-geocoder-debug.js"></script>
 ```
 
 ##### Self hosted

@@ -1,7 +1,7 @@
 /**
  * @class OpenStreet
  */
-export class OpenStreet {
+export default class OpenStreet {
   /**
    * @constructor
    */

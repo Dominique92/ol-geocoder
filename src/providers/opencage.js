@@ -1,7 +1,7 @@
 /**
  * @class OpenCage
  */
-export class OpenCage {
+export default class OpenCage {
   /**
    * @constructor
    */

@@ -10,7 +10,6 @@ import {
   PROVIDERS,
   EVENT_TYPE
 } from '../konstants';
-
 import {
   hasClass,
   addClass,
@@ -20,26 +19,17 @@ import {
   removeAllChildren,
 } from './helpers/dom';
 import {
-  Photon
-} from './providers/photon';
-import {
-  OpenStreet
-} from './providers/osm';
-import {
-  MapQuest
-} from './providers/mapquest';
-import {
-  Bing
-} from './providers/bing';
-import {
-  OpenCage
-} from './providers/opencage';
-import {
   randomId
 } from './helpers/mix';
 import {
   json
 } from './helpers/ajax';
+
+import Photon from './providers/photon';
+import OpenStreet from './providers/osm';
+import MapQuest from './providers/mapquest';
+import Bing from './providers/bing';
+import OpenCage from './providers/opencage';
 
 const klasses = VARS.cssClasses;
 
@@ -74,18 +64,14 @@ export class Nominatim {
     this.lastQuery = '';
     this.container = this.els.container;
     this.registeredListeners = {
-      mapClick: false
+      mapClick: false,
     };
     this.setListeners();
   }
 
   setListeners() {
-    let timeout;
-    let lastQuery;
-
     const openSearch = (evt) => {
       evt.stopPropagation();
-
       hasClass(this.els.control, klasses.glass.expanded) ? this.collapse() : this.expand();
     };
     const query = (evt) => {
@@ -106,7 +92,6 @@ export class Nominatim {
     const stopBubbling = (evt) => evt.stopPropagation();
     const search = () => {
       this.els.input.focus();
-      addClass(this.els.search, klasses.hidden);
       this.query(this.els.input.value);
     };
     const handleValue = (evt) => {
@@ -275,7 +260,7 @@ export class Nominatim {
         map.getView().animate({
           center: coord,
           // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
-          resolution: this.options.defaultFlyResolution || 10, // Meters per pixel
+          resolution: this.options.defaultFlyResolution,
           duration: 500,
         });
       }

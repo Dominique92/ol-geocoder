@@ -1,7 +1,7 @@
 /**
  * @class MapQuest
  */
-export class MapQuest {
+export default class MapQuest {
   /**
    * @constructor
    */

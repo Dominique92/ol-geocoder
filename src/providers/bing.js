@@ -1,7 +1,7 @@
 /**
  * @class Bing
  */
-export class Bing {
+export default class Bing {
   /**
    * @constructor
    */

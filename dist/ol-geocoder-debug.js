@@ -1,9 +1,11 @@
 /*!
- * ol-geocoder - v4.2.1
+ * ol-geocoder - v4.3.0
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Mon Sep 04 2023 16:09:28 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Tue Sep 05 2023 21:03:55 GMT+0200 (heure d’été d’Europe centrale)
  */
+ 
+ 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('ol/control/Control'), require('ol/style/Style'), require('ol/style/Icon'), require('ol/layer/Vector'), require('ol/source/Vector'), require('ol/geom/Point'), require('ol/Feature'), require('ol/proj')) :
   typeof define === 'function' && define.amd ? define(['ol/control/Control', 'ol/style/Style', 'ol/style/Icon', 'ol/layer/Vector', 'ol/source/Vector', 'ol/geom/Point', 'ol/Feature', 'ol/proj'], factory) :
@@ -123,6 +125,9 @@
     limit: 5,
     keepOpen: false,
     preventDefault: false,
+    preventPanning: false,
+    preventMarker: false,
+    defaultFlyResolution: 10, // Meters per pixel
     debug: false,
   };
 
@@ -418,6 +423,83 @@
   </div>
   <ul class="${klasses$1.inputText.result}"></ul>
 `;
+
+  function json(obj) {
+    return new Promise((resolve, reject) => {
+      const url = encodeUrlXhr(obj.url, obj.data);
+      const config = {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'same-origin',
+      };
+
+      if (obj.jsonp) {
+        jsonp(url, obj.callbackName, resolve);
+      } else {
+        fetch(url, config)
+          .then((r) => r.json())
+          .then(resolve)
+          .catch(reject);
+      }
+    });
+  }
+
+  function toQueryString(obj) {
+    return Object.keys(obj)
+      .reduce((acc, k) => {
+        acc.push(
+          typeof obj[k] === 'object' ?
+          toQueryString(obj[k]) :
+          `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
+        );
+
+        return acc;
+      }, [])
+      .join('&');
+  }
+
+  function encodeUrlXhr(url, data) {
+    if (data && typeof data === 'object') {
+      url += (/\?/u.test(url) ? '&' : '?') + toQueryString(data);
+    }
+
+    return url;
+  }
+
+  function jsonp(url, key, callback) {
+    // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
+    const {
+      head
+    } = document;
+    const script = document.createElement('script');
+    // generate minimally unique name for callback function
+    const callbackName = `f${Math.round(Math.random() * Date.now())}`;
+
+    // set request url
+    script.setAttribute(
+      'src',
+      // add callback parameter to the url
+      //    where key is the parameter key supplied
+      //    and callbackName is the parameter value
+      `${url + (url.indexOf('?') > 0 ? '&' : '?') + key}=${callbackName}`
+    );
+
+    // place jsonp callback on window,
+    //  the script sent by the server should call this
+    //  function as it was passed as a url parameter
+    window[callbackName] = (data) => {
+      window[callbackName] = undefined;
+
+      // clean up script tag created for request
+      setTimeout(() => head.removeChild(script), 0);
+
+      // hand data back to the user
+      callback(data);
+    };
+
+    // actually make the request
+    head.append(script);
+  }
 
   /**
    * @class Photon
@@ -727,83 +809,6 @@
     }
   }
 
-  function json(obj) {
-    return new Promise((resolve, reject) => {
-      const url = encodeUrlXhr(obj.url, obj.data);
-      const config = {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'same-origin',
-      };
-
-      if (obj.jsonp) {
-        jsonp(url, obj.callbackName, resolve);
-      } else {
-        fetch(url, config)
-          .then((r) => r.json())
-          .then(resolve)
-          .catch(reject);
-      }
-    });
-  }
-
-  function toQueryString(obj) {
-    return Object.keys(obj)
-      .reduce((acc, k) => {
-        acc.push(
-          typeof obj[k] === 'object' ?
-          toQueryString(obj[k]) :
-          `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`
-        );
-
-        return acc;
-      }, [])
-      .join('&');
-  }
-
-  function encodeUrlXhr(url, data) {
-    if (data && typeof data === 'object') {
-      url += (/\?/u.test(url) ? '&' : '?') + toQueryString(data);
-    }
-
-    return url;
-  }
-
-  function jsonp(url, key, callback) {
-    // https://github.com/Fresheyeball/micro-jsonp/blob/master/src/jsonp.js
-    const {
-      head
-    } = document;
-    const script = document.createElement('script');
-    // generate minimally unique name for callback function
-    const callbackName = `f${Math.round(Math.random() * Date.now())}`;
-
-    // set request url
-    script.setAttribute(
-      'src',
-      // add callback parameter to the url
-      //    where key is the parameter key supplied
-      //    and callbackName is the parameter value
-      `${url + (url.indexOf('?') > 0 ? '&' : '?') + key}=${callbackName}`
-    );
-
-    // place jsonp callback on window,
-    //  the script sent by the server should call this
-    //  function as it was passed as a url parameter
-    window[callbackName] = (data) => {
-      window[callbackName] = undefined;
-
-      // clean up script tag created for request
-      setTimeout(() => head.removeChild(script), 0);
-
-      // hand data back to the user
-      callback(data);
-    };
-
-    // actually make the request
-    head.append(script);
-  }
-
   const klasses = VARS.cssClasses;
 
   /**
@@ -837,16 +842,14 @@
       this.lastQuery = '';
       this.container = this.els.container;
       this.registeredListeners = {
-        mapClick: false
+        mapClick: false,
       };
       this.setListeners();
     }
 
     setListeners() {
-
       const openSearch = (evt) => {
         evt.stopPropagation();
-
         hasClass(this.els.control, klasses.glass.expanded) ? this.collapse() : this.expand();
       };
       const query = (evt) => {
@@ -867,7 +870,6 @@
       const stopBubbling = (evt) => evt.stopPropagation();
       const search = () => {
         this.els.input.focus();
-        addClass(this.els.search, klasses.hidden);
         this.query(this.els.input.value);
       };
       const handleValue = (evt) => {
@@ -1036,7 +1038,7 @@
           map.getView().animate({
             center: coord,
             // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
-            resolution: this.options.defaultFlyResolution || 10, // Meters per pixel
+            resolution: this.options.defaultFlyResolution,
             duration: 500,
           });
         }

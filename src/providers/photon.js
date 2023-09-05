@@ -1,7 +1,7 @@
 /**
  * @class Photon
  */
-export class Photon {
+export default class Photon {
   /**
    * @constructor
    */

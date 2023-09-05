@@ -1,6 +1,6 @@
 {
   "name": "ol-geocoder",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "A geocoder extension compatible with OpenLayers v7+ & v8+",
   "author": "Jonatas Walker",
   "homepage": "https://github.com/Dominique92/ol-geocoder",
@@ -25,7 +25,7 @@
     "nominatim"
   ],
   "scripts": {
-    "beautify": "js-beautify -s=2 build/* examples/* konstants/* src/*.*s src/helpers/* src/providers/* package.json",
+    "beautify": "js-beautify -s=2 build/*c* examples/* konstants/* src/*.*s src/helpers/* src/providers/* package.json",
     "dev": "run-s lint build:css rollup:dev",
     "build": "run-s rollup build:css",
     "build:css": "node build/build-css",
@@ -33,6 +33,7 @@
     "rollup:dev": "rollup -w -c build/config.js",
     "lint": "eslint --ext .js .",
     "lint:fix": "npm run lint -- --fix",
+    "lint:dom": "npx eslint examples/*.js konstants/*.js src/*.js src/*/*.js",
     "ci": "run-s build lint test:unit test:controls test:providers",
     "test": "run-s build lint test:unit test:controls",
     "test:controls": "testcafe chrome test/e2e/controls/*.test.js",
@@ -42,7 +43,7 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "ol": ">7.0.0"
+    "ol": ">8.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",

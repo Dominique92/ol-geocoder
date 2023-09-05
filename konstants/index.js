@@ -35,5 +35,8 @@ export const DEFAULT_OPTIONS = {
   limit: 5,
   keepOpen: false,
   preventDefault: false,
+  preventPanning: false,
+  preventMarker: false,
+  defaultFlyResolution: 10, // Meters per pixel
   debug: false,
 };
