@@ -2,7 +2,7 @@
  * ol-geocoder - v4.3.1-dev
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Wed Sep 13 2023 11:09:15 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Wed Sep 13 2023 20:36:09 GMT+0200 (heure d’été d’Europe centrale)
  */
  
  
@@ -939,26 +939,28 @@
         switch (this.options.provider) {
           case PROVIDERS.OSM:
             addressHtml = `<span class="${klasses.road}">${row.address.name}</span>`;
-
             break;
 
           default:
             addressHtml = this.addressTemplate(row.address);
         }
 
-        const html = `<a href="#">${addressHtml}</a>`;
-        const li = createElement('li', html);
+        if (response.length == 1) {
+          this.chosen(row, addressHtml, row.address, row.original);
+        } else {
+          const li = createElement('li', `<a href="#">${addressHtml}</a>`);
 
-        li.addEventListener(
-          'click',
-          (evt) => {
-            evt.preventDefault();
-            this.chosen(row, addressHtml, row.address, row.original);
-          },
-          false
-        );
+          li.addEventListener(
+            'click',
+            (evt) => {
+              evt.preventDefault();
+              this.chosen(row, addressHtml, row.address, row.original);
+            },
+            false
+          );
 
-        ul.append(li);
+          ul.append(li);
+        }
       });
     }
 
