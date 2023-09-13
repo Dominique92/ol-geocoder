@@ -49,14 +49,14 @@ Custom providers must implement the following methods:
 Load CSS and Javascript:
 ```HTML
 <link href="https://cdn.jsdelivr.net/npm/ol-geocoder@latest/dist/ol-geocoder.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/ol-geocoder"></script>
+<script src="https://cdn.jsdelivr.net/npm/ol-geocoder/dist/ol-geocoder.js"></script>
 ```
 
 ##### CDN hosted - unpkg
 Load CSS and Javascript:
 ```HTML
 <link href="https://unpkg.com/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
-<script src="https://unpkg.com/ol-geocoder"></script>
+<script src="https://unpkg.com/ol-geocoder/dist/ol-geocoder.js"></script>
 ```
 
 ##### Github pages hosted
