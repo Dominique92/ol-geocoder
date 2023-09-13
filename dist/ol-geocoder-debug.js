@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v4.3.0
+ * ol-geocoder - v4.3.1-dev
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Tue Sep 05 2023 21:03:55 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Wed Sep 13 2023 11:09:15 GMT+0200 (heure d’été d’Europe centrale)
  */
  
  
@@ -44,6 +44,7 @@
   var containerId = "gcd-container";
   var buttonControlId = "gcd-button-control";
   var inputQueryId = "gcd-input-query";
+  var inputLabelId = "gcd-input-label";
   var inputSearchId = "gcd-input-search";
   var cssClasses = {
   	namespace: "ol-geocoder",
@@ -66,6 +67,7 @@
   	inputText: {
   		container: "gcd-txt-container",
   		control: "gcd-txt-control",
+  		label: "gcd-txt-label",
   		input: "gcd-txt-input",
   		search: "gcd-txt-search",
   		icon: "gcd-txt-glass",
@@ -76,6 +78,7 @@
   	containerId: containerId,
   	buttonControlId: buttonControlId,
   	inputQueryId: inputQueryId,
+  	inputLabelId: inputLabelId,
   	inputSearchId: inputSearchId,
   	cssClasses: cssClasses
   };
@@ -85,6 +88,7 @@
     containerId: containerId,
     buttonControlId: buttonControlId,
     inputQueryId: inputQueryId,
+    inputLabelId: inputLabelId,
     inputSearchId: inputSearchId,
     cssClasses: cssClasses,
     'default': vars
@@ -118,6 +122,7 @@
 
   const DEFAULT_OPTIONS = {
     provider: PROVIDERS.OSM,
+    label: '',
     placeholder: 'Search for an address',
     featureStyle: null,
     targetType: TARGET_TYPE.GLASS,
@@ -130,29 +135,6 @@
     defaultFlyResolution: 10, // Meters per pixel
     debug: false,
   };
-
-  /**
-   * Overwrites obj1's values with obj2's and adds
-   * obj2's if non existent in obj1
-   * @returns obj3 a new object based on obj1 and obj2
-   */
-  function mergeOptions(obj1, obj2) {
-    const obj3 = {};
-
-    Object.keys(obj1).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(obj1, key)) {
-        obj3[key] = obj1[key];
-      }
-    });
-
-    Object.keys(obj2).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(obj2, key)) {
-        obj3[key] = obj2[key];
-      }
-    });
-
-    return obj3;
-  }
 
   function assert(condition, message = 'Assertion failed') {
     if (!condition) {
@@ -376,10 +358,12 @@
         elements = {
           container,
           control: container.querySelector(`.${klasses$1.inputText.control}`),
+          label: container.querySelector(`.${klasses$1.inputText.label}`),
           input: container.querySelector(`.${klasses$1.inputText.input}`),
           search: container.querySelector(`.${klasses$1.inputText.search}`),
           result: container.querySelector(`.${klasses$1.inputText.result}`),
         };
+        elements.label.innerHTML = this.options.label;
       } else {
         containerClass = `${klasses$1.namespace} ${klasses$1.glass.container}`;
         container = createElement(
@@ -417,6 +401,7 @@
 
   Html.input = `
   <div class="${klasses$1.inputText.control}">
+    <label type="button" id="${VARS.inputSearchId}" class="${klasses$1.inputText.label}"></label>
     <input type="text" id="${VARS.inputQueryId}" class="${klasses$1.inputText.input}" autocomplete="off" placeholder="Search ...">
     <span class="${klasses$1.inputText.icon}"></span>
     <button type="button" id="${VARS.inputSearchId}" class="${klasses$1.inputText.search} ${klasses$1.hidden}"></button>
@@ -1177,16 +1162,18 @@
         `@param 'type' should be '${CONTROL_TYPE.NOMINATIM}'
       or '${CONTROL_TYPE.REVERSE}'!`
       );
-      assert(typeof options === 'object', '@param `options` should be object!');
-
-      DEFAULT_OPTIONS.featureStyle = [
-        new Style__default["default"]({
-          image: new Icon__default["default"]({
-            scale: 0.7,
-            src: FEATURE_SRC
-          })
-        }),
-      ];
+      options = {
+        ...DEFAULT_OPTIONS,
+        featureStyle: [
+          new Style__default["default"]({
+            image: new Icon__default["default"]({
+              scale: 0.7,
+              src: FEATURE_SRC
+            })
+          }),
+        ],
+        ...options,
+     };
 
       let container;
 
@@ -1205,7 +1192,7 @@
 
       if (!(this instanceof Base)) return new Base();
 
-      this.options = mergeOptions(DEFAULT_OPTIONS, options);
+      this.options = options;
       this.container = container;
 
       if (type === CONTROL_TYPE.NOMINATIM) {

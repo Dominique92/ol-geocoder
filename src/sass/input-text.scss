@@ -28,6 +28,11 @@ $result-top: $control-height + .2;
   background-color: #fff;
   overflow: hidden;
 }
+.#{map-get($input-text, label)} {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
 .#{map-get($input-text, input)} {
   position: absolute;
   z-index: $z-index;

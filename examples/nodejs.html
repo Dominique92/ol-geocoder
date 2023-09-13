@@ -4,20 +4,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css">
+
+  <link rel="stylesheet" href="../node_modules/ol/ol.css">
+  <script src="../node_modules/ol/dist/ol.js"></script>
+
   <link rel="stylesheet" href="https://unpkg.com/ol-popup@5.0.0/src/ol-popup.css">
-  <link rel="stylesheet" href="index.css">
-  <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
   <script src="https://unpkg.com/ol-popup@5.0.0/dist/ol-popup.js"></script>
+
   <script type="module">
     import '../dist/ol-geocoder.css';
     import Geocoder from '../src/base';
     window.Geocoder = Geocoder;
   </script>
+
+  <link rel="stylesheet" href="index.css">
   <script src="index.js" defer></script>
 </head>
 
 <body>
+  <p>
+    Other demos :
+    <a href="control-nominatim.html">control-nominatim</a> &nbsp;
+    <a href="control-glass.html">control-glass</a> &nbsp;
+    <a href="custom-provider.html">custom-provider</a> &nbsp;
+  </p>
+
   <div id="map">
     This example needs to be run on <a href="https://nodejs.org/">nodejs</a> environment.
   </div>

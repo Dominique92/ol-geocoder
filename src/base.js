@@ -16,7 +16,6 @@ import {
 } from './nominatim';
 import {
   assert,
-  mergeOptions
 } from './helpers/mix';
 
 /**
@@ -36,16 +35,18 @@ export default class Base extends Control {
       `@param 'type' should be '${CONTROL_TYPE.NOMINATIM}'
       or '${CONTROL_TYPE.REVERSE}'!`
     );
-    assert(typeof options === 'object', '@param `options` should be object!');
-
-    DEFAULT_OPTIONS.featureStyle = [
-      new Style({
-        image: new Icon({
-          scale: 0.7,
-          src: FEATURE_SRC
-        })
-      }),
-    ];
+    options = {
+      ...DEFAULT_OPTIONS,
+      featureStyle: [
+        new Style({
+          image: new Icon({
+            scale: 0.7,
+            src: FEATURE_SRC
+          })
+        }),
+      ],
+      ...options,
+   };
 
     let container;
 
@@ -64,7 +65,7 @@ export default class Base extends Control {
 
     if (!(this instanceof Base)) return new Base();
 
-    this.options = mergeOptions(DEFAULT_OPTIONS, options);
+    this.options = options;
     this.container = container;
 
     if (type === CONTROL_TYPE.NOMINATIM) {

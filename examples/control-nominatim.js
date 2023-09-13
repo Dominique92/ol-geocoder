@@ -21,6 +21,7 @@
     provider: 'osm',
     targetType: 'text-input',
     lang: 'en',
+    label: 'Find a location by name',
     placeholder: 'Search for ...',
     limit: 5,
     keepOpen: false,

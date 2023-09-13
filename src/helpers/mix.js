@@ -1,26 +1,3 @@
-/**
- * Overwrites obj1's values with obj2's and adds
- * obj2's if non existent in obj1
- * @returns obj3 a new object based on obj1 and obj2
- */
-export function mergeOptions(obj1, obj2) {
-  const obj3 = {};
-
-  Object.keys(obj1).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(obj1, key)) {
-      obj3[key] = obj1[key];
-    }
-  });
-
-  Object.keys(obj2).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(obj2, key)) {
-      obj3[key] = obj2[key];
-    }
-  });
-
-  return obj3;
-}
-
 export function assert(condition, message = 'Assertion failed') {
   if (!condition) {
     if (typeof Error !== 'undefined') throw new Error(message);
@@ -49,14 +26,6 @@ export function now() {
   }
 
   return window.performance.now();
-}
-
-export function flyTo(map, coord, duration = 500, resolution = 2.388657133911758) {
-  map.getView().animate({
-    center: coord,
-    resolution: resolution,
-    duration: duration,
-  });
 }
 
 export function randomId(prefix) {

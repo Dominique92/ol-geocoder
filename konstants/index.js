@@ -28,6 +28,7 @@ export const PROVIDERS = {
 
 export const DEFAULT_OPTIONS = {
   provider: PROVIDERS.OSM,
+  label: '',
   placeholder: 'Search for an address',
   featureStyle: null,
   targetType: TARGET_TYPE.GLASS,

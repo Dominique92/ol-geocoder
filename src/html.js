@@ -39,10 +39,12 @@ export class Html {
       elements = {
         container,
         control: container.querySelector(`.${klasses.inputText.control}`),
+        label: container.querySelector(`.${klasses.inputText.label}`),
         input: container.querySelector(`.${klasses.inputText.input}`),
         search: container.querySelector(`.${klasses.inputText.search}`),
         result: container.querySelector(`.${klasses.inputText.result}`),
       };
+      elements.label.innerHTML = this.options.label;
     } else {
       containerClass = `${klasses.namespace} ${klasses.glass.container}`;
       container = createElement(
@@ -80,6 +82,7 @@ Html.glass = `
 
 Html.input = `
   <div class="${klasses.inputText.control}">
+    <label type="button" id="${VARS.inputSearchId}" class="${klasses.inputText.label}"></label>
     <input type="text" id="${VARS.inputQueryId}" class="${klasses.inputText.input}" autocomplete="off" placeholder="Search ...">
     <span class="${klasses.inputText.icon}"></span>
     <button type="button" id="${VARS.inputSearchId}" class="${klasses.inputText.search} ${klasses.hidden}"></button>

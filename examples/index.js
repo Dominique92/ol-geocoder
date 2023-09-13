@@ -11,6 +11,18 @@ const geocoderGlass = new Geocoder('nominatim', {
 });
 
 // Instantiate with nominatim, outside of the map
+const geocoderDirect = new Geocoder('nominatim', {
+  provider: 'osm',
+  targetType: 'text-input',
+  lang: 'en',
+  label: 'Direct access to the first found',
+  placeholder: 'Search in nominatim/OSM',
+  limit: 1,
+  keepOpen: false,
+  target: document.body, // Attach this control out of the map
+});
+
+// Instantiate with nominatim, outside of the map
 const geocoder = new Geocoder('nominatim', {
   provider: 'osm',
   targetType: 'text-input',
@@ -21,14 +33,14 @@ const geocoder = new Geocoder('nominatim', {
   target: document.body, // Attach this control out of the map
 });
 
+const popup = new ol.Overlay.Popup();
+
 // Listen when an address is chosen
 geocoder.on('addresschosen', (evt) => {
   window.setTimeout(() => {
     popup.show(evt.coordinate, evt.address.formatted);
   }, 1000);
 });
-
-const popup = new ol.Overlay.Popup();
 
 new ol.Map({
   target: document.querySelector('#map'),
@@ -39,6 +51,7 @@ new ol.Map({
   controls: [
     new ol.control.Zoom(),
     geocoderGlass,
+    geocoderDirect,
     geocoder,
   ],
   layers: [
