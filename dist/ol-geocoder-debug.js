@@ -2,7 +2,7 @@
  * ol-geocoder - v4.3.1-dev
  * A geocoder extension compatible with OpenLayers v7+ & v8+
  * https://github.com/Dominique92/ol-geocoder
- * Built: Wed Sep 13 2023 20:36:09 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: Wed Sep 13 2023 20:58:26 GMT+0200 (heure d’été d’Europe centrale)
  */
  
  
