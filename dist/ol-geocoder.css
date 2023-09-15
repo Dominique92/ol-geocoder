@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v4.3.1-dev
- * A geocoder extension compatible with OpenLayers v7+ & v8+
+ * ol-geocoder - v4.3.1
+ * A geocoder extension compatible with OpenLayers v6.x, v7.x & v8.x
  * https://github.com/Dominique92/ol-geocoder
- * Built: Wed Sep 13 2023 20:58:28 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: 15/09/2023 16:57:43
  */
  
  .ol-touch .ol-control.gcd-gl-control button {
@@ -74,7 +74,8 @@
   width: 1.5625em;
   height: 1.5625em;
   top: 0.125em;
-  left: 0.125em; }
+  left: 0.125em;
+  cursor: pointer; }
 
 .ol-geocoder .gcd-gl-btn:after {
   content: "\1F50D"; }

@@ -8,12 +8,8 @@ import {
   FEATURE_SRC
 } from '../konstants';
 
-import {
-  Html
-} from './html';
-import {
-  Nominatim
-} from './nominatim';
+import Html from './html';
+import Nominatim from './nominatim';
 import {
   assert,
 } from './helpers/mix';
@@ -28,14 +24,14 @@ export default class Base extends Control {
    * @param {string} type nominatim|reverse.
    * @param {object} options Options.
    */
-  constructor(type = CONTROL_TYPE.NOMINATIM, options = {}) {
+  constructor(type = CONTROL_TYPE.NOMINATIM, opt) {
     assert(typeof type === 'string', '@param `type` should be string!');
     assert(
       type === CONTROL_TYPE.NOMINATIM || type === CONTROL_TYPE.REVERSE,
       `@param 'type' should be '${CONTROL_TYPE.NOMINATIM}'
       or '${CONTROL_TYPE.REVERSE}'!`
     );
-    options = {
+    const options = {
       ...DEFAULT_OPTIONS,
       featureStyle: [
         new Style({
@@ -45,13 +41,11 @@ export default class Base extends Control {
           })
         }),
       ],
-      ...options,
-   };
+      ...opt,
+    };
 
     let container;
-
     let $nominatim;
-
     const $html = new Html(options);
 
     if (type === CONTROL_TYPE.NOMINATIM) {

@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v4.3.1-dev
- * A geocoder extension compatible with OpenLayers v7+ & v8+
+ * ol-geocoder - v4.3.1
+ * A geocoder extension compatible with OpenLayers v6.x, v7.x & v8.x
  * https://github.com/Dominique92/ol-geocoder
- * Built: Wed Sep 13 2023 20:58:26 GMT+0200 (heure d’été d’Europe centrale)
+ * Built: 15/09/2023 16:57:41
  */
  
  
@@ -1157,14 +1157,14 @@
      * @param {string} type nominatim|reverse.
      * @param {object} options Options.
      */
-    constructor(type = CONTROL_TYPE.NOMINATIM, options = {}) {
+    constructor(type = CONTROL_TYPE.NOMINATIM, opt) {
       assert(typeof type === 'string', '@param `type` should be string!');
       assert(
         type === CONTROL_TYPE.NOMINATIM || type === CONTROL_TYPE.REVERSE,
         `@param 'type' should be '${CONTROL_TYPE.NOMINATIM}'
       or '${CONTROL_TYPE.REVERSE}'!`
       );
-      options = {
+      const options = {
         ...DEFAULT_OPTIONS,
         featureStyle: [
           new Style__default["default"]({
@@ -1174,13 +1174,11 @@
             })
           }),
         ],
-        ...options,
-     };
+        ...opt,
+      };
 
       let container;
-
       let $nominatim;
-
       const $html = new Html(options);
 
       if (type === CONTROL_TYPE.NOMINATIM) {

@@ -12,7 +12,7 @@ const klasses = VARS.cssClasses;
 /**
  * @class Html
  */
-export class Html {
+export default class Html {
   /**
    * @constructor
    * @param {object} options Options.

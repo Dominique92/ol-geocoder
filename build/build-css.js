@@ -12,14 +12,14 @@ const autoprefixer = require('autoprefixer');
 const postcss = require('postcss');
 const postcssReport = require('postcss-reporter');
 const cssnano = require('cssnano');
-const pkg = require('../package.json');
+const pkg = require('../package.json'); // Convert CommonJS module into ES module
 
 const banner = readFileSync('./build/banner.js', 'utf-8')
   .replace('{name}', pkg.name)
   .replace('{description}', pkg.description)
   .replace('{homepage}', pkg.homepage)
   .replace('{version}', pkg.version)
-  .replace('{time}', new Date());
+  .replace('{time}', new Date().toLocaleString());
 
 sass.render({
     file: './src/sass/main.scss',

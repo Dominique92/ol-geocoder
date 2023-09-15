@@ -82,6 +82,7 @@ $result-top: $control-height;
   height: $btn-search-width;
   top: $btn-search-top;
   left: $btn-search-top;
+  cursor: pointer; 
 }
 .#{map-get($glass, button)}:after {
   content: "\1F50D";

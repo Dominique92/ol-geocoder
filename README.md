@@ -8,14 +8,16 @@
   </a>
 </p>
 
-A geocoder extension compatible with OpenLayers v7 & v8 (Tested with all versions from v6.15.1 to v8.0.0).
+A geocoder extension compatible with OpenLayers v6.x, v7.x & v8.x
 
 ![geocoder anim](https://raw.githubusercontent.com/Dominique92/ol-geocoder/screenshots/images/anim.gif)
 
 ## Demo
-You can see [here a demo](http://dominique92.github.io/ol-geocoder/examples/control-nominatim.html)
-or on [jsFiddle](http://jsfiddle.net/Dominique92/c4qv9afb/) if you prefer.
-There is also a [demo of creating a custom provider](http://dominique92.github.io/ol-geocoder/examples/custom-provider.html)
+You can see
+* a [demo of searching in nominatim/OSM](http://dominique92.github.io/ol-geocoder/examples/control-nominatim.html)
+* a [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer.
+* a [demo of searching in proton provider using a glass button](http://dominique92.github.io/ol-geocoder/examples/control-glass.html)
+* a [demo of creating a custom provider](http://dominique92.github.io/ol-geocoder/examples/custom-provider.html)
 
 ## Providers
 The plugin supports (for now) the following providers:
@@ -33,6 +35,13 @@ For an example of defining and using a custom provider see [`examples/custom-pro
 
 Custom providers must implement the following methods:
 
+## What's new in 4.3.1 ?
+* [#102](https://github.com/Dominique92/ol-geocoder/issues/102) Low-resolution icon appears blurry in HiDPI screens
+* [#198](https://github.com/Dominique92/ol-geocoder/issues/198) Add option for HTML label
+* [#206](https://github.com/Dominique92/ol-geocoder/issues/206) Is there a way to get keyboard return event to pick top choice in dropdown?
+* [#236](https://github.com/Dominique92/ol-geocoder/issues/236) Some 404 errors, unable to access content
+* [#250](https://github.com/Dominique92/ol-geocoder/issues/250) Warning when using ol-geocoder from the CDN
+
 #### `getParameters(options)`
 * `options` `{Object}`
     * `query` Search string entered by the user;
@@ -48,7 +57,7 @@ Custom providers must implement the following methods:
 ##### CDN hosted - [jsDelivr](https://www.jsdelivr.com/package/npm/ol-geocoder)
 Load CSS and Javascript:
 ```HTML
-<link href="https://cdn.jsdelivr.net/npm/ol-geocoder@latest/dist/ol-geocoder.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/ol-geocoder/dist/ol-geocoder.js"></script>
 ```
 
@@ -62,8 +71,8 @@ Load CSS and Javascript:
 ##### Github pages hosted
 Load CSS and Javascript:
 ```HTML
-<link rel="stylesheet" href="http://dominique92.github.io/ol-geocoder/dist/ol-geocoder.css">
-<script src="http://dominique92.github.io/ol-geocoder/dist/ol-geocoder-debug.js"></script>
+<link href="http://dominique92.github.io/ol-geocoder/dist/ol-geocoder.min.css" rel="stylesheet">
+<script src="http://dominique92.github.io/ol-geocoder/dist/ol-geocoder.js"></script>
 ```
 
 ##### Self hosted
@@ -107,7 +116,7 @@ geocoder.on('addresschosen', (evt) => {
   * `provider`             : `'osm'` (default), `'mapquest'`, `'photon'`, `'pelias'`, `'bing'`, `'opencage'`, custom provider instance; Your preferable provider;
   * `url`                  : `'https://nominatim.openstreetmap.org/search''`; API provider url;
   * `key`                  : `''`; API Key if required;
-  * `label`                : `label to be display in the top of the input div;
+  * `label`                : `''`; Label to display at top of input div;
   * `placeholder`          : `'Search for an address'`; Placeholder for text input;
   * `targetType`           : `'glass-button'`; Can also be `'text-input'`;
   * `featureStyle`         : `ol.style.Style`; Feature style;
@@ -151,6 +160,54 @@ geocoder.on('addresschosen', function(evt) {
   // it's up to you
   console.info(evt);
 });
+```
+
+## Text input customisation
+You can customize the text input control using the js parameters to
+* Add a label inside the input field
+* Attach the control out of the map
+* One touch position access (avoid the 5 positions choice)
+
+See the [demo](http://dominique92.github.io/ol-geocoder/examples/index.html)
+
+## Glass button customisation
+You can customize the glass button using css (to include after ol-geocoder.css)
+For example :
+```css
+/* Change the button position */
+.ol-geocoder.gcd-gl-container {
+  position: initial;
+  float: left;
+  height: 26.75px;
+  width: 26.75px;
+  margin: 2px !important;
+}
+.ol-geocoder .gcd-gl-btn {
+  position: initial;
+  height: 24.75px;
+  width: 24.75px;
+}
+/* Customise the button aspect */
+.ol-geocoder .gcd-gl-btn:after {
+  content: "\1F50E"; /* Inverse loop */
+  font-size: 15px;
+}
+/* Don't fotget to change the position of the input & result fields */
+.ol-geocoder .gcd-gl-expanded {
+  overflow: visible;
+}
+.ol-geocoder .gcd-gl-input {
+  top: 30px;
+  left: 1px;
+}
+.ol-geocoder .gcd-gl-search {
+  top: 28px;
+  left: 175px;
+}
+.ol-geocoder .gcd-gl-result {
+  top: 61px !important;
+  left: 66px !important;
+}
 ```
 
 # Maintenance takeover
