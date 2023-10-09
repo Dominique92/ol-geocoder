@@ -35,13 +35,6 @@ For an example of defining and using a custom provider see [`examples/custom-pro
 
 Custom providers must implement the following methods:
 
-## What's new in 4.3.1 ?
-* [#102](https://github.com/Dominique92/ol-geocoder/issues/102) Low-resolution icon appears blurry in HiDPI screens
-* [#198](https://github.com/Dominique92/ol-geocoder/issues/198) Add option for HTML label
-* [#206](https://github.com/Dominique92/ol-geocoder/issues/206) Is there a way to get keyboard return event to pick top choice in dropdown?
-* [#236](https://github.com/Dominique92/ol-geocoder/issues/236) Some 404 errors, unable to access content
-* [#250](https://github.com/Dominique92/ol-geocoder/issues/250) Warning when using ol-geocoder from the CDN
-
 #### `getParameters(options)`
 * `options` `{Object}`
     * `query` Search string entered by the user;

@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v4.3.1
+ * ol-geocoder - v4.3.2-dev
  * A geocoder extension compatible with OpenLayers v6.x, v7.x & v8.x
  * https://github.com/Dominique92/ol-geocoder
- * Built: 15/09/2023 16:57:41
+ * Built: 09/10/2023 10:43:17
  */
  
  
