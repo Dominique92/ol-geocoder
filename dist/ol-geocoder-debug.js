@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v4.3.2-dev
- * A geocoder extension compatible with OpenLayers v6.x, v7.x & v8.x
+ * ol-geocoder - v4.3.2
+ * A geocoder extension compatible with OpenLayers v6.x to v9.0
  * https://github.com/Dominique92/ol-geocoder
- * Built: 09/10/2023 10:43:17
+ * Built: 27/02/2024 17:01:43
  */
  
  
@@ -809,6 +809,7 @@
 
       this.layerName = randomId('geocoder-layer-');
       this.layer = new LayerVector__default["default"]({
+        background: 'transparent',
         name: this.layerName,
         source: new SourceVector__default["default"](),
         displayInLayerSwitcher: false, // Remove search layer from legend https://github.com/Dominique92/ol-geocoder/issues/256

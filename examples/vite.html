@@ -12,8 +12,9 @@
   <script src="https://unpkg.com/ol-popup@5.0.0/dist/ol-popup.js"></script>
 
   <script type="module">
-    import '../dist/ol-geocoder.css';
+    import '../dist/ol-geocoder.css'; //TODO use sass preprocessor
     import Geocoder from '../src/base';
+
     window.Geocoder = Geocoder;
   </script>
 
@@ -22,16 +23,8 @@
 </head>
 
 <body>
-  <p>
-    Other demos :
-    <a href="control-nominatim.html">control-nominatim</a> &nbsp;
-    <a href="control-glass.html">control-glass</a> &nbsp;
-    <a href="custom-provider.html">custom-provider</a> &nbsp;
-    <a href="index.html">Misc</a> (Label, one shot fly, control out of the map).
-  </p>
-
+  <p>This example needs to be run on <a href="https://nodejs.org/">nodejs</a> environment.</p>
   <div id="map">
-    This example needs to be run on <a href="https://nodejs.org/">nodejs</a> environment.
   </div>
 </body>
 

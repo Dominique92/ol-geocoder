@@ -8,7 +8,7 @@
   </a>
 </p>
 
-A geocoder extension compatible with OpenLayers v6.x, v7.x & v8.x
+A geocoder extension compatible with OpenLayers v6.x to 9.0.0
 
 ![geocoder anim](https://raw.githubusercontent.com/Dominique92/ol-geocoder/screenshots/images/anim.gif)
 
@@ -18,6 +18,12 @@ You can see
 * a [jsFiddle](http://jsfiddle.net/jonataswalker/c4qv9afb/) if you prefer.
 * a [demo of searching in proton provider using a glass button](http://dominique92.github.io/ol-geocoder/examples/control-glass.html)
 * a [demo of creating a custom provider](http://dominique92.github.io/ol-geocoder/examples/custom-provider.html)
+
+## What's new in 4.3.2 ?
+Fix current issues
+* [#282](https://github.com/Dominique92/ol-geocoder/issues/282) Tile layer is hidden by the marker layer in Openlayers 9.0.0
+* [#280](https://github.com/Dominique92/ol-geocoder/pull/280) Bump @adobe/css-tools from 4.3.1 to 4.3.2
+* [#279](https://github.com/Dominique92/ol-geocoder/pull/279) Bump @babel/traverse from 7.22.17 to 7.23.2
 
 ## Providers
 The plugin supports (for now) the following providers:
@@ -202,8 +208,3 @@ For example :
   left: 66px !important;
 }
 ```
-
-# Maintenance takeover
-I would like to thank you @jonataswalker & @kirtandesai and the entire development team for the fantastic work done so far creating and maintaining this project.
-As they request a new maintainer, I will assume it within the core goals and values of the project.
-@Dominque92

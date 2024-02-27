@@ -1,7 +1,7 @@
 {
   "name": "ol-geocoder",
-  "version": "4.3.2-dev",
-  "description": "A geocoder extension compatible with OpenLayers v6.x, v7.x & v8.x",
+  "version": "4.3.2",
+  "description": "A geocoder extension compatible with OpenLayers v6.x to v9.0",
   "author": "Jonatas Walker",
   "homepage": "https://github.com/Dominique92/ol-geocoder",
   "license": "MIT",
@@ -26,16 +26,11 @@
   ],
   "scripts": {
     "beautify": "js-beautify -s=2 build/*c* examples/* konstants/* src/*.*s src/helpers/* src/providers/* package.json",
-    "dev": "run-s lint build:css rollup:dev",
     "build": "run-s rollup build:css",
     "build:css": "node build/build-css",
     "rollup": "rollup -c build/config.js",
-    "rollup:dev": "rollup -w -c build/config.js",
-    "lint:olg": "eslint --ext .js .",
-    "lint:fix": "npm run lint -- --fix",
     "lint": "npx eslint examples/*.js konstants/*.js src/*.js src/*/*.js",
-    "ci": "run-s build lint test:unit test:controls test:providers",
-    "test": "run-s build lint test:unit test:controls",
+    "test": "run-s build lint test:controls test:providers test:unit",
     "test:controls": "testcafe chrome test/e2e/controls/*.test.js",
     "test:providers": "testcafe chrome test/e2e/providers/*.test.js",
     "test:unit": "jest",
@@ -74,13 +69,12 @@
     "node-sass": "^8.0.0",
     "node-sass-json-importer": "^4.3.0",
     "npm-run-all": "^4.1.5",
-    "ol": "latest",
     "postcss": "^8.4.31",
     "postcss-import": "^14.0.0",
     "postcss-reporter": "^7.0.1",
     "prettier": "^2.7.1",
     "rollup": "^2.79.0",
     "rollup-plugin-terser": "^7.0.2",
-    "testcafe": "^3.3.0"
+    "testcafe": "^3.4.0"
   }
 }
