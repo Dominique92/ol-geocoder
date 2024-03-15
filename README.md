@@ -19,7 +19,8 @@ You can see
 * a [demo of searching in proton provider using a glass button](http://dominique92.github.io/ol-geocoder/examples/control-glass.html)
 * a [demo of creating a custom provider](http://dominique92.github.io/ol-geocoder/examples/custom-provider.html)
 
-## What's new in 4.3.3 ?
+## What's new in 4.3.4 ?
+* Re-delivery of v43.3.3 which carries a virus. Sorry for the inconvenience.
 * [#284](https://github.com/Dominique92/ol-geocoder/issues/284) keepOpen flag not working for Submit Button
 * [#285](https://github.com/Dominique92/ol-geocoder/issues/285) The marker is an external dependency
 * [#286](https://github.com/Dominique92/ol-geocoder/issues/286) mapquest API change
