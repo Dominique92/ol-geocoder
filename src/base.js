@@ -36,7 +36,7 @@ export default class Base extends Control {
       featureStyle: [
         new Style({
           image: new Icon({
-            scale: 0.7,
+            anchor: [0.5, 1], // #285
             src: FEATURE_SRC
           })
         }),

@@ -1,8 +1,8 @@
 /*!
- * ol-geocoder - v4.3.2
+ * ol-geocoder - v4.3.3
  * A geocoder extension compatible with OpenLayers v6.x to v9.0
  * https://github.com/Dominique92/ol-geocoder
- * Built: 27/02/2024 17:01:43
+ * Built: 15/03/2024 08:57:04
  */
  
  
@@ -110,14 +110,27 @@
     INPUT: 'text-input',
   };
 
-  const FEATURE_SRC = '//cdn.rawgit.com/jonataswalker/map-utils/master/images/marker.png';
+  const FEATURE_SRC = 'data:image/svg+xml;charset=utf-8,' +
+    '<svg width="26" height="42" viewBox="0 0 26 42" xmlns="http://www.w3.org/2000/svg">' +
+    '<polygon points="1,18 14,42 25,18" fill="rgb(75,75,75)" />' +
+    '<ellipse cx="13" cy="13" rx="13" ry="13" fill="rgb(75,75,75)" />' +
+    '<ellipse cx="13" cy="14" rx="6" ry="6" fill="yellow" />' +
+    '</svg>'; // #285
 
   const PROVIDERS = {
-    OSM: 'osm',
-    MAPQUEST: 'mapquest',
-    PHOTON: 'photon',
     BING: 'bing',
+    MAPQUEST: 'mapquest',
     OPENCAGE: 'opencage',
+    OSM: 'osm',
+    PHOTON: 'photon',
+  };
+
+  const APIS = {
+    BING: 'https://dev.virtualearth.net/REST/v1/Locations',
+    MAPQUEST: 'https://nominatim.openstreetmap.org/search', // #286
+    OPENCAGE: 'https://api.opencagedata.com/geocode/v1/json?',
+    OSM: 'https://nominatim.openstreetmap.org/search',
+    PHOTON: 'https://photon.komoot.io/api/',
   };
 
   const DEFAULT_OPTIONS = {
@@ -358,7 +371,7 @@
         elements = {
           container,
           control: container.querySelector(`.${klasses$1.inputText.control}`),
-          label: container.querySelector(`.${klasses$1.inputText.label}`),
+          label: container.querySelector(`.${klasses$1.inputText.label}`), // #198
           input: container.querySelector(`.${klasses$1.inputText.input}`),
           search: container.querySelector(`.${klasses$1.inputText.search}`),
           result: container.querySelector(`.${klasses$1.inputText.result}`),
@@ -495,7 +508,7 @@
      */
     constructor() {
       this.settings = {
-        url: 'https://photon.komoot.io/api/',
+        url: APIS.PHOTON,
 
         params: {
           q: '',
@@ -554,9 +567,8 @@
      */
     constructor(options) {
       this.settings = {
-        url: 'https://nominatim.openstreetmap.org/search',
-        ...options, // Allow custom URL for osm provider https://github.com/Dominique92/ol-geocoder/issues/266
-
+        url: APIS.OSM,
+        ...options, // #266 Allow custom URL for osm provider
         params: {
           q: '',
           format: 'json',
@@ -579,7 +591,7 @@
           addressdetails: this.settings.params.addressdetails,
           limit: opt.limit || this.settings.params.limit,
           countrycodes: opt.countrycodes || this.settings.params.countrycodes,
-          viewbox: opt.viewbox || this.settings.params.viewbox,
+          viewbox: opt.viewbox || this.settings.params.viewbox, // #260
           'accept-language': opt.lang || this.settings.params['accept-language'],
         },
       };
@@ -620,7 +632,7 @@
      */
     constructor() {
       this.settings = {
-        url: 'https://open.mapquestapi.com/nominatim/v1/search.php',
+        url: APIS.MAPQUEST,
 
         params: {
           q: '',
@@ -684,7 +696,7 @@
      */
     constructor() {
       this.settings = {
-        url: 'https://dev.virtualearth.net/REST/v1/Locations',
+        url: APIS.BING,
         callbackName: 'jsonp',
 
         params: {
@@ -744,7 +756,7 @@
      */
     constructor() {
       this.settings = {
-        url: 'https://api.opencagedata.com/geocode/v1/json?',
+        url: APIS.OPENCAGE,
 
         params: {
           q: '',
@@ -809,10 +821,10 @@
 
       this.layerName = randomId('geocoder-layer-');
       this.layer = new LayerVector__default["default"]({
-        background: 'transparent',
+        background: 'transparent', // #282
         name: this.layerName,
         source: new SourceVector__default["default"](),
-        displayInLayerSwitcher: false, // Remove search layer from legend https://github.com/Dominique92/ol-geocoder/issues/256
+        displayInLayerSwitcher: false, // #256 Remove search layer from legend
       });
 
       this.options = base.options;
@@ -825,7 +837,6 @@
       this.provider = this.newProvider();
 
       this.els = els;
-      this.lastQuery = '';
       this.container = this.els.container;
       this.registeredListeners = {
         mapClick: false,
@@ -854,7 +865,7 @@
         }
       };
       const stopBubbling = (evt) => evt.stopPropagation();
-      const search = () => {
+      const search = () => { // #255
         this.els.input.focus();
         this.query(this.els.input.value);
       };
@@ -891,10 +902,7 @@
         limit: this.options.limit,
       });
 
-      if (this.lastQuery === q && this.els.result.firstChild) return;
-
-      this.lastQuery = q;
-      this.clearResults();
+      this.clearResults(this.options.keepOpen === false); // #284
       addClass(this.els.search, klasses.spin);
 
       const ajax = {
@@ -947,6 +955,7 @@
         }
 
         if (response.length == 1) {
+          // #206 Direct access if options.limit: 1
           this.chosen(row, addressHtml, row.address, row.original);
         } else {
           const li = createElement('li', `<a href="#">${addressHtml}</a>`);
@@ -977,7 +986,7 @@
 
       if (bbox) {
         bbox = proj__namespace.transformExtent(
-          // https://nominatim.org/release-docs/latest/api/Output/#boundingbox
+          // #274 https://nominatim.org/release-docs/latest/api/Output/#boundingbox
           // Requires parseFloat on negative bbox entries
           [parseFloat(bbox[2]), parseFloat(bbox[0]), parseFloat(bbox[3]), parseFloat(bbox[1])], // SNWE -> WSEN
           'EPSG:4326',
@@ -991,8 +1000,9 @@
         original: addressOriginal,
       };
 
-      this.options.keepOpen === false && this.clearResults(true);
+      this.clearResults(true); // #284
 
+      // #239
       if (this.options.preventDefault === true || this.options.preventMarker === true) {
         // No display change
         this.Base.dispatchEvent({
@@ -1016,6 +1026,7 @@
         });
       }
 
+      // #239
       if (this.options.preventDefault !== true && this.options.preventPanning !== true) {
         // Move & zoom to the position
         if (bbox) {
@@ -1025,7 +1036,7 @@
         } else {
           map.getView().animate({
             center: coord,
-            // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
+            // #235 ol-geocoder results are too much zoomed -in
             resolution: this.options.defaultFlyResolution,
             duration: 500,
           });
@@ -1100,7 +1111,7 @@
       this.els.input.blur();
       addClass(this.els.search, klasses.hidden);
       removeClass(this.els.control, klasses.glass.expanded);
-      this.clearResults();
+      removeAllChildren(this.els.result); // #284
     }
 
     listenMapClick() {
@@ -1116,7 +1127,6 @@
       mapElement.addEventListener(
         'click', {
           handleEvent(evt) {
-            that.clearResults(true);
             mapElement.removeEventListener(evt.type, this, false);
             that.registeredListeners.mapClick = false;
           },
@@ -1170,7 +1180,7 @@
         featureStyle: [
           new Style__default["default"]({
             image: new Icon__default["default"]({
-              scale: 0.7,
+              anchor: [0.5, 1], // #285
               src: FEATURE_SRC
             })
           }),

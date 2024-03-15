@@ -46,10 +46,10 @@ export default class Nominatim {
 
     this.layerName = randomId('geocoder-layer-');
     this.layer = new LayerVector({
-      background: 'transparent',
+      background: 'transparent', // #282
       name: this.layerName,
       source: new SourceVector(),
-      displayInLayerSwitcher: false, // Remove search layer from legend https://github.com/Dominique92/ol-geocoder/issues/256
+      displayInLayerSwitcher: false, // #256 Remove search layer from legend
     });
 
     this.options = base.options;
@@ -62,7 +62,6 @@ export default class Nominatim {
     this.provider = this.newProvider();
 
     this.els = els;
-    this.lastQuery = '';
     this.container = this.els.container;
     this.registeredListeners = {
       mapClick: false,
@@ -91,7 +90,7 @@ export default class Nominatim {
       }
     };
     const stopBubbling = (evt) => evt.stopPropagation();
-    const search = () => {
+    const search = () => { // #255
       this.els.input.focus();
       this.query(this.els.input.value);
     };
@@ -128,10 +127,7 @@ export default class Nominatim {
       limit: this.options.limit,
     });
 
-    if (this.lastQuery === q && this.els.result.firstChild) return;
-
-    this.lastQuery = q;
-    this.clearResults();
+    this.clearResults(this.options.keepOpen === false); // #284
     addClass(this.els.search, klasses.spin);
 
     const ajax = {
@@ -184,6 +180,7 @@ export default class Nominatim {
       }
 
       if (response.length == 1) {
+        // #206 Direct access if options.limit: 1
         this.chosen(row, addressHtml, row.address, row.original);
       } else {
         const li = createElement('li', `<a href="#">${addressHtml}</a>`);
@@ -214,7 +211,7 @@ export default class Nominatim {
 
     if (bbox) {
       bbox = proj.transformExtent(
-        // https://nominatim.org/release-docs/latest/api/Output/#boundingbox
+        // #274 https://nominatim.org/release-docs/latest/api/Output/#boundingbox
         // Requires parseFloat on negative bbox entries
         [parseFloat(bbox[2]), parseFloat(bbox[0]), parseFloat(bbox[3]), parseFloat(bbox[1])], // SNWE -> WSEN
         'EPSG:4326',
@@ -228,8 +225,9 @@ export default class Nominatim {
       original: addressOriginal,
     };
 
-    this.options.keepOpen === false && this.clearResults(true);
+    this.clearResults(true); // #284
 
+    // #239
     if (this.options.preventDefault === true || this.options.preventMarker === true) {
       // No display change
       this.Base.dispatchEvent({
@@ -253,6 +251,7 @@ export default class Nominatim {
       });
     }
 
+    // #239
     if (this.options.preventDefault !== true && this.options.preventPanning !== true) {
       // Move & zoom to the position
       if (bbox) {
@@ -262,7 +261,7 @@ export default class Nominatim {
       } else {
         map.getView().animate({
           center: coord,
-          // ol-geocoder results are too much zoomed -in Dominique92/ol-geocoder#235
+          // #235 ol-geocoder results are too much zoomed -in
           resolution: this.options.defaultFlyResolution,
           duration: 500,
         });
@@ -337,7 +336,7 @@ export default class Nominatim {
     this.els.input.blur();
     addClass(this.els.search, klasses.hidden);
     removeClass(this.els.control, klasses.glass.expanded);
-    this.clearResults();
+    removeAllChildren(this.els.result); // #284
   }
 
   listenMapClick() {
@@ -353,7 +352,6 @@ export default class Nominatim {
     mapElement.addEventListener(
       'click', {
         handleEvent(evt) {
-          that.clearResults(true);
           mapElement.removeEventListener(evt.type, this, false);
           that.registeredListeners.mapClick = false;
         },

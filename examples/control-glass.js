@@ -23,7 +23,7 @@
     lang: 'en',
     placeholder: 'Search for ...',
     limit: 5,
-    keepOpen: false,
+    keepOpen: true,
   });
 
   map.addControl(geocoder);

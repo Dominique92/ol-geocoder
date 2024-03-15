@@ -39,7 +39,7 @@ export default class Html {
       elements = {
         container,
         control: container.querySelector(`.${klasses.inputText.control}`),
-        label: container.querySelector(`.${klasses.inputText.label}`),
+        label: container.querySelector(`.${klasses.inputText.label}`), // #198
         input: container.querySelector(`.${klasses.inputText.input}`),
         search: container.querySelector(`.${klasses.inputText.search}`),
         result: container.querySelector(`.${klasses.inputText.result}`),

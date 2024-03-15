@@ -1,3 +1,7 @@
+import {
+  APIS,
+} from '../../konstants';
+
 /**
  * @class OpenCage
  */
@@ -7,7 +11,7 @@ export default class OpenCage {
    */
   constructor() {
     this.settings = {
-      url: 'https://api.opencagedata.com/geocode/v1/json?',
+      url: APIS.OPENCAGE,
 
       params: {
         q: '',

@@ -1,3 +1,7 @@
+import {
+  APIS,
+} from '../../konstants';
+
 /**
  * @class MapQuest
  */
@@ -7,7 +11,7 @@ export default class MapQuest {
    */
   constructor() {
     this.settings = {
-      url: 'https://open.mapquestapi.com/nominatim/v1/search.php',
+      url: APIS.MAPQUEST,
 
       params: {
         q: '',

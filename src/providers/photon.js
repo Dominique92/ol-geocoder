@@ -1,3 +1,7 @@
+import {
+  APIS,
+} from '../../konstants';
+
 /**
  * @class Photon
  */
@@ -7,7 +11,7 @@ export default class Photon {
    */
   constructor() {
     this.settings = {
-      url: 'https://photon.komoot.io/api/',
+      url: APIS.PHOTON,
 
       params: {
         q: '',

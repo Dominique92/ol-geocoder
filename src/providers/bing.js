@@ -1,3 +1,7 @@
+import {
+  APIS,
+} from '../../konstants';
+
 /**
  * @class Bing
  */
@@ -7,7 +11,7 @@ export default class Bing {
    */
   constructor() {
     this.settings = {
-      url: 'https://dev.virtualearth.net/REST/v1/Locations',
+      url: APIS.BING,
       callbackName: 'jsonp',
 
       params: {

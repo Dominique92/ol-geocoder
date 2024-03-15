@@ -19,11 +19,10 @@ You can see
 * a [demo of searching in proton provider using a glass button](http://dominique92.github.io/ol-geocoder/examples/control-glass.html)
 * a [demo of creating a custom provider](http://dominique92.github.io/ol-geocoder/examples/custom-provider.html)
 
-## What's new in 4.3.2 ?
-Fix current issues
-* [#282](https://github.com/Dominique92/ol-geocoder/issues/282) Tile layer is hidden by the marker layer in Openlayers 9.0.0
-* [#280](https://github.com/Dominique92/ol-geocoder/pull/280) Bump @adobe/css-tools from 4.3.1 to 4.3.2
-* [#279](https://github.com/Dominique92/ol-geocoder/pull/279) Bump @babel/traverse from 7.22.17 to 7.23.2
+## What's new in 4.3.3 ?
+* [#284](https://github.com/Dominique92/ol-geocoder/issues/284) keepOpen flag not working for Submit Button
+* [#285](https://github.com/Dominique92/ol-geocoder/issues/285) The marker is an external dependency
+* [#286](https://github.com/Dominique92/ol-geocoder/issues/286) mapquest API change
 
 ## Providers
 The plugin supports (for now) the following providers:
