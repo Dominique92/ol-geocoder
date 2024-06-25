@@ -20,7 +20,7 @@ You can see
 * a [demo of creating a custom provider](http://dominique92.github.io/ol-geocoder/examples/custom-provider.html)
 
 ## What's new in 4.3.4 ?
-* Re-delivery of v43.3.3 which carries a virus. Sorry for the inconvenience.
+* SAME AS v43.3.3. Sorry for this unusefull commit.
 * [#284](https://github.com/Dominique92/ol-geocoder/issues/284) keepOpen flag not working for Submit Button
 * [#285](https://github.com/Dominique92/ol-geocoder/issues/285) The marker is an external dependency
 * [#286](https://github.com/Dominique92/ol-geocoder/issues/286) mapquest API change
